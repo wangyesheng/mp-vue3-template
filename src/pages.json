@@ -1,0 +1,170 @@
+{
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^nut-(.*)?-(.*)": "nutui-uniapp/components/$1$2/$1$2.vue",
+      "^nut-(.*)": "nutui-uniapp/components/$1/$1.vue"
+    }
+  },
+  "usingComponents": {
+    "uni-pdf-viewer": "@dcloudio/uni-pdf-viewer"
+  },
+  "pages": [
+    {
+      "path": "pages/home/index",
+      "style": {
+        "navigationBarTitleText": "首页",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/me/index",
+      "style": {
+        "navigationBarTitleText": "我的",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/me/complaint-details",
+      "style": {
+        "navigationBarTitleText": "我的订单投诉详情"
+      }
+    },
+    {
+      "path": "pages/resource-cart/form",
+      "style": {
+        "navigationBarTitleText": "新增车辆"
+      }
+    },
+    {
+      "path": "pages/complaint/index",
+      "style": {
+        "navigationBarTitleText": "订单投诉"
+      }
+    },
+    {
+      "path": "pages/me/personal",
+      "style": {
+        "navigationBarTitleText": "个人中心"
+      }
+    },
+    {
+      "path": "pages/me/money-log",
+      "style": {
+        "navigationBarTitleText": "消费记录"
+      }
+    },
+    {
+      "path": "pages/order/index",
+      "style": {
+        "navigationBarTitleText": "订单",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/resource-cart/index",
+      "style": {
+        "navigationBarTitleText": "资源车"
+      }
+    },
+    {
+      "path": "pages/resource-cart/my",
+      "style": {
+        "navigationBarTitleText": "我的资源车"
+      }
+    },
+    {
+      "path": "pages/me/complaint",
+      "style": {
+        "navigationBarTitleText": "我的订单投诉"
+      }
+    },
+    {
+      "path": "pages/coupon/my",
+      "style": {
+        "navigationBarTitleText": "我的优惠券"
+      }
+    },
+    {
+      "path": "pages/coupon/index",
+      "style": {
+        "navigationBarTitleText": "领券中心"
+      }
+    },
+    {
+      "path": "pages/order/details",
+      "style": {
+        "navigationBarTitleText": "订单详情"
+      }
+    },
+    {
+      "path": "pages/me/signature",
+      "style": {
+        "navigationBarTitleText": "signature"
+      }
+    },
+    {
+      "path": "pages/me/poster",
+      "style": {
+        "navigationBarTitleText": "海报"
+      }
+    },
+    {
+      "path": "pages/me/richtext",
+      "style": {
+        "navigationBarTitleText": "关于我们"
+      }
+    },
+    {
+      "path": "pages/resource-cart/details",
+      "style": {
+        "navigationBarTitleText": "车辆详情"
+      }
+    },
+    {
+      "path": "pages/place-order/index",
+      "style": {
+        "navigationBarTitleText": "下单",
+        "navigationStyle": "custom"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "车无忧",
+    "navigationBarBackgroundColor": "#ffffff",
+    "backgroundColor": "#ffffff"
+  },
+  "tabBar": {
+    "color": "#909399",
+    "selectedColor": "#303133",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      {
+        "iconPath": "static/images/tabbar/home.png",
+        "selectedIconPath": "static/images/tabbar/home-selected.png",
+        "text": "首页",
+        "pagePath": "pages/home/index"
+      },
+      {
+        "iconPath": "static/images/tabbar/place-order.png",
+        "selectedIconPath": "static/images/tabbar/place-order-selected.png",
+        "text": "下单",
+        "pagePath": "pages/place-order/index"
+      },
+      {
+        "iconPath": "static/images/tabbar/order.png",
+        "selectedIconPath": "static/images/tabbar/order-selected.png",
+        "text": "订单",
+        "pagePath": "pages/order/index"
+      },
+      {
+        "iconPath": "static/images/tabbar/me.png",
+        "selectedIconPath": "static/images/tabbar/me-selected.png",
+        "text": "我的",
+        "pagePath": "pages/me/index"
+      }
+    ]
+  }
+}

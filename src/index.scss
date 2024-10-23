@@ -1,0 +1,89 @@
+:root,
+page {
+  --nut-button-large-height: 90rpx;
+  background: #f7f9fc;
+}
+
+.__bindMobilePopup {
+  width: 80%;
+  padding: 30rpx;
+  box-sizing: border-box;
+
+  .nut-button__wrap > view {
+    display: flex;
+    align-items: center;
+
+    image {
+      width: 48rpx;
+      height: 48rpx;
+      margin-right: 20rpx;
+    }
+  }
+  .title {
+    font-size: 32rpx;
+    margin-bottom: 30rpx;
+    text-align: center;
+    color: #666;
+    font-weight: 500;
+  }
+  .tips {
+    color: #6b6b6b;
+    font-size: 30rpx;
+    font-weight: 500;
+    margin-bottom: 50rpx;
+  }
+}
+
+.__rechargePopupWrap {
+  .customAmount {
+    box-sizing: border-box;
+    padding: 0 30rpx;
+
+    .nut-input {
+      background: transparent !important;
+      padding-left: 10rpx !important;
+      padding-right: 10rpx !important;
+      margin-bottom: 20rpx;
+
+      input {
+        font-size: 36rpx !important;
+      }
+    }
+
+    .nut-button {
+      margin-top: 40rpx;
+    }
+  }
+}
+
+.__title {
+  font-size: 34rpx;
+  color: #333;
+  margin-bottom: 20rpx;
+  position: relative;
+
+  &::before {
+    content: '';
+    display: block;
+    width: 10rpx;
+    height: 50%;
+    border-radius: 50%;
+    background: #344ad9;
+    position: absolute;
+    top: 25%;
+    left: -20rpx;
+  }
+}
+
+.nut-empty {
+  height: 100%;
+  margin: auto;
+  .nut-empty__box {
+    width: 195rpx;
+    height: 128rpx;
+  }
+
+  .nut-empty__description {
+    margin-top: 30rpx;
+  }
+}
