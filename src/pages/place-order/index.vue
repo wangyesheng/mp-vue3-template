@@ -85,11 +85,11 @@
           class="bg-[#fff] rounded-[12rpx] box-border px-[36rpx] py-[46rpx] relative top-[-50rpx]">
           <nut-divider>在线下单</nut-divider>
           <SelectPicker
-            title="请选择订单类型"
+            title="选择订单类型"
             :customStyle="{ marginBottom: '28rpx' }"
             :options="[
               { text: '代驾', value: '1' },
-              { text: '物流', value: '2' }
+              { text: '托运', value: '2' }
             ]"
             v-model:value="orderInfo.order_type" />
           <div
@@ -119,11 +119,16 @@
               alt="" />
           </div>
 
-          <SelectPicker
-            title="请选择车型"
-            :customStyle="{ marginBottom: '28rpx' }"
-            :options="carTypes"
-            v-model:value="orderInfo.vehicle_type" />
+          <nut-input
+            :border="false"
+            v-model="orderInfo.vehicle_type"
+            placeholder="您的车型（例：红旗）" />
+          <nut-input
+            :border="false"
+            v-model="orderInfo.go_time"
+            placeholder="出发时间"
+            disabled
+            @click="showDatePicker(true)" />
           <nut-input
             :border="false"
             v-model="orderInfo.user_name"
@@ -133,7 +138,6 @@
             v-model="orderInfo.user_phone"
             placeholder="您的手机号码" />
 
-          <!-- <nut-animate loop type="ripple" duration="1000"> -->
           <nut-button
             block
             type="primary"
@@ -141,7 +145,6 @@
             @click="debounce(onSubmit)">
             立即下单
           </nut-button>
-          <!-- </nut-animate> -->
 
           <div class="text-[24rpx] text-center mt-[34rpx]">
             联系电话：{{ merchantTel }}
@@ -172,6 +175,18 @@
             <span>联系电话</span>
           </div>
         </div>
+
+        <nut-popup
+          v-model:visible="goTimePopupVisible"
+          position="bottom"
+          safe-area-inset-bottom>
+          <nut-date-picker
+            title="选择出发时间"
+            v-model="selectedGoTime"
+            :min-date="minDate"
+            @confirm="onGoTimeConfirm"
+            @cancel="showDatePicker(false)" />
+        </nut-popup>
       </div>
     </div>
   </AppContainer>
@@ -217,8 +232,23 @@ const orderInfo = ref({
   order_type: null,
   vehicle_type: null,
   user_name: null,
+  go_time: null,
   user_phone: appStore.appUser.mobile
 })
+
+const goTimePopupVisible = ref(false),
+  selectedGoTime = ref(new Date()),
+  minDate = new Date()
+
+function showDatePicker(value) {
+  goTimePopupVisible.value = value
+}
+
+function onGoTimeConfirm({ date, selectedValue, selectedOptions }) {
+  const [year, month, day] = selectedValue
+  orderInfo.value.go_time = `${year}-${month}-${day}`
+  showDatePicker(false)
+}
 
 const carTypes = ref([])
 async function getCarTypes() {
@@ -254,7 +284,10 @@ async function placeOrder() {
     return toast('请选择目的地')
   }
   if (isNullOrWhitespace(orderInfo.value.vehicle_type)) {
-    return toast('请选择车型')
+    return toast('请输入您的车型')
+  }
+  if (isNullOrWhitespace(orderInfo.value.go_time)) {
+    return toast('请输入出发时间')
   }
   if (isNullOrWhitespace(orderInfo.value.user_name)) {
     return toast('请输入您的姓名')
@@ -307,7 +340,6 @@ async function placeOrder() {
   appStore.setArrivedLocation()
   appStore.setOriginLocation()
   appStore.setOrderPageWantedRefreshData(true)
-  appStore.setActiveOrderType(orderInfo.value.order_type)
   appStore.setSubOrderActiveKey('0')
   appStore.setOrderType(null)
   orderInfo.value = {

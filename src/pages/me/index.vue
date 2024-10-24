@@ -113,65 +113,9 @@
       </div>
 
       <div
-        class="bg-[#fff] box-border px-[40rpx] py-[50rpx] flex justify-around mt-[20rpx] text-[24rpx] rounded-[30rpx]">
-        <div
-          class="w-[30%] flex flex-col justify-around items-center"
-          @click="OnToOrderPage('1')">
-          <div class="h-[68rpx] mb-[30rpx]">
-            <img
-              class="w-[68rpx] h-full"
-              src="../../static/images/me/driver.png"
-              alt="" />
-          </div>
-          <span>代驾订单</span>
-        </div>
-        <div
-          class="w-[30%] flex flex-col justify-between items-center"
-          @click="OnToOrderPage('2')">
-          <div class="h-[68rpx] mb-[30rpx] flex items-end">
-            <img
-              class="w-[60rpx] h-[48rpx]"
-              src="../../static/images/me/logistics.png"
-              alt="" />
-          </div>
-
-          <span>物流订单</span>
-        </div>
-        <div
-          class="w-[30%] flex flex-col justify-between items-center"
-          @click="navTo('/pages/coupon/my')">
-          <div class="h-[68rpx] mb-[30rpx] flex items-end">
-            <img
-              class="w-[57rpx] h-[50rpx]"
-              src="../../static/images/me/coupons.png"
-              alt="" />
-          </div>
-          <span>优惠券</span>
-        </div>
-        <!-- <div class="flex flex-col justify-between items-center">
-          <div class="h-[68rpx] mb-[30rpx flex items-end">
-            <img
-              class="w-[57rpx] h-[54rpx]"
-              src="../../static/images/me/gifts.png"
-              alt="" />
-          </div>
-          <span>我的礼包</span>
-        </div> -->
-      </div>
-      <div
-        class="mt-[20rpx] rounded-[30rpx] box-border px-[40rpx] pt-[30rpx] text-[26rpx] bg-[#fff]">
-        <div class="mb-[40rpx] text-[32rpx]">其他服务</div>
-        <div class="flex justify-around flex-wrap">
-          <div
-            class="w-[30%] mb-[50rpx] flex flex-col justify-between items-center"
-            @click="navTo(`/pages/me/richtext?type=flowProcess`)">
-            <img
-              class="w-[90rpx] h-[90rpx] mb-[16rpx]"
-              src="../../static/images/me/place-order.png"
-              alt="" />
-
-            <span>下单流程</span>
-          </div>
+        class="mt-[40rpx] rounded-[30rpx] box-border px-[40rpx] pt-[30rpx] text-[26rpx] bg-[#fff]">
+        <div class="mb-[40rpx] text-[32rpx]">我的服务</div>
+        <div class="flex justify-between flex-wrap">
           <div
             class="w-[30%] mb-[50rpx] flex flex-col justify-between items-center"
             @click="navTo('/pages/me/personal')">
@@ -184,6 +128,30 @@
           </div>
           <div
             class="w-[30%] mb-[50rpx] flex flex-col justify-between items-center"
+            @click="navTo(`/pages/me/richtext?type=flowProcess`)">
+            <img
+              class="w-[90rpx] h-[90rpx] mb-[16rpx]"
+              src="../../static/images/me/place-order.png"
+              alt="" />
+
+            <span>下单流程</span>
+          </div>
+          <div
+            class="w-[30%] mb-[50rpx] flex flex-col justify-between items-center"
+            @click="navTo('/pages/coupon/my')">
+            <div
+              class="w-[90rpx] h-[90rpx] flex justify-center items-center mb-[16rpx]">
+              <image
+                class="w-[63rpx] h-[56rpx]"
+                mode="aspectFit"
+                src="../../static/images/me/coupons.png"
+                alt="" />
+            </div>
+
+            <span>优惠券</span>
+          </div>
+          <div
+            class="w-[30%] mb-[50rpx] flex flex-col justify-between items-center"
             @click="navTo('/pages/me/complaint?type=1')">
             <img
               class="w-[90rpx] h-[90rpx] mb-[16rpx]"
@@ -192,16 +160,7 @@
 
             <span>订单投诉</span>
           </div>
-          <div
-            class="w-[30%] mb-[50rpx] flex flex-col justify-between items-center"
-            @click="callPhone(merchantTel)">
-            <img
-              class="w-[90rpx] h-[90rpx] mb-[16rpx]"
-              src="../../static/images/me/phone.png"
-              alt="" />
 
-            <span>联系我们</span>
-          </div>
           <div
             class="w-[30%] mb-[50rpx] flex flex-col justify-between items-center"
             @click="navTo('/pages/me/complaint?type=2')">
@@ -225,14 +184,16 @@
         </div>
       </div>
       <div
-        class="my-[20rpx] rounded-[30rpx] box-border px-[40rpx] py-[30rpx] text-[28rpx] bg-[#fff] flex justify-between items-center"
-        @click="navTo('/pages/resource-cart/index')">
-        <div class="flex items-center">
-          <img
-            class="w-[90rpx] h-[90rpx] mr-[30rpx]"
-            src="../../static/images/me/car.png"
-            alt="" />
-          <span>资源车列表</span>
+        class="mt-[40rpx] rounded-[30rpx] box-border px-[40rpx] py-[30rpx] text-[28rpx] bg-[#fff] flex justify-between items-center"
+        @click="callPhone(merchantTel)">
+        <div class="flex items-center w-full">
+          <div class="w-[24%] flex justify-end">
+            <img
+              class="w-[90rpx] h-[90rpx] mr-[20rpx]"
+              src="../../static/images/me/phone.png"
+              alt="" />
+          </div>
+          <span>联系我们</span>
         </div>
         <img
           class="w-[20rpx] h-[20rpx]"
@@ -335,12 +296,5 @@ async function onNicknameChange(e) {
     })
     uni.setStorageSync('APP_USER', appUser.value)
   }
-}
-
-function OnToOrderPage(type) {
-  appStore.setActiveOrderType(type)
-  appStore.setSubOrderActiveKey('0')
-  appStore.setOrderPageWantedRefreshData(true)
-  uni.switchTab({ url: '/pages/order/index' })
 }
 </script>

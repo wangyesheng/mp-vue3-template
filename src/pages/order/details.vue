@@ -2,11 +2,23 @@
   <AppContainer>
     <div class="bg-[#fff] box-border px-[40rpx] py-[20rpx] __orderDetails">
       <div class="flex items-center justify-between text-[26rpx]">
+        <div class="text-[#A3A3A3] w-[140rpx]">订单状态：</div>
+        <div class="text-right text-[#333] font-bold">
+          {{ orderStatus?.label }}
+        </div>
+      </div>
+      <div class="flex items-center justify-between text-[26rpx]">
         <div class="text-[#A3A3A3] w-[140rpx]">订单编号：</div>
         <div
           class="text-right text-[#333] font-bold"
           @click="copy(currentOrderInfo.order_number)">
           {{ currentOrderInfo.order_number }}
+        </div>
+      </div>
+      <div class="flex items-center justify-between text-[26rpx]">
+        <div class="text-[#A3A3A3] w-[140rpx]">订单类型：</div>
+        <div class="text-right text-[#333] font-bold">
+          {{ currentOrderInfo.order_type == 1 ? '代驾' : '托运' }}
         </div>
       </div>
       <div class="flex items-center justify-between text-[26rpx]">
@@ -28,6 +40,12 @@
         </div>
       </div>
       <div class="flex items-center justify-between text-[26rpx]">
+        <div class="text-[#A3A3A3] w-[140rpx]">出发时间：</div>
+        <div class="text-right text-[#333] font-bold">
+          {{ currentOrderInfo.go_time || '-' }}
+        </div>
+      </div>
+      <div class="flex items-center justify-between text-[26rpx]">
         <div class="text-[#A3A3A3] w-[140rpx]">车型：</div>
         <div class="text-right text-[#333] font-bold">
           {{ currentOrderInfo.vehicle_type }}
@@ -43,12 +61,6 @@
         <div class="text-[#A3A3A3] w-[140rpx]">手机号：</div>
         <div class="text-right text-[#333] font-bold">
           {{ currentOrderInfo.user_phone }}
-        </div>
-      </div>
-      <div class="flex items-center justify-between text-[26rpx]">
-        <div class="text-[#A3A3A3] w-[140rpx]">订单状态：</div>
-        <div class="text-right text-[#333] font-bold">
-          {{ orderStatus?.label }}
         </div>
       </div>
       <div
@@ -102,10 +114,7 @@ onLoad(async ({ order_number }) => {
 .__orderDetails {
   & > view {
     box-sizing: border-box;
-    padding: 30rpx 0;
-    &:not(:last-child) {
-      border-bottom: 2rpx solid #f5f5f5;
-    }
+    padding: 20rpx 0;
   }
 }
 </style>

@@ -99,7 +99,7 @@
       .nut-tab-pane {
         box-sizing: border-box;
         padding: 30rpx !important;
-        min-height: calc(100vh - 290rpx);
+        min-height: calc(100vh - 380rpx);
       }
 
       .nut-tabs__list {
@@ -134,40 +134,102 @@
         订单
       </div>
 
-      <div class="__subTabs">
-        <nut-tabs
-          title-scroll
-          background="#fff"
-          :modelValue="subOrderActiveKey"
-          @update:modelValue="(value) => appStore.setSubOrderActiveKey(value)">
-          <nut-tab-pane
-            v-for="item in subTabPannels"
-            :key="item.key"
-            :title="item.title"
-            :pane-key="item.key">
-            <div class="relative h-[60vh]" v-if="item.loading">
-              <Loading position="absolute" showText />
+      <nut-tabs background="#fff" :modelValue="activeOrderType">
+        <template #titles>
+          <div
+            class="flex justify-between w-full box-border px-[30rpx] py-[20rpx]"
+            @click="onClickOrderType">
+            <div
+              id="1"
+              class="w-[300rpx] h-[64rpx] leading-[64rpx] text-center bg-[#D6D6D6] text-[#363636] text-[24rpx] rounded-[20rpx]"
+              :style="getActiveStyle('1')">
+              代驾
             </div>
-            <div v-else>
-              <div v-if="orders.length > 0">
-                <OrderInfo
-                  v-for="order in orders"
-                  :key="order.id"
-                  :data="order"
-                  @refresh="getOrders(1)"
-                  @callPayPopup="onCallPayPopup" />
-              </div>
-              <div class="h-[60vh]" v-else>
-                <nut-empty image="empty" description="暂无数据">
-                  <template #image>
-                    <img src="../../static/images/no-data.png" />
-                  </template>
-                </nut-empty>
-              </div>
+            <div
+              id="2"
+              class="w-[300rpx] h-[64rpx] leading-[64rpx] text-center bg-[#D6D6D6] text-[#363636] text-[24rpx] rounded-[20rpx]"
+              :style="getActiveStyle('2')">
+              物流
             </div>
-          </nut-tab-pane>
-        </nut-tabs>
-      </div>
+          </div>
+        </template>
+        <nut-tab-pane pane-key="1">
+          <div class="__subTabs">
+            <nut-tabs
+              title-scroll
+              background="#fff"
+              :modelValue="subOrderActiveKey"
+              @update:modelValue="
+                (value) => appStore.setSubOrderActiveKey(value)
+              ">
+              <nut-tab-pane
+                v-for="item in subTabPannels"
+                :key="item.key"
+                :title="item.title"
+                :pane-key="item.key">
+                <div class="relative h-[60vh]" v-if="item.loading">
+                  <Loading position="absolute" showText />
+                </div>
+                <div v-else>
+                  <div v-if="orders.length > 0">
+                    <OrderInfo
+                      v-for="order in orders"
+                      :key="order.id"
+                      :data="order"
+                      @refresh="getOrders(1)"
+                      @callPayPopup="onCallPayPopup" />
+                  </div>
+                  <div class="h-[60vh]" v-else>
+                    <nut-empty image="empty" description="暂无数据">
+                      <template #image>
+                        <img src="../../static/images/no-data.png" />
+                      </template>
+                    </nut-empty>
+                  </div>
+                </div>
+              </nut-tab-pane>
+            </nut-tabs>
+          </div>
+        </nut-tab-pane>
+        <nut-tab-pane pane-key="2">
+          <div class="__subTabs">
+            <nut-tabs
+              title-scroll
+              background="#fff"
+              :modelValue="subOrderActiveKey"
+              @update:modelValue="
+                (value) => appStore.setSubOrderActiveKey(value)
+              ">
+              <nut-tab-pane
+                v-for="item in subTabPannels"
+                :key="item.key"
+                :title="item.title"
+                :pane-key="item.key">
+                <div class="relative h-[60vh]" v-if="item.loading">
+                  <Loading position="absolute" showText />
+                </div>
+                <div v-else>
+                  <div v-if="orders.length > 0">
+                    <OrderInfo
+                      v-for="order in orders"
+                      :key="order.id"
+                      :data="order"
+                      @refresh="getOrders(1)"
+                      @callPayPopup="onCallPayPopup" />
+                  </div>
+                  <div class="h-[60vh]" v-else>
+                    <nut-empty image="empty" description="暂无数据">
+                      <template #image>
+                        <img src="../../static/images/no-data.png" />
+                      </template>
+                    </nut-empty>
+                  </div>
+                </div>
+              </nut-tab-pane>
+            </nut-tabs>
+          </div>
+        </nut-tab-pane>
+      </nut-tabs>
 
       <nut-popup
         round
@@ -365,10 +427,27 @@ const [headerTop] = calcMenuButton()
 
 const appStore = useAppStore()
 const {
+  activeOrderType,
   subOrderActiveKey,
   orderPageWantedRefreshData,
   orderPageAlreadyInitData
 } = storeToRefs(appStore)
+
+function onClickOrderType(e) {
+  const id = e.target.id
+  id && appStore.setActiveOrderType(id)
+  getOrders(1)
+}
+function getActiveStyle(id) {
+  if (id === activeOrderType.value) {
+    return {
+      background: '#344AD9',
+      color: '#fff'
+    }
+  } else {
+    return null
+  }
+}
 
 const subTabPannels = ref(
   Object.keys(ORDER_STATUS).map((key) => ({
@@ -404,6 +483,7 @@ async function getOrders(currentPage) {
     const { data, total } = await getOrdersRes({
       page,
       limit: 10,
+      order_type: activeOrderType.value,
       order_status: subOrderActiveKey.value
     })
     orders.value = page == 1 ? data : orders.value.concat(data)

@@ -41,12 +41,6 @@ export const useAppStore = defineStore('app', () => {
     orderType.value = value
   }
 
-  // 代驾订单 '1' | 物流订单 '2'
-  const activeOrderType = ref('1')
-  function setActiveOrderType(value) {
-    activeOrderType.value = value
-  }
-
   // 默认 `待报价` 枚举值，参考 ORDER_STATUS
   const subOrderActiveKey = ref('0')
   function setSubOrderActiveKey(value) {
@@ -78,8 +72,6 @@ export const useAppStore = defineStore('app', () => {
     setOriginLocation,
     arrivedLocation,
     setArrivedLocation,
-    activeOrderType,
-    setActiveOrderType,
     subOrderActiveKey,
     setSubOrderActiveKey,
     orderPageWantedRefreshData,

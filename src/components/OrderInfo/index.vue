@@ -1,19 +1,28 @@
 <style lang="scss" scoped>
 .__orderInfo {
-  .orderStatus {
-    position: relative;
+  .orderType {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100rpx;
+    height: 40rpx;
+    border-top-right-radius: 20rpx;
+    border-bottom-left-radius: 20rpx;
+    line-height: 40rpx;
+    text-align: center;
+    font-size: 24rpx;
+    font-weight: 550;
 
-    &::before {
-      display: block;
-      content: '';
-      width: 10rpx;
-      height: 10rpx;
-      border-radius: 50%;
-      background: var(--color);
-      position: absolute;
-      top: 50%;
-      left: -20rpx;
-      transform: translateY(-50%);
+    // 代驾
+    &.driver {
+      background: rgba(52, 74, 217, 0.1);
+      color: #344ad9;
+    }
+
+    // 托运
+    &.check {
+      background: rgba(107, 186, 91, 0.1);
+      color: #6bba5b;
     }
   }
 
@@ -29,16 +38,14 @@
 
 <template>
   <div
-    class="__orderInfo w-full bg-[#fff] box-border px-[30rpx] py-[30rpx] mb-[20rpx]">
+    class="__orderInfo relative w-full bg-[#fff] box-border px-[30rpx] py-[30rpx] mb-[20rpx] rounded-[20rpx]">
+    <div :class="['orderType', data.order_type == 1 ? 'driver' : 'check']">
+      {{ data.order_type == 1 ? '代驾' : '托运' }}
+    </div>
     <div
       class="flex justify-between items-center text-[24rpx] border-b-[2rpx] border-solid border-[#E6E6E6] pb-[16rpx]">
       <span class="text-[#A3A3A3]" @click="copy(data.order_number)">
         订单号：{{ data.order_number }}
-      </span>
-      <span
-        class="orderStatus"
-        :style="{ color: orderStatus.color, '--color': orderStatus.color }">
-        {{ orderStatus.label }}
       </span>
     </div>
     <div

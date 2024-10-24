@@ -17,6 +17,72 @@
     }
   }
 }
+
+.funcs {
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 30rpx;
+
+  .func-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    image {
+      width: 116rpx;
+      height: 116rpx;
+    }
+
+    label {
+      font-size: 26rpx;
+      color: #333;
+    }
+  }
+}
+
+.service {
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 30rpx;
+
+  .service-item {
+    &:first-child {
+      width: 326rpx;
+      height: 378rpx;
+      background-image: url(../../static/images/home/bg1.png);
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+    }
+
+    &:last-child {
+      width: 330rpx;
+      height: 378rpx;
+      background-image: url(../../static/images/home/bg2.png);
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+    }
+
+    & > view {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 60rpx;
+
+      label:first-child {
+        color: #0f2930;
+        font-size: 32rpx;
+        margin-bottom: 10rpx;
+      }
+
+      label:last-child {
+        color: #78829e;
+        font-size: 24rpx;
+      }
+    }
+  }
+}
 </style>
 
 <template>
@@ -90,6 +156,40 @@
         </div>
       </div>
 
+      <div class="funcs">
+        <div class="func-item" @click="onSwitchTab('1')">
+          <image src="../../static/images/home/icon1.png" mode="aspectFit" />
+          <span>我要代驾</span>
+        </div>
+        <div class="func-item" @click="onSwitchTab('2')">
+          <image src="../../static/images/home/icon2.png" mode="aspectFit" />
+          <span>轿车托运</span>
+        </div>
+        <div class="func-item" @click="onClickComingSoonFunc">
+          <image src="../../static/images/home/icon3.png" mode="aspectFit" />
+          <span>商务代驾</span>
+        </div>
+        <div class="func-item" @click="onClickComingSoonFunc">
+          <image src="../../static/images/home/icon4.png" mode="aspectFit" />
+          <span>车辆检测</span>
+        </div>
+      </div>
+
+      <div class="service">
+        <div class="service-item" @click="navTo('/pages/resource-cart/index')">
+          <div>
+            <span>资源车</span>
+            <span>大量车辆任你选择</span>
+          </div>
+        </div>
+        <div class="service-item" @click="onClickComingSoonFunc">
+          <div>
+            <span>搭电送油</span>
+            <span>立马到达现场</span>
+          </div>
+        </div>
+      </div>
+
       <div
         class="box-border px-[30rpx] w-full h-[192rpx] rounded-[16rpx] mt-[20rpx]"
         @click="navTo('/pages/coupon/index')">
@@ -99,120 +199,23 @@
           :src="couponUrl"
           alt="" />
       </div>
-
-      <div class="__order-tabs px-[20rpx] box-border mt-[20rpx]">
-        <nut-tabs background="#fff" v-model="orderType">
-          <nut-tab-pane title="代驾路线" pane-key="1">
-            <div>
-              <p
-                class="text-[#A3A3A3] font-[400] text-[24rpx] text-center mb-[20rpx]">
-                此处为估计，以实际下单价格为准
-              </p>
-              <div
-                class="box-border py-[30rpx] border-b-[2rpx] border-solid border-[#F0F0F0] flex justify-between items-center"
-                v-for="route in driverRoutes"
-                :key="route.id">
-                <div class="text-[28rpx] font-[400] flex items-center">
-                  <span>
-                    {{ route.s_city }}
-                  </span>
-                  <img
-                    class="w-[34rpx] h-[10rpx] mx-[10rpx]"
-                    src="../../static/images/home/to.png"
-                    alt="" />
-                  <span>
-                    {{ route.r_city }}
-                  </span>
-                </div>
-
-                <div class="flex justify-between items-center">
-                  <div class="text-[#C72020] text-[22rpx] mr-[20rpx]">
-                    <span>预估</span>
-                    <span>￥</span>
-                    <span
-                      class="text-[32rpx] inline-block text-center min-w-[120rpx]">
-                      {{ route.order_amount }}
-                    </span>
-                    <span>元</span>
-                  </div>
-                  <nut-button
-                    type="primary"
-                    size="mini"
-                    shape="square"
-                    @click="onSwitchTab('1')">
-                    下单
-                  </nut-button>
-                </div>
-              </div>
-            </div>
-          </nut-tab-pane>
-          <nut-tab-pane title="物流路线" pane-key="2">
-            <div>
-              <p class="text-[#A3A3A3] font-[400] text-[24rpx] text-center">
-                此处为估计，以实际下单价格为准
-              </p>
-              <div
-                class="box-border py-[30rpx] border-b-[2rpx] border-solid border-[#F0F0F0] flex justify-between items-center"
-                v-for="route in logisticsRoutes"
-                :key="route.id">
-                <div class="text-[28rpx] font-[400] flex items-center">
-                  <span>
-                    {{ route.s_city }}
-                  </span>
-                  <img
-                    class="w-[34rpx] h-[10rpx] mx-[10rpx]"
-                    src="../../static/images/home/to.png"
-                    alt="" />
-                  <span>
-                    {{ route.r_city }}
-                  </span>
-                </div>
-
-                <div class="flex justify-between items-center">
-                  <div class="text-[#C72020] text-[22rpx] mr-[20rpx]">
-                    <span>预估</span>
-                    <span>￥</span>
-                    <span
-                      class="text-[32rpx] inline-block text-center min-w-[120rpx]">
-                      {{ route.order_amount }}
-                    </span>
-                    <span>元</span>
-                  </div>
-                  <nut-button
-                    type="primary"
-                    size="mini"
-                    shape="square"
-                    @click="onSwitchTab('2')">
-                    下单
-                  </nut-button>
-                </div>
-              </div>
-            </div>
-          </nut-tab-pane>
-        </nut-tabs>
-      </div>
     </div>
   </AppContainer>
 </template>
 <script setup>
 import AppContainer from '@/components/AppContainer/index'
 import BindMobile from '@/components/BindMobile/index'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useChooseLocation } from '../../hooks/useChooseLocation'
 import { useLogin } from '../../hooks/useLogin'
 import { useAppStore } from '../../stores/app'
 import { storeToRefs } from 'pinia'
 import { onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
-import {
-  getBannersRes,
-  getCouponUrlRes,
-  getRoutesRes,
-  getTelRes
-} from '../../api'
-import { navTo } from '../../utils/uni'
+import { getBannersRes, getCouponUrlRes, getTelRes } from '../../api'
+import { callPhone, navTo } from '../../utils/uni'
 
 const appStore = useAppStore()
-const { appUser } = storeToRefs(appStore)
+const { appUser, merchantTel } = storeToRefs(appStore)
 
 const { bindMobileVisible, login, getPhoneNumber } = useLogin()
 const { originLocation, arrivedLocation, chooseLocation } = useChooseLocation()
@@ -226,35 +229,22 @@ onLoad(async () => {
   appStore.setMerchantTel(tel)
 })
 
-const orderType = ref('1'),
-  driverRoutes = ref([]),
-  logisticsRoutes = ref([])
-watch(
-  () => orderType.value,
-  (newType) => {
-    if (newType == 1 && driverRoutes.value.length === 0) {
-      getRoutes(newType)
-    } else if (newType == 2 && logisticsRoutes.value.length === 0) {
-      getRoutes(newType)
-    }
-  },
-  {
-    immediate: true
-  }
-)
-
-async function getRoutes(type) {
-  const data = await getRoutesRes(type)
-  if (type == 1) {
-    driverRoutes.value = data
-  } else if (type == 2) {
-    logisticsRoutes.value = data
-  }
-}
-
 function onSwitchTab(type) {
   appStore.setOrderType(type)
   uni.switchTab({ url: '/pages/place-order/index' })
+}
+
+function onClickComingSoonFunc() {
+  uni.showModal({
+    title: '业务即将上线，敬请期待',
+    content: `平台热线：${merchantTel.value}`,
+    confirmText: '拨打热线',
+    success({ confirm }) {
+      if (confirm) {
+        callPhone(merchantTel.value)
+      }
+    }
+  })
 }
 
 onShareAppMessage(() => {
