@@ -51,7 +51,6 @@ declare module 'vue' {
     NutSwiperItem: typeof import('nutui-uniapp/components/swiperitem/swiperitem.vue')['default']
     NutTabPane: typeof import('nutui-uniapp/components/tabpane/tabpane.vue')['default']
     NutTabs: typeof import('nutui-uniapp/components/tabs/tabs.vue')['default']
-    NutTag: typeof import('nutui-uniapp/components/tag/tag.vue')['default']
     NutTextarea: typeof import('nutui-uniapp/components/textarea/textarea.vue')['default']
     NutToast: typeof import('nutui-uniapp/components/toast/toast.vue')['default']
     NutUploader: typeof import('nutui-uniapp/components/uploader/uploader.vue')['default']

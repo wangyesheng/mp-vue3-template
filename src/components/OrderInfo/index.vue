@@ -43,7 +43,7 @@
       {{ data.order_type == 1 ? '代驾' : '托运' }}
     </div>
     <div
-      class="flex justify-between items-center text-[24rpx] border-b-[2rpx] border-solid border-[#E6E6E6] pb-[16rpx]">
+      class="flex justify-between items-center text-[24rpx] border-b-[2rpx] border-solid border-[#f5f5f5] pb-[16rpx]">
       <span class="text-[#A3A3A3]" @click="copy(data.order_number)">
         订单号：{{ data.order_number }}
       </span>
@@ -75,18 +75,6 @@
           </span>
         </div>
       </div>
-      <!-- <div class="text-[24rpx] mt-[10rpx]">
-        <span>车型：</span>
-        <span class="text-[#A3A3A3]">{{ data.vehicle_type }}</span>
-      </div>
-      <div class="text-[24rpx] mt-[10rpx]">
-        <span>姓名：</span>
-        <span class="text-[#A3A3A3]">{{ data.user_name }}</span>
-      </div>
-      <div class="text-[24rpx] mt-[10rpx]">
-        <span>手机号：</span>
-        <span class="text-[#A3A3A3]">{{ data.user_phone }}</span>
-      </div> -->
       <div v-if="data.order_status == 1">
         <div class="text-[24rpx] text-[#CC3535] mt-[10rpx]">
           <span>订单总额：</span>
@@ -118,7 +106,7 @@
     </div>
     <div
       v-if="data.order_status < 5"
-      class="footer flex justify-end items-center mt-[20rpx] pt-[20rpx] border-t-[2rpx] border-solid border-[#E6E6E6]">
+      class="footer flex justify-end items-center mt-[20rpx] pt-[20rpx] border-t-[2rpx] border-solid border-[#f5f5f5]">
       <nut-button
         v-if="data.order_status == 1"
         plain

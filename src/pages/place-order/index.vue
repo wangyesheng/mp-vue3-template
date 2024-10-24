@@ -51,6 +51,10 @@
       margin-top: 20rpx;
       width: 100%;
     }
+
+    .nut-button {
+      margin-top: 40rpx;
+    }
   }
 }
 </style>
@@ -82,7 +86,7 @@
         </div>
 
         <div
-          class="bg-[#fff] rounded-[12rpx] box-border px-[36rpx] py-[46rpx] relative top-[-50rpx]">
+          class="bg-[#fff] rounded-[12rpx] box-border px-[30rpx] py-[40rpx] relative top-[-50rpx] formWrap">
           <nut-divider>在线下单</nut-divider>
           <SelectPicker
             title="选择订单类型"
@@ -118,17 +122,16 @@
               src="../../static/images/order/arrow.png"
               alt="" />
           </div>
-
-          <nut-input
-            :border="false"
-            v-model="orderInfo.vehicle_type"
-            placeholder="您的车型（例：红旗）" />
           <nut-input
             :border="false"
             v-model="orderInfo.go_time"
             placeholder="出发时间"
             disabled
             @click="showDatePicker(true)" />
+          <nut-input
+            :border="false"
+            v-model="orderInfo.vehicle_type"
+            placeholder="您的车型（例：红旗H9）" />
           <nut-input
             :border="false"
             v-model="orderInfo.user_name"
@@ -142,8 +145,9 @@
             block
             type="primary"
             size="large"
+            :loading="loading"
             @click="debounce(onSubmit)">
-            立即下单
+            {{ loading ? '下单中...' : '立即下单' }}
           </nut-button>
 
           <div class="text-[24rpx] text-center mt-[34rpx]">
@@ -199,8 +203,7 @@ import { useAppStore } from '../../stores/app'
 import { storeToRefs } from 'pinia'
 import { useChooseLocation } from '../../hooks/useChooseLocation'
 import SelectPicker from '@/components/SelectPicker/index'
-import { createOrderRes, getCarTypesRes, getTemplateIdsRes } from '../../api'
-import { onLoad } from '@dcloudio/uni-app'
+import { createOrderRes } from '../../api'
 import { isEmpty, isNullOrWhitespace } from '../../utils/is'
 import { callPhone, copy, toast } from '../../utils/uni'
 import testUtil from '../../utils/test'
@@ -208,6 +211,8 @@ import { useToast } from 'nutui-uniapp/composables'
 import debounce from '../../utils/debounce'
 
 const [headerTop, contentTop] = calcMenuButton()
+
+const { success } = useToast()
 
 const appStore = useAppStore()
 const { arrivedLocation, originLocation, orderType, merchantTel, appUser } =
@@ -219,22 +224,20 @@ const originLocationDesc = computed(() =>
     ? `${originLocation.value.city}-${originLocation.value.name}`
     : '起始地'
 )
-
 const arrivedLocationDesc = computed(() =>
   arrivedLocation.value.city
     ? `${arrivedLocation.value.city}-${arrivedLocation.value.name}`
     : '目的地'
 )
 
-const { success } = useToast()
-
-const orderInfo = ref({
-  order_type: null,
-  vehicle_type: null,
-  user_name: null,
-  go_time: null,
-  user_phone: appStore.appUser.mobile
-})
+const loading = ref(false),
+  orderInfo = ref({
+    order_type: null,
+    vehicle_type: null,
+    user_name: null,
+    go_time: null,
+    user_phone: appStore.appUser.mobile
+  })
 
 const goTimePopupVisible = ref(false),
   selectedGoTime = ref(new Date()),
@@ -248,15 +251,6 @@ function onGoTimeConfirm({ date, selectedValue, selectedOptions }) {
   const [year, month, day] = selectedValue
   orderInfo.value.go_time = `${year}-${month}-${day}`
   showDatePicker(false)
-}
-
-const carTypes = ref([])
-async function getCarTypes() {
-  const data = await getCarTypesRes()
-  carTypes.value = data?.map((text) => ({
-    text,
-    value: text
-  }))
 }
 
 watch(
@@ -300,58 +294,60 @@ async function placeOrder() {
     return toast('请输入正确的手机号')
   }
 
-  const {
-    province: sendProvince,
-    city: sendCity,
-    district: sendDistrict,
-    address: sendAddress,
-    name: send_address_name,
-    longitude: sendLng,
-    latitude: sendLat
-  } = originLocation.value
-  const {
-    province: receiveProvince,
-    city: receiveCity,
-    district: receiveDistrict,
-    address: receiveAddress,
-    name: receive_address_name,
-    longitude: receiveLng,
-    latitude: receiveLat
-  } = arrivedLocation.value
+  try {
+    loading.value = true
+    const {
+      province: sendProvince,
+      city: sendCity,
+      district: sendDistrict,
+      address: sendAddress,
+      name: send_address_name,
+      longitude: sendLng,
+      latitude: sendLat
+    } = originLocation.value
+    const {
+      province: receiveProvince,
+      city: receiveCity,
+      district: receiveDistrict,
+      address: receiveAddress,
+      name: receive_address_name,
+      longitude: receiveLng,
+      latitude: receiveLat
+    } = arrivedLocation.value
 
-  const reqData = {
-    send_city: `${sendProvince}/${sendCity}/${sendDistrict}`,
-    send_address: sendAddress,
-    send_address_name,
-    send_lng: sendLng,
-    send_lat: sendLat,
+    const reqData = {
+      send_city: `${sendProvince}/${sendCity}/${sendDistrict}`,
+      send_address: sendAddress,
+      send_address_name,
+      send_lng: sendLng,
+      send_lat: sendLat,
 
-    receive_city: `${receiveProvince}/${receiveCity}/${receiveDistrict}`,
-    receive_address: receiveAddress,
-    receive_address_name,
-    receive_lng: receiveLng,
-    receive_lat: receiveLat,
+      receive_city: `${receiveProvince}/${receiveCity}/${receiveDistrict}`,
+      receive_address: receiveAddress,
+      receive_address_name,
+      receive_lng: receiveLng,
+      receive_lat: receiveLat,
 
-    ...orderInfo.value
+      ...orderInfo.value
+    }
+
+    await createOrderRes(reqData)
+    success('下单成功')
+    appStore.setArrivedLocation()
+    appStore.setOriginLocation()
+    appStore.setOrderPageWantedRefreshData(true)
+    appStore.setSubOrderActiveKey('0')
+    appStore.setOrderType(null)
+    orderInfo.value = {
+      order_type: null,
+      vehicle_type: null,
+      go_time: null,
+      user_name: null,
+      user_phone: appStore.appUser.mobile
+    }
+    uni.switchTab({ url: '/pages/order/index' })
+  } finally {
+    loading.value = false
   }
-
-  await createOrderRes(reqData)
-  success('下单成功')
-  appStore.setArrivedLocation()
-  appStore.setOriginLocation()
-  appStore.setOrderPageWantedRefreshData(true)
-  appStore.setSubOrderActiveKey('0')
-  appStore.setOrderType(null)
-  orderInfo.value = {
-    order_type: null,
-    vehicle_type: null,
-    user_name: null,
-    user_phone: appStore.appUser.mobile
-  }
-  uni.switchTab({ url: '/pages/order/index' })
 }
-
-onLoad(() => {
-  getCarTypes()
-})
 </script>
