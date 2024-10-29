@@ -42,6 +42,10 @@
     .nut-input {
       padding: 0 !important;
       margin-bottom: 28rpx;
+
+      input {
+        color: #333;
+      }
     }
     .nut-input__input {
       @extend .__form-item;
@@ -90,6 +94,7 @@
           <nut-divider>在线下单</nut-divider>
           <SelectPicker
             title="选择订单类型"
+            :clickable="!originLocation.orderAmount"
             :customStyle="{ marginBottom: '28rpx' }"
             :options="[
               { text: '代驾', value: '1' },
@@ -100,9 +105,9 @@
             class="__form-item flex justify-between items-center mb-[28rpx]"
             hover-class="__form-item-hover"
             hover-stay-time="150"
-            @click="() => chooseLocation('origin')">
-            <span>
-              {{ originLocationDesc }}
+            @click="onChooseLocation('origin')">
+            <span :style="{ color: originLocationObj.color }">
+              {{ originLocationObj.label }}
             </span>
             <img
               class="w-[19rpx] h-[11rpx]"
@@ -113,9 +118,11 @@
             class="__form-item flex justify-between items-center mb-[28rpx]"
             hover-class="__form-item-hover"
             hover-stay-time="150"
-            @click="() => chooseLocation('arrived')">
+            @click="onChooseLocation('arrived')">
             <span>
-              {{ arrivedLocationDesc }}
+              <span :style="{ color: arrivedLocationObj.color }">
+                {{ arrivedLocationObj.label }}
+              </span>
             </span>
             <img
               class="w-[19rpx] h-[11rpx]"
@@ -188,6 +195,7 @@
             title="选择出发时间"
             v-model="selectedGoTime"
             :min-date="minDate"
+            :max-date="maxDate"
             @confirm="onGoTimeConfirm"
             @cancel="showDatePicker(false)" />
         </nut-popup>
@@ -219,16 +227,39 @@ const { arrivedLocation, originLocation, orderType, merchantTel, appUser } =
   storeToRefs(appStore)
 const { chooseLocation } = useChooseLocation()
 
-const originLocationDesc = computed(() =>
-  originLocation.value.city
-    ? `${originLocation.value.city}-${originLocation.value.name}`
-    : '起始地'
-)
-const arrivedLocationDesc = computed(() =>
-  arrivedLocation.value.city
-    ? `${arrivedLocation.value.city}-${arrivedLocation.value.name}`
-    : '目的地'
-)
+function onChooseLocation(type) {
+  if (originLocation.value.orderAmount) {
+    return
+  }
+  chooseLocation(type)
+}
+
+const originLocationObj = computed(() => {
+  const obj = {
+    label: '起始地',
+    color: '#7a7a7a'
+  }
+  if (originLocation.value.city) {
+    obj.label = originLocation.value.name
+      ? `${originLocation.value.city}-${originLocation.value.name}`
+      : originLocation.value.city
+    obj.color = '#333'
+  }
+  return obj
+})
+const arrivedLocationObj = computed(() => {
+  const obj = {
+    label: '目的地',
+    color: '#7a7a7a'
+  }
+  if (arrivedLocation.value.city) {
+    obj.label = arrivedLocation.value.name
+      ? `${arrivedLocation.value.city}-${arrivedLocation.value.name}`
+      : arrivedLocation.value.city
+    obj.color = '#333'
+  }
+  return obj
+})
 
 const loading = ref(false),
   orderInfo = ref({
@@ -241,7 +272,8 @@ const loading = ref(false),
 
 const goTimePopupVisible = ref(false),
   selectedGoTime = ref(new Date()),
-  minDate = new Date()
+  minDate = new Date(),
+  maxDate = new Date().setMonth(new Date().getMonth() + 1)
 
 function showDatePicker(value) {
   goTimePopupVisible.value = value
@@ -271,6 +303,9 @@ function onSubmit() {
 }
 
 async function placeOrder() {
+  if (isEmpty(orderInfo.vehicle_type)) {
+    return toast('请选择订单类型')
+  }
   if (isEmpty(originLocation.value)) {
     return toast('请选择起始地')
   }
@@ -303,7 +338,8 @@ async function placeOrder() {
       address: sendAddress,
       name: send_address_name,
       longitude: sendLng,
-      latitude: sendLat
+      latitude: sendLat,
+      orderAmount
     } = originLocation.value
     const {
       province: receiveProvince,
@@ -317,18 +353,22 @@ async function placeOrder() {
 
     const reqData = {
       send_city: `${sendProvince}/${sendCity}/${sendDistrict}`,
-      send_address: sendAddress,
-      send_address_name,
-      send_lng: sendLng,
-      send_lat: sendLat,
-
       receive_city: `${receiveProvince}/${receiveCity}/${receiveDistrict}`,
-      receive_address: receiveAddress,
-      receive_address_name,
-      receive_lng: receiveLng,
-      receive_lat: receiveLat,
-
       ...orderInfo.value
+    }
+
+    if (orderAmount) {
+      reqData.order_amount = orderAmount
+    } else {
+      reqData.receive_address = receiveAddress
+      reqData.receive_address_name = receive_address_name
+      reqData.receive_lng = receiveLng
+      reqData.receive_lat = receiveLat
+
+      reqData.send_address = sendAddress
+      reqData.send_address_name = send_address_name
+      reqData.send_lng = sendLng
+      reqData.send_lat = sendLat
     }
 
     await createOrderRes(reqData)

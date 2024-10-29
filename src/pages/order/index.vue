@@ -416,6 +416,7 @@ async function getOrders(currentPage) {
 }
 
 onShow(async () => {
+  if (!appStore.appUser.id) return
   if (orderPageWantedRefreshData.value || !orderPageAlreadyInitData.value) {
     resetPayState()
     await getOrders(1)

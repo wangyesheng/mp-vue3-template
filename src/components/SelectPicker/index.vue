@@ -1,11 +1,11 @@
 <template>
   <div
     class="__selectWrap"
-    :hover-class="needHoverClass ? 'activeHoverClass' : 'unactiveHoverClass'"
     hover-stay-time="150"
+    :hover-class="needHoverClass ? 'activeHoverClass' : 'unactiveHoverClass'"
     :style="customStyle">
-    <div class="control" @click="popupVisible = true">
-      <span>{{ titleValue }}</span>
+    <div class="control" @click="onPopupShow(true)">
+      <span :style="{ color: titleObj.color }">{{ titleObj.label }}</span>
       <img
         class="w-[19rpx] h-[11rpx]"
         src="../../static/images/order/arrow.png"
@@ -22,7 +22,7 @@
         :columns="options"
         :title="title"
         @confirm="onConfirm"
-        @cancel="popupVisible = false"></nut-picker>
+        @cancel="onPopupShow(false)" />
     </nut-popup>
   </div>
 </template>
@@ -52,6 +52,10 @@ const props = defineProps({
   needHoverClass: {
     type: Boolean,
     default: true
+  },
+  clickable: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -59,18 +63,31 @@ const emits = defineEmits(['update:value', 'confirm'])
 
 const popupVisible = ref(false),
   selectedPickerValue = ref([])
-const titleValue = computed(() => {
+const titleObj = computed(() => {
   if (isNullOrUndef(props.value)) {
     selectedPickerValue.value = []
-    return props.title
+    return {
+      label: props.title,
+      color: '#7a7a7a'
+    }
   }
   const values = Array.isArray(props.value) ? props.value : [props.value]
   selectedPickerValue.value = values
-  return props.options
-    .filter((x) => values.includes(x.value))
-    .map((x) => x.text)
-    .join('、')
+  return {
+    label: props.options
+      .filter((x) => values.includes(x.value))
+      .map((x) => x.text)
+      .join('、'),
+    color: '#333'
+  }
 })
+
+function onPopupShow(value) {
+  if (!props.clickable) {
+    return
+  }
+  popupVisible.value = value
+}
 
 function formatSelectedValue(selectedValue) {
   return selectedValue.length === 1 ? selectedValue[0] : selectedValue

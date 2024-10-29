@@ -53,11 +53,11 @@
         onNavTo(`/pages/order/details?order_number=${data.order_number}`)
       ">
       <div class="flex justify-between items-center mt-[30rpx]">
-        <div class="flex flex-col w-[45%] min-h-[120rpx]">
-          <span class="text-[28rpx] font-bold mb-[10rpx]">
+        <div class="flex flex-col justify-center w-[45%] min-h-[120rpx]">
+          <span class="text-[28rpx] font-bold">
             {{ data.s_city }}
           </span>
-          <span class="text-[24rpx] text-[#A3A3A3]">
+          <span class="text-[24rpx] text-[#A3A3A3] mt-[10rpx]">
             {{ data.send_address_name }}
           </span>
         </div>
@@ -66,13 +66,20 @@
           src="../../static/images/order/to.png"
           alt="" />
 
-        <div class="flex flex-col text-right w-[45%] min-h-[120rpx]">
-          <span class="text-[28rpx] font-bold mb-[10rpx]">
+        <div
+          class="flex flex-col justify-center text-right w-[45%] min-h-[120rpx]">
+          <span class="text-[28rpx] font-bold">
             {{ data.r_city }}
           </span>
-          <span class="text-[24rpx] text-[#A3A3A3]">
+          <span class="text-[24rpx] text-[#A3A3A3] mt-[10rpx]">
             {{ data.receive_address_name }}
           </span>
+        </div>
+      </div>
+      <div v-if="data.order_status == 0">
+        <div class="text-[24rpx] text-[#CC3535] mt-[10rpx]">
+          <span>预估金额：</span>
+          <span class="text-[28rpx] font">￥{{ data.order_amount }}元</span>
         </div>
       </div>
       <div v-if="data.order_status == 1">
@@ -144,9 +151,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import { copy, navTo } from '../../utils/uni'
-import { ORDER_STATUS } from '../../constant'
 import { cancelOrderRes, confirmOrderRes } from '../../api'
 import debounce from '../../utils/debounce'
 import { useAppStore } from '../../stores/app'
@@ -161,8 +166,6 @@ const props = defineProps({
 const emit = defineEmits(['refresh', 'callPayPopup'])
 
 const appStore = useAppStore()
-
-const orderStatus = computed(() => ORDER_STATUS[props.data.order_status])
 
 function onCallPayPopup() {
   emit('callPayPopup', props.data)

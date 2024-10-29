@@ -1,6 +1,9 @@
 <style lang="scss" scoped>
 .__order-tabs {
   ::v-deep() {
+    .nut-tabs {
+      border-radius: 20rpx !important;
+    }
     .nut-tabs__titles {
       height: 120rpx !important;
     }
@@ -83,6 +86,52 @@
     }
   }
 }
+
+.advantage {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  border: 2rpx solid #344ad9;
+  border-radius: 10rpx;
+  box-sizing: border-box;
+  padding: 20rpx 0;
+  background: rgba(52 74 217 / 5%);
+
+  & > view {
+    width: 25%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+
+    &:not(:last-child) {
+      &::after {
+        content: '';
+        position: absolute;
+        background: #d6d6d6;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        height: 50%;
+        width: 2rpx;
+      }
+    }
+
+    label:first-child {
+      font-size: 28rpx;
+      font-weight: 500;
+      color: #344ad9;
+      margin-bottom: 10rpx;
+    }
+
+    label:last-child {
+      font-size: 28rpx;
+      font-weight: 500;
+      color: #6b6b6b;
+    }
+  }
+}
 </style>
 
 <template>
@@ -135,7 +184,7 @@
             block
             size="large"
             type="primary"
-            @click="onSwitchTab('1')"
+            @click="onSwitchTab('1', {})"
             v-if="appUser.id">
             获取报价
           </nut-button>
@@ -157,11 +206,11 @@
       </div>
 
       <div class="funcs">
-        <div class="func-item" @click="onSwitchTab('1')">
+        <div class="func-item" @click="onSwitchTab('1', null)">
           <image src="../../static/images/home/icon1.png" mode="aspectFit" />
           <span>我要代驾</span>
         </div>
-        <div class="func-item" @click="onSwitchTab('2')">
+        <div class="func-item" @click="onSwitchTab('2', null)">
           <image src="../../static/images/home/icon2.png" mode="aspectFit" />
           <span>轿车托运</span>
         </div>
@@ -191,7 +240,7 @@
       </div>
 
       <div
-        class="box-border px-[30rpx] w-full h-[192rpx] rounded-[16rpx] mt-[20rpx]"
+        class="box-border px-[30rpx] w-full h-[192rpx] rounded-[16rpx]"
         @click="navTo('/pages/coupon/index')">
         <image
           mode="aspectFit"
@@ -199,26 +248,175 @@
           :src="couponUrl"
           alt="" />
       </div>
+
+      <div class="__order-tabs px-[30rpx] box-border mt-[30rpx]">
+        <nut-tabs background="#fff" v-model="orderType">
+          <nut-tab-pane title="代驾路线" pane-key="1">
+            <div>
+              <p
+                class="text-[#A3A3A3] font-[400] text-[24rpx] text-center mb-[20rpx]">
+                此处为估计，以实际下单价格为准
+              </p>
+              <div
+                class="box-border py-[30rpx] border-b-[2rpx] border-solid border-[#F0F0F0] flex justify-between items-center"
+                v-for="route in driverRoutes"
+                :key="route.id">
+                <div class="text-[28rpx] font-[400] flex items-center">
+                  <span>
+                    {{ route.s_city }}
+                  </span>
+                  <img
+                    class="w-[34rpx] h-[10rpx] mx-[10rpx]"
+                    src="../../static/images/home/to.png"
+                    alt="" />
+                  <span>
+                    {{ route.r_city }}
+                  </span>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <div class="text-[#C72020] text-[22rpx] mr-[20rpx]">
+                    <span>预估</span>
+                    <span>￥</span>
+                    <span
+                      class="text-[32rpx] inline-block text-center min-w-[120rpx]">
+                      {{ route.order_amount }}
+                    </span>
+                    <span>元</span>
+                  </div>
+                  <nut-button
+                    type="primary"
+                    size="mini"
+                    shape="square"
+                    @click="onSwitchTab('1', route)">
+                    下单
+                  </nut-button>
+                </div>
+              </div>
+            </div>
+          </nut-tab-pane>
+          <nut-tab-pane title="托运路线" pane-key="2">
+            <div>
+              <p class="text-[#A3A3A3] font-[400] text-[24rpx] text-center">
+                此处为估计，以实际下单价格为准
+              </p>
+              <div
+                class="box-border py-[30rpx] border-b-[2rpx] border-solid border-[#F0F0F0] flex justify-between items-center"
+                v-for="route in logisticsRoutes"
+                :key="route.id">
+                <div class="text-[28rpx] font-[400] flex items-center">
+                  <span>
+                    {{ route.s_city }}
+                  </span>
+                  <img
+                    class="w-[34rpx] h-[10rpx] mx-[10rpx]"
+                    src="../../static/images/home/to.png"
+                    alt="" />
+                  <span>
+                    {{ route.r_city }}
+                  </span>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <div class="text-[#C72020] text-[22rpx] mr-[20rpx]">
+                    <span>预估</span>
+                    <span>￥</span>
+                    <span
+                      class="text-[32rpx] inline-block text-center min-w-[120rpx]">
+                      {{ route.order_amount }}
+                    </span>
+                    <span>元</span>
+                  </div>
+                  <nut-button
+                    type="primary"
+                    size="mini"
+                    shape="square"
+                    @click="onSwitchTab('2', route)">
+                    下单
+                  </nut-button>
+                </div>
+              </div>
+            </div>
+          </nut-tab-pane>
+        </nut-tabs>
+      </div>
+
+      <div class="box-border px-[30rpx] mt-[30rpx]">
+        <div
+          class="box-border px-[40rpx] py-[30rpx] bg-[#fff] w-full rounded-[20rpx]">
+          <div class="text-[32rpx] font-[500] mb-[20rpx]">平台优势</div>
+          <div class="advantage">
+            <div>
+              <span>品牌服务</span>
+              <span>覆盖全国</span>
+            </div>
+            <div>
+              <span>服务价格</span>
+              <span>公开透明</span>
+            </div>
+            <div>
+              <span>平台背书</span>
+              <span>使用安心</span>
+            </div>
+            <div>
+              <span>7*24小时</span>
+              <span>售后服务</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </AppContainer>
 </template>
 <script setup>
 import AppContainer from '@/components/AppContainer/index'
 import BindMobile from '@/components/BindMobile/index'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useChooseLocation } from '../../hooks/useChooseLocation'
 import { useLogin } from '../../hooks/useLogin'
 import { useAppStore } from '../../stores/app'
 import { storeToRefs } from 'pinia'
 import { onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
-import { getBannersRes, getCouponUrlRes, getTelRes } from '../../api'
+import {
+  getBannersRes,
+  getCouponUrlRes,
+  getTelRes,
+  getRoutesRes
+} from '../../api'
 import { callPhone, navTo } from '../../utils/uni'
+import { isNullOrUndef } from '../../utils/is'
 
 const appStore = useAppStore()
 const { appUser, merchantTel } = storeToRefs(appStore)
 
 const { bindMobileVisible, login, getPhoneNumber } = useLogin()
 const { originLocation, arrivedLocation, chooseLocation } = useChooseLocation()
+
+const orderType = ref('1'),
+  driverRoutes = ref([]),
+  logisticsRoutes = ref([])
+watch(
+  () => orderType.value,
+  (newType) => {
+    if (newType == 1 && driverRoutes.value.length === 0) {
+      getRoutes(newType)
+    } else if (newType == 2 && logisticsRoutes.value.length === 0) {
+      getRoutes(newType)
+    }
+  },
+  {
+    immediate: true
+  }
+)
+
+async function getRoutes(type) {
+  const data = await getRoutesRes(type)
+  if (type == 1) {
+    driverRoutes.value = data
+  } else if (type == 2) {
+    logisticsRoutes.value = data
+  }
+}
 
 const banners = ref([]),
   couponUrl = ref(null)
@@ -229,14 +427,34 @@ onLoad(async () => {
   appStore.setMerchantTel(tel)
 })
 
-function onSwitchTab(type) {
+function onSwitchTab(type, route) {
+  if (isNullOrUndef(route)) {
+    appStore.setOriginLocation()
+    appStore.setArrivedLocation()
+  } else if (route.order_amount) {
+    appStore.setOriginLocation({
+      province: route.s_province,
+      city: route.s_city,
+      district: route.s_area,
+      orderAmount: route.order_amount
+    })
+    appStore.setArrivedLocation({
+      province: route.r_province,
+      city: route.r_city,
+      district: route.r_area,
+      orderAmount: route.order_amount
+    })
+  } else {
+    appStore.setOriginLocation(originLocation.value)
+    appStore.setArrivedLocation(arrivedLocation.value)
+  }
   appStore.setOrderType(type)
   uni.switchTab({ url: '/pages/place-order/index' })
 }
 
 function onClickComingSoonFunc() {
   uni.showModal({
-    title: '业务即将上线，敬请期待',
+    title: '请拨打平台热线电话',
     content: `平台热线：${merchantTel.value}`,
     confirmText: '拨打热线',
     success({ confirm }) {

@@ -25,8 +25,7 @@
         <div class="text-[#A3A3A3] w-[140rpx]">起始地：</div>
         <div class="flex flex-col text-right text-[#333] font-bold">
           <span>
-            {{ currentOrderInfo.s_city }} -
-            {{ currentOrderInfo.send_address_name }}
+            {{ getLocationDesc(1) }}
           </span>
         </div>
       </div>
@@ -34,8 +33,7 @@
         <div class="text-[#A3A3A3] w-[140rpx]">目的地：</div>
         <div class="flex flex-col text-right text-[#333] font-bold">
           <span>
-            {{ currentOrderInfo.r_city }} -
-            {{ currentOrderInfo.receive_address_name }}
+            {{ getLocationDesc(2) }}
           </span>
         </div>
       </div>
@@ -105,6 +103,19 @@ const currentOrderInfo = ref({})
 const orderStatus = computed(
   () => ORDER_STATUS[currentOrderInfo.value.order_status]
 )
+function getLocationDesc(type) {
+  if (type == 1) {
+    // 起始地
+    return currentOrderInfo.value.send_address_name
+      ? `${currentOrderInfo.value.s_city} - ${currentOrderInfo.value.send_address_name}`
+      : currentOrderInfo.value.s_city
+  } else {
+    // 目的地
+    return currentOrderInfo.value.receive_address_name
+      ? `${currentOrderInfo.value.r_city} - ${currentOrderInfo.value.receive_address_name}`
+      : currentOrderInfo.value.r_city
+  }
+}
 onLoad(async ({ order_number }) => {
   currentOrderInfo.value = await getOrderDetailsRes(order_number)
 })
