@@ -37,20 +37,20 @@
 </template>
 
 <script>
-import loading0 from './static/loading-circle.vue'
-import loading1 from './static/loading-pulse.vue'
-import loading2 from './static/loading-bounce.vue'
-import loading3 from './static/loading-eyes.vue'
-import loading4 from './static/loading-surround.vue'
-import loading5 from './static/loading-sun.vue'
-import loading6 from './static/loading-love.vue'
-import loading7 from './static/loading-sword.vue'
-import loading8 from './static/loading-atom.vue'
-import loading9 from './static/loading-gear.vue'
-import loading10 from './static/loading-radar.vue'
-import loading11 from './static/loading-annulus.vue'
-import loading12 from './static/loading-wobble.vue'
-import loading13 from './static/loading-equal.vue'
+import loading0 from './comps/loading-circle.vue'
+import loading1 from './comps/loading-pulse.vue'
+import loading2 from './comps/loading-bounce.vue'
+import loading3 from './comps/loading-eyes.vue'
+import loading4 from './comps/loading-surround.vue'
+import loading5 from './comps/loading-sun.vue'
+import loading6 from './comps/loading-love.vue'
+import loading7 from './comps/loading-sword.vue'
+import loading8 from './comps/loading-atom.vue'
+import loading9 from './comps/loading-gear.vue'
+import loading10 from './comps/loading-radar.vue'
+import loading11 from './comps/loading-annulus.vue'
+import loading12 from './comps/loading-wobble.vue'
+import loading13 from './comps/loading-equal.vue'
 
 export default {
   name: 'Loading',

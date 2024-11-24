@@ -1,5 +1,5 @@
 {
-  "name": "uni-app-vue3-vite",
+  "name": "protocol",
   "appid": "",
   "description": "",
   "versionName": "1.0.0",
@@ -42,26 +42,11 @@
   },
   "quickapp": {},
   "mp-weixin": {
-    "appid": "wxddd2a0515e004d07",
+    "appid": "wx5105ba8a5c45afbe",
     "setting": {
       "urlCheck": false
     },
     "usingComponents": true,
-    "permission": {
-      "scope.userFuzzyLocation": {
-        "desc": "将获取您的具体位置信息，便于您更准确的选择代驾地点"
-      },
-      "scope.userLocation": {
-        "desc": "将获取您的具体位置信息，便于您更准确的选择代驾地点"
-      }
-    },
-    "requiredPrivateInfos": ["chooseLocation", "getLocation"],
-    "plugins": {
-      "citySelector": {
-        "version": "1.0.2",
-        "provider": "wx63ffb7b7894e99ae"
-      }
-    },
     "lazyCodeLoading": "requiredComponents"
   },
   "mp-alipay": {
