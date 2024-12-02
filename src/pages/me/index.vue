@@ -126,7 +126,7 @@ import AppContainer from '@/components/AppContainer/index'
 import Recharge from '@/components/Recharge/index'
 import { useAppStore } from '../../stores/app'
 import { storeToRefs } from 'pinia'
-import { getRechargeLevelsRes, updateUserRes } from '../../api'
+import { updateUserRes } from '../../api'
 import { ref } from 'vue'
 import { useLogin } from '../../hooks/useLogin'
 import { callPhone, navTo, toast } from '../../utils/uni'
@@ -135,7 +135,7 @@ const baseUrl = import.meta.env.VITE_BASE_API
 const uploadUrl = `${baseUrl}/api/common/upload`
 
 const appStore = useAppStore()
-const { appUser, merchantTel } = storeToRefs(appStore)
+const { appUser, appToken } = storeToRefs(appStore)
 
 const { bindMobileVisible, login, getPhoneNumber } = useLogin()
 
@@ -169,7 +169,7 @@ async function onChooseAvatar(e) {
     filePath: avatarUrl,
     name: 'file',
     header: {
-      token: appUser.value.token,
+      token: appToken.value,
       'content-type': 'multipart/form-data'
     },
     success: async (result) => {

@@ -77,15 +77,12 @@ export function useLogin() {
       avatar: bindMobileUserProfile.current.avatarUrl,
       mobile: phoneInfo.phoneNumber
     }
-    const { userinfo } = await checkLoginRes(reqData)
-    const newUserInfo = {
-      ...userinfo,
-      totalMoney: (
-        parseFloat(userinfo.money) + parseFloat(userinfo.gift_money)
-      ).toFixed(2)
-    }
-    appStore.setAppUser(newUserInfo)
-    uni.setStorageSync('APP_USER', newUserInfo)
+    const {
+      userinfo: { token }
+    } = await checkLoginRes(reqData)
+    uni.setStorageSync('APP_TOKEN', token)
+    appStore.setAppToken(token)
+    appStore.refreshAppUser()
     bindMobileVisible.value = false
   }
 

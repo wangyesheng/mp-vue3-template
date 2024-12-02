@@ -1,19 +1,19 @@
 <style lang="scss" scoped>
-.__order-tabs {
-  ::v-deep() {
-    .nut-tabs__titles {
-      height: 120rpx !important;
-    }
-    .nut-tabs__list {
-      .nut-tabs__titles-item {
-        border-bottom: 2rpx solid #f7f7f7;
+.home-wrap {
+  .template {
+    width: 45%;
+    background: #fff;
+    border-radius: 10rpx;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 30rpx;
 
-        &__line {
-          bottom: 0 !important;
-          width: 100% !important;
-          background: #344ad9 !important;
-        }
-      }
+    image {
+      width: 100%;
+      height: 200rpx;
+      border-top-left-radius: 10rpx;
+      border-top-right-radius: 10rpx;
+      margin-bottom: 30rpx;
     }
   }
 }
@@ -21,12 +21,24 @@
 
 <template>
   <AppContainer>
-    <div class="min-w-full min-h-screen pb-[50rpx]">
+    <div class="min-w-full min-h-screen home-wrap">
       <nut-swiper height="348" :auto-play="3000">
         <nut-swiper-item v-for="banner in banners" :key="banner.id">
           <img :src="banner.image" class="w-full h-full" draggable="false" />
         </nut-swiper-item>
       </nut-swiper>
+      <div class="px-[20rpx] mt-[40rpx] box-border flex justify-around">
+        <div
+          v-for="template in templates"
+          :key="template.id"
+          class="template"
+          @click="navTo(`/pages/template/preview?id=${template.id}`)">
+          <image :src="template.image" mode="aspectFill" />
+          <span class="text-[26rpx] text-[#333] font-[550] text-center">
+            {{ template.name }}
+          </span>
+        </div>
+      </div>
       <BindMobile
         v-model:visible="bindMobileVisible"
         :getPhoneNumber="getPhoneNumber" />
@@ -36,12 +48,16 @@
 <script setup>
 import AppContainer from '@/components/AppContainer/index'
 import BindMobile from '@/components/BindMobile/index'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useLogin } from '../../hooks/useLogin'
 import { useAppStore } from '../../stores/app'
 import { storeToRefs } from 'pinia'
 import { onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
-import { getBannersRes } from '../../api'
+import {
+  getBannersRes,
+  getPartyAContractsRes,
+  getTemplatesRes
+} from '../../api'
 import { navTo } from '../../utils/uni'
 
 const appStore = useAppStore()
@@ -49,9 +65,13 @@ const { appUser } = storeToRefs(appStore)
 
 const { bindMobileVisible, login, getPhoneNumber } = useLogin()
 
-const banners = ref([])
+const banners = ref([]),
+  templates = ref([])
 onLoad(async () => {
   banners.value = await getBannersRes()
+  const { data } = await getTemplatesRes()
+  templates.value = data
+  await getPartyAContractsRes()
 })
 
 onShareAppMessage(() => {

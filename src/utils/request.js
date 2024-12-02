@@ -7,8 +7,8 @@ http.setConfig({
 })
 
 http.interceptor.request = (config) => {
-  const appUser = uni.getStorageSync('APP_USER') || {}
-  appUser.token && (config.header.token = appUser.token)
+  const token = uni.getStorageSync('APP_TOKEN')
+  token && (config.header.token = token)
   return config // 如果 return 一个 false 值，则会取消本次请求
 }
 
