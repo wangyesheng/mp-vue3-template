@@ -7,7 +7,7 @@
           <span :class="appUser.real_status == 0 ? 'default' : 'success'">
             {{ appUser.real_status == 0 ? '未认证' : '已认证' }}
           </span>
-          <div class="flex items-center">
+          <div class="flex items-center" v-if="appUser.real_status == 0">
             <nut-divider direction="vertical" />
             <div
               class="auth"
@@ -44,7 +44,7 @@
         </nut-form>
       </div>
     </div>
-    <div class="footer">
+    <div class="footer flex justify-center items-center">
       <nut-button
         block
         size="large"
@@ -140,8 +140,12 @@ async function onCreateContract() {
         color: #333;
       }
 
+      .default,
       .success {
-        color: #6bba5b;
+        font-weight: 550;
+      }
+      .success {
+        color: #6bba5b !important;
       }
 
       .auth {

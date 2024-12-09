@@ -26,28 +26,16 @@
             @click="
               () => {
                 currentSelectedLevel = level
-                customAmount = null
               }
             ">
-            <div class="text-[36rpx] mb-[10rpx]">
-              ￥{{ level.recharge_amount }}
-            </div>
+            <div class="text-[36rpx] mb-[10rpx]">￥{{ level.amount }}</div>
             <div class="text-[26rpx]">
-              {{ `充 ${level.recharge_amount} 送 ${level.gift_amount}` }}
+              {{ `${level.amount} 元 ${level.gift_times} 次` }}
             </div>
           </div>
         </div>
       </div>
       <div class="customAmount mt-[20rpx]">
-        <nut-input
-          v-model="customAmount"
-          type="digit"
-          placeholder="请输入自定义金额">
-          <template #left>
-            <span class="text-[38rpx] font-bold">￥</span>
-          </template>
-        </nut-input>
-
         <nut-button
           block
           size="large"
@@ -63,11 +51,10 @@
 </template>
 
 <script setup>
-// import { callRechargeRes } from '../../api'
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import debounce from '../../utils/debounce'
 import { useAppStore } from '../../stores/app'
-import { isNullOrWhitespace } from '../../utils/is'
+import { buyPackageRes } from '../../api'
 
 const props = defineProps({
   visible: {
@@ -84,43 +71,17 @@ const emit = defineEmits(['update:visible', 'refresh'])
 const appStore = useAppStore()
 
 const currentSelectedLevel = ref({}),
-  customAmount = ref(null),
   payLoading = ref(false),
-  payButtonDisabled = computed(
-    () => !currentSelectedLevel.value.id && customAmount.value <= 0
-  )
-
-watch(
-  () => props.visible,
-  (newValue) => {
-    if (newValue) {
-      customAmount.value = null
-    }
-  }
-)
-watch(
-  () => customAmount.value,
-  (newValue) => {
-    if (!isNullOrWhitespace(newValue)) {
-      currentSelectedLevel.value = {}
-    }
-  }
-)
+  payButtonDisabled = computed(() => !currentSelectedLevel.value.id)
 
 async function onCallRecharge() {
   try {
     if (payLoading.value) return
     payLoading.value = true
-    let data
-    if (currentSelectedLevel.value.id) {
-      data = await callRechargeRes({
-        recharge_id: currentSelectedLevel.value.id
-      })
-    } else {
-      data = await callRechargeRes({
-        money: customAmount.value
-      })
-    }
+    const data = await buyPackageRes({
+      package_id: currentSelectedLevel.value.id
+    })
+
     data &&
       uni.requestPayment({
         ...data,

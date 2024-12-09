@@ -49,21 +49,9 @@
 import AppContainer from '@/components/AppContainer/index'
 import BindMobile from '@/components/BindMobile/index'
 import { ref } from 'vue'
-import { useLogin } from '../../hooks/useLogin'
-import { useAppStore } from '../../stores/app'
-import { storeToRefs } from 'pinia'
 import { onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
-import {
-  getBannersRes,
-  getPartyAContractsRes,
-  getTemplatesRes
-} from '../../api'
+import { getBannersRes, getTemplatesRes } from '../../api'
 import { navTo } from '../../utils/uni'
-
-const appStore = useAppStore()
-const { appUser } = storeToRefs(appStore)
-
-const { bindMobileVisible, login, getPhoneNumber } = useLogin()
 
 const banners = ref([]),
   templates = ref([])
@@ -71,7 +59,6 @@ onLoad(async () => {
   banners.value = await getBannersRes()
   const { data } = await getTemplatesRes()
   templates.value = data
-  await getPartyAContractsRes()
 })
 
 onShareAppMessage(() => {

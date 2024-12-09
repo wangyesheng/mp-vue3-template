@@ -5714,10 +5714,10 @@ nth-check@^2.1.1:
   dependencies:
     boolbase "^1.0.0"
 
-nutui-uniapp@1.7.17:
-  version "1.7.17"
-  resolved "https://registry.npmmirror.com/nutui-uniapp/-/nutui-uniapp-1.7.17.tgz#55f83d6cee344e8111ba03fb28630a36019409a3"
-  integrity sha512-OsOXEl1qOWsAKjCeFnPOL76wwtip3z/b7sVZ2HzTWQ21QsLw/NWlPjASe3oUI77WTHCBrZbCn1OpOmW3rEqsfQ==
+nutui-uniapp@1.8.1:
+  version "1.8.1"
+  resolved "https://registry.npmmirror.com/nutui-uniapp/-/nutui-uniapp-1.8.1.tgz#f937fec4a438805d4e1d0c71b4c429f0a12495bb"
+  integrity sha512-+bvotOYKLot5OyUloHzBOgdXxuxMnMoBzcGXt4/Tj3ckIO5UwosOdYcK9fZdNlbhS8NcqEHZaSOAwstCV3otuQ==
 
 object-assign@^4.0.1:
   version "4.1.1"

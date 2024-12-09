@@ -86,21 +86,42 @@
         </div>
         <div
           class="bg-[#292f45] text-[#fff] mt-[40rpx] box-border px-[60rpx] py-[40rpx] rounded-[20rpx] flex justify-between wallet">
-          <div class="flex flex-col items-center">
-            <span class="mb-[10rpx] text-[36rpx]">
-              {{ appUser.totalMoney }}
+          <div class="flex items-center">
+            <span class="text-[46rpx] mr-[10rpx]">
+              {{ appUser.score }}
             </span>
-            <span class="text-[24rpx] text-[#C2C2C2]">余额（元）</span>
+            <span class="text-[24rpx] text-[#C2C2C2]">次</span>
           </div>
           <div class="flex flex-col items-center">
             <span
               class="mb-[20rpx] text-[24rpx] self-end"
               @click="navTo(`/pages/me/money-log`)">
-              消费记录
+              购买记录
             </span>
             <nut-button type="warning" @click="onShowRechargePopup">
               充值
             </nut-button>
+          </div>
+        </div>
+        <div class="bg-[#fff] rounded-[20rpx] px-[20rpx] py-[30rpx] mt-[40rpx]">
+          <div
+            class="text-[28rpx] text-[#292f45] font-[550] mb-[40rpx] flex justify-between items-center"
+            @click="navTo('/pages/contract/list?status=0')">
+            <span>我的合同</span>
+            <nut-icon name="arrow-right" size="28rpx" />
+          </div>
+          <div class="flex justify-around">
+            <div
+              class="flex flex-col items-center"
+              v-for="(item, index) in contractStatusList"
+              :key="index"
+              @click="navTo(`/pages/contract/list?status=${item.value}`)">
+              <image
+                class="w-[48rpx] h-[48rpx] mb-[15rpx]"
+                :src="item.icon"
+                mode="widthFix" />
+              <span class="text-[24rpx] text-[#707070]">{{ item.label }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -126,10 +147,11 @@ import AppContainer from '@/components/AppContainer/index'
 import Recharge from '@/components/Recharge/index'
 import { useAppStore } from '../../stores/app'
 import { storeToRefs } from 'pinia'
-import { updateUserRes } from '../../api'
+import { getPackagesRes, updateUserRes } from '../../api'
 import { ref } from 'vue'
 import { useLogin } from '../../hooks/useLogin'
 import { callPhone, navTo, toast } from '../../utils/uni'
+import { contractStatusList } from '../../constant'
 
 const baseUrl = import.meta.env.VITE_BASE_API
 const uploadUrl = `${baseUrl}/api/common/upload`
@@ -148,10 +170,10 @@ async function onShowRechargePopup() {
   }
   try {
     uni.showLoading({
-      title: '充值档次获取中...',
+      title: '礼包档次获取中...',
       mask: true
     })
-    const data = await getRechargeLevelsRes()
+    const data = await getPackagesRes()
     rechargeLevels.value = data
     rechargePopupVisible.value = true
   } finally {
