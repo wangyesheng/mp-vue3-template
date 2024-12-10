@@ -1,5 +1,6 @@
 import { toast } from './uni'
 import http from './http'
+import { useAppStore } from '../stores/app'
 
 http.setConfig({
   baseUrl: import.meta.env.VITE_BASE_API,
@@ -42,7 +43,11 @@ const request = ({ url, method, data = {} }) => {
       // request:fail timeout => 请求超时
       if (errerData.code === 401) {
         toast('请授权登录')
+        uni.setStorageSync('APP_TOKEN', '')
         uni.setStorageSync('APP_USER', {})
+        const appStore = useAppStore()
+        appStore?.setAppToken('')
+        appStore?.setAppUser({})
       } else {
         uni.showModal({
           title: '提示',

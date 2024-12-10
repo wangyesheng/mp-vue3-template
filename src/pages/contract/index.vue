@@ -45,20 +45,31 @@
         待乙方操作
       </div>
 
-      <div
-        class="flex justify-around items-center w-full h-full btn2"
-        v-if="currentContract.status == 3">
-        <!-- 乙方签署 -->
-        <nut-button
-          plain
-          size="large"
-          type="danger"
-          @click="debounce(onRefuseContractSign)">
-          拒签
-        </nut-button>
-        <nut-button size="large" type="primary" @click="debounce(onPartyBSign)">
-          签署
-        </nut-button>
+      <div class="h-full" v-if="currentContract.status == 3">
+        <!-- 待乙方签署 -->
+        <!-- 合同绑定的乙方信息等于当前登录用户 -->
+        <div
+          v-if="currentContract.second_party_id == appUser.id"
+          class="flex justify-around items-center h-full btn2">
+          <nut-button
+            plain
+            size="large"
+            type="danger"
+            @click="debounce(onRefuseContractSign)">
+            拒签
+          </nut-button>
+          <nut-button
+            size="large"
+            type="primary"
+            @click="debounce(onPartyBSign)">
+            签署
+          </nut-button>
+        </div>
+        <div
+          v-else
+          class="text-[#666] font-[550] text-[28rpx] text-center leading-[10vh]">
+          待乙方签署
+        </div>
       </div>
 
       <!-- <div
@@ -281,6 +292,7 @@ function onShare() {
       if (currentContract.value.status == 1) {
         // 只有当状态为待分享的时候才需要设置状态
         await changeContractStatusRes(currentContract.value.id)
+        currentContract.value.status = '2'
       }
     },
     fail(res) {

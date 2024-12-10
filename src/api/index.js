@@ -171,3 +171,17 @@ export function getFreeTimesRes() {
     method: 'get'
   })
 }
+
+export function getAboutUsRes() {
+  return request({
+    url: `/api/user/about_us`,
+    method: 'get'
+  })
+}
+
+export function getUserAgreementRes() {
+  return request({
+    url: `/api/user/agreement`,
+    method: 'get'
+  })
+}

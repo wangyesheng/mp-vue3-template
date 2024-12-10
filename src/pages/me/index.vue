@@ -57,6 +57,23 @@
       color: #666;
     }
   }
+
+  .setting {
+    ::v-deep() {
+      .nut-cell-group__wrap {
+        box-shadow: none !important;
+
+        .title {
+          color: #292f45 !important;
+        }
+
+        .nut-cell__link {
+          color: #292f45 !important;
+          font-size: 28rpx !important;
+        }
+      }
+    }
+  }
 }
 </style>
 
@@ -131,6 +148,23 @@
           <img src="../../static/images/me/noLoginUser.png" alt="" />
         </div>
         <span>请登录</span>
+      </div>
+
+      <div class="setting mt-[40rpx]">
+        <nut-cell-group>
+          <nut-cell
+            is-link
+            title="个人中心"
+            @click="navTo('/pages/me/personal')"></nut-cell>
+          <nut-cell
+            is-link
+            title="关于我们"
+            @click="navTo('/pages/me/richtext?type=aboutUs')"></nut-cell>
+          <nut-cell
+            is-link
+            title="用户协议"
+            @click="navTo('/pages/me/richtext?type=userAgreement')"></nut-cell>
+        </nut-cell-group>
       </div>
 
       <Recharge

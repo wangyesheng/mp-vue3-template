@@ -16,6 +16,18 @@
       }
     },
     {
+      "path": "pages/me/personal",
+      "style": {
+        "navigationBarTitleText": "个人中心"
+      }
+    },
+    {
+      "path": "pages/me/richtext",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
       "path": "pages/contract/sign-invitation",
       "style": {
         "navigationBarTitleText": "签署邀请",
