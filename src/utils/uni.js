@@ -15,11 +15,14 @@ export function copy(content, tips = '复制成功') {
   })
 }
 
-export function navTo(url) {
-  const appUser = uni.getStorageSync('APP_USER') || {}
-  if (!appUser.id) {
-    return toast('请授权登录')
+export function navTo(url, needValidateToken = true) {
+  if (needValidateToken) {
+    const appUser = uni.getStorageSync('APP_USER') || {}
+    if (!appUser.id) {
+      return toast('请授权登录')
+    }
   }
+
   uni.navigateTo({
     url
   })

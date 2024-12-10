@@ -118,7 +118,7 @@
         <div class="flex justify-between flex-wrap">
           <div
             class="w-[30%] mb-[50rpx] flex flex-col justify-between items-center"
-            @click="navTo('/pages/me/personal')">
+            @click="navTo('/pages/me/personal', false)">
             <img
               class="w-[90rpx] h-[90rpx] mb-[16rpx]"
               src="../../static/images/me/personal.png"
