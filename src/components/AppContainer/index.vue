@@ -12,7 +12,7 @@ const themeVars = reactive({
   primaryColor: '#344AD9',
   primaryColorEnd: '#344AD9',
   successColor: '#1CBF1E',
-  successColorEnd: '#344AD9'
+  successColorEnd: '#1CBF1E'
 })
 </script>
 

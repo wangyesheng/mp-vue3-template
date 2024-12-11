@@ -37,13 +37,13 @@ declare module 'vue' {
     NutIcon: typeof import('nutui-uniapp/components/icon/icon.vue')['default']
     NutInput: typeof import('nutui-uniapp/components/input/input.vue')['default']
     NutPopup: typeof import('nutui-uniapp/components/popup/popup.vue')['default']
-    NutSignature: typeof import('nutui-uniapp/components/signature/signature.vue')['default']
     NutSwiper: typeof import('nutui-uniapp/components/swiper/swiper.vue')['default']
     NutSwiperItem: typeof import('nutui-uniapp/components/swiperitem/swiperitem.vue')['default']
     NutTabPane: typeof import('nutui-uniapp/components/tabpane/tabpane.vue')['default']
     NutTabs: typeof import('nutui-uniapp/components/tabs/tabs.vue')['default']
     NutToast: typeof import('nutui-uniapp/components/toast/toast.vue')['default']
     Recharge: typeof import('./src/components/Recharge/index.vue')['default']
+    Signature: typeof import('./src/components/Signature/index.vue')['default']
     WeappTailwindcss: typeof import('./src/components/WeappTailwindcss.vue')['default']
   }
 }

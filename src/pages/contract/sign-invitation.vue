@@ -41,7 +41,6 @@
         :disabled="noPreviewAuth"
         @click="onPreviewContract">
         查看合同
-        {{ currentContract.id }}
       </nut-button>
 
       <nut-button

@@ -99,16 +99,35 @@
     </div>
 
     <nut-popup
+      round
       position="bottom"
       :custom-style="{
-        padding: '60rpx 20rpx'
+        padding: '60rpx 20rpx',
+        height: '60vh'
       }"
       v-model:visible="signVisible">
-      <nut-signature
-        ref="signatureRef"
-        :lineWidth="4"
-        @confirm="onSignConfirm"
-        @clear="onSignClear" />
+      <div class="signature">
+        <div class="inner">
+          <div class="text">请在此处签名</div>
+          <Signature
+            v-if="signVisible"
+            ref="signatureRef"
+            disableScroll
+            openSmooth
+            :penSize="15" />
+        </div>
+        <div class="btn">
+          <nut-button plain type="primary" @click="signatureHandler('clear')">
+            清空
+          </nut-button>
+          <nut-button
+            type="primary"
+            :disabled="synthesizing"
+            @click="debounce(signatureHandler('save'))">
+            {{ synthesizing ? '签名生成中...' : '确认' }}
+          </nut-button>
+        </div>
+      </div>
     </nut-popup>
 
     <nut-popup
@@ -180,6 +199,7 @@ import wechatIcon from '../../static/images/wechat.png'
 import walletIcon from '../../static/images/wallet.png'
 import { isNullOrWhitespace } from '../../utils/is'
 import debounce from '../../utils/debounce'
+import Signature from '../../components/Signature/index.vue'
 
 const baseUrl = import.meta.env.VITE_BASE_API
 const uploadUrl = `${baseUrl}/api/common/upload`
@@ -235,51 +255,70 @@ function onRefuseContractSign() {
 }
 
 const signVisible = ref(false),
-  signatureRef = ref(null)
+  signatureRef = ref(null),
+  synthesizing = ref(false) // 是否正在合成
 function onShowSignPopup() {
   signVisible.value = true
 }
-function onSignConfirm(canvas, data) {
-  uni.uploadFile({
-    url: uploadUrl,
-    filePath: data,
-    name: 'file',
-    header: {
-      token: appToken.value,
-      'content-type': 'multipart/form-data'
-    },
-    success: async (result) => {
-      const {
-        code,
-        data: { url },
-        msg
-      } = JSON.parse(result.data)
-      if (code !== 1) {
-        toast(msg)
-      } else {
-        const data = await (currentContract.value.status == 3
-          ? partyBSignRes({
-              sign_name: url,
-              id: currentContract.value.id
-            })
-          : partyASignRes({
-              sign_name: url,
-              id: currentContract.value.id
-            }))
-        currentContract.value = {
-          ...data,
-          template_sign_images: data?.template_sign_images?.map(
-            (url) => `${url}?ts=${new Date().getTime()}`
-          )
+function signatureHandler(type) {
+  if (type == 'save') {
+    signatureRef.value.canvasToTempFilePath({
+      success({ isEmpty, tempFilePath }) {
+        if (!isEmpty) {
+          synthesizing.value = true
+          uni.uploadFile({
+            url: uploadUrl,
+            filePath: tempFilePath,
+            name: 'file',
+            header: {
+              token: appToken.value,
+              'content-type': 'multipart/form-data'
+            },
+            async success(result) {
+              try {
+                const {
+                  code,
+                  data: { url },
+                  msg
+                } = JSON.parse(result.data)
+                if (code !== 1) {
+                  toast(msg)
+                } else {
+                  const data = await (currentContract.value.status == 3
+                    ? partyBSignRes({
+                        sign_name: url,
+                        id: currentContract.value.id
+                      })
+                    : partyASignRes({
+                        sign_name: url,
+                        id: currentContract.value.id
+                      }))
+                  currentContract.value = {
+                    ...data,
+                    template_sign_images: data?.template_sign_images?.map(
+                      (url) => `${url}?ts=${new Date().getTime()}`
+                    )
+                  }
+                  signVisible.value = false
+                }
+              } finally {
+                synthesizing.value = false
+              }
+            },
+            fail(error) {
+              console.log('upload::error', error)
+              synthesizing.value = false
+              toast('上传失败！')
+            }
+          })
         }
-        signVisible.value = false
       }
-    },
-    fail: (uploadFileErr) => {
-      console.log('upload::error', uploadFileErr)
-      toast('上传失败！')
-    }
-  })
+    })
+    return
+  }
+  if (signatureRef.value) signatureRef.value[type]()
+
+  return
 }
 function onSignClear(...args) {
   console.log(args, signatureRef.value)
@@ -381,7 +420,9 @@ async function onPaySubmit() {
           payLoading.value = false
           payMethodPopupVisible.value = false
           currentContract.value.pay_status = 1
-          signVisible.value = true
+          setTimeout(() => {
+            signVisible.value = true
+          }, 1000)
         },
         fail(error) {
           console.log('用户支付扣款失败', error)
@@ -394,7 +435,10 @@ async function onPaySubmit() {
       payMethodPopupVisible.value = false
       appStore.refreshAppUser()
       currentContract.value.pay_status = 1
-      signVisible.value = true
+      toast('支付成功')
+      setTimeout(() => {
+        signVisible.value = true
+      }, 1000)
     }
   } catch {
     payLoading.value = false
@@ -410,12 +454,43 @@ async function onPaySubmit() {
 }
 
 ::v-deep() {
-  .nut-signature {
-    view:last-child {
+  .signature {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    .inner {
+      position: relative;
+
+      .text {
+        position: absolute;
+        /* #ifndef APP-NVUE */
+        left: 50%;
+        top: 50%;
+        /* #endif */
+        /* #ifdef APP-NVUE */
+        left: 375rpx;
+        top: 375rpx;
+        /* #endif */
+        font-size: 50rpx;
+        color: #ddd;
+        transform: translate(-50%, -50%);
+        z-index: -1;
+        transition: transform 300ms;
+      }
+
+      .lime-signature {
+        height: 40vh;
+        border: 2rpx solid #ddd;
+      }
+    }
+
+    .btn {
       display: flex;
       justify-content: space-around;
       button {
-        width: 40%;
+        width: 45% !important;
       }
     }
   }

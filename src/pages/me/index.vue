@@ -155,7 +155,7 @@
           <nut-cell
             is-link
             title="个人中心"
-            @click="navTo('/pages/me/personal')"></nut-cell>
+            @click="navTo('/pages/me/personal', true)"></nut-cell>
           <nut-cell
             is-link
             title="关于我们"

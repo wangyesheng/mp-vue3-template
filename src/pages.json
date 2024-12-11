@@ -9,6 +9,19 @@
 
   "pages": [
     {
+      "path": "pages/home/index",
+      "style": {
+        "navigationBarTitleText": "首页",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/contract/index",
+      "style": {
+        "navigationBarTitleText": "合同签署"
+      }
+    },
+    {
       "path": "pages/me/index",
       "style": {
         "navigationBarTitleText": "我的",
@@ -37,24 +50,9 @@
     },
 
     {
-      "path": "pages/home/index",
-      "style": {
-        "navigationBarTitleText": "首页",
-        "navigationStyle": "custom"
-      }
-    },
-
-    {
       "path": "pages/me/money-log",
       "style": {
         "navigationBarTitleText": "礼包记录"
-      }
-    },
-
-    {
-      "path": "pages/contract/index",
-      "style": {
-        "navigationBarTitleText": "合同签署"
       }
     },
 

@@ -28,10 +28,10 @@
           <div class="flex justify-end items-center">
             <div
               :class="[
-                appUser.real_status == 0 ? 'text-[#999]' : 'text-[#6bba5b]',
+                appUser.real_status == 1 ? 'text-[#6bba5b]' : 'text-[#999]',
                 'font-[550]'
               ]">
-              {{ appUser.real_status == 0 ? '未认证' : '已认证' }}
+              {{ appUser.real_status == 1 ? '已认证' : '未认证' }}
             </div>
             <div class="flex items-center" v-if="appUser.real_status == 0">
               <nut-divider direction="vertical" />
