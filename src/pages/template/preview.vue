@@ -7,7 +7,7 @@
         v-for="(src, index) in currentTemplate.content_images || []"
         :key="index"
         :src="src"
-        @click="previewImage(currentTemplate.content_images)" />
+        @click="previewImage(currentTemplate.content_images, index)" />
     </div>
     <div class="footer flex justify-center items-center">
       <nut-button

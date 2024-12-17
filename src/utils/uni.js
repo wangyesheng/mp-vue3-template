@@ -27,9 +27,10 @@ export function navTo(url, needValidateToken = false) {
   })
 }
 
-export function previewImage(urls) {
+export function previewImage(urls, current) {
   uni.previewImage({
-    urls
+    urls,
+    current
   })
 }
 

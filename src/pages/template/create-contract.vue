@@ -50,8 +50,9 @@
         size="large"
         type="primary"
         :disabled="disabledCreateContractButton"
+        :loading="isCreating"
         @click="onCreateContract">
-        确认创建
+        {{ isCreating ? '创建合同中...' : '确认创建' }}
       </nut-button>
     </div>
   </AppContainer>
@@ -83,18 +84,24 @@ const fields = computed(() => {
   return ret
 })
 const disabledCreateContractButton = computed(() => {
-  if (appUser.value.real_status == 0) return true
-  for (const key in templateParams.value) {
-    if (isNullOrWhitespace(templateParams.value[key])) return true
-  }
-  return false
-})
+    if (appUser.value.real_status == 0) return true
+    for (const key in templateParams.value) {
+      if (isNullOrWhitespace(templateParams.value[key])) return true
+    }
+    return false
+  }),
+  isCreating = ref(false)
 async function onCreateContract() {
-  const data = await createContractRes({
-    id: currentTemplate.value.id,
-    ...templateParams.value
-  })
-  navTo(`/pages/contract/index?id=${data.id}`)
+  try {
+    isCreating.value = true
+    const data = await createContractRes({
+      id: currentTemplate.value.id,
+      ...templateParams.value
+    })
+    navTo(`/pages/contract/index?id=${data.id}`)
+  } finally {
+    isCreating.value = false
+  }
 }
 </script>
 

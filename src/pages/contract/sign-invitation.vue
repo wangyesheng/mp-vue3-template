@@ -39,8 +39,8 @@
         size="large"
         type="primary"
         :disabled="noPreviewAuth"
-        @click="onPreviewContract">
-        查看合同
+        @click="debounce(onPreviewContract)">
+        {{ isBinding ? '乙方信息绑定中...' : '查看合同' }}
       </nut-button>
 
       <nut-button
@@ -49,7 +49,7 @@
         size="large"
         type="primary"
         open-type="getUserInfo"
-        @click="login">
+        @click="debounce(login)">
         查看合同
       </nut-button>
     </div>
@@ -71,6 +71,7 @@ import { computed, ref } from 'vue'
 import { bindPartyBRes, getContractDetailsRes } from '../../api'
 import { signInvitationStatusMap } from '../../constant'
 import noAuthIcon from '../../static/images/noAuth.png'
+import debounce from '../../utils/debounce'
 
 const { appUser } = storeToRefs(useAppStore())
 const { bindMobileVisible, login, getPhoneNumber } = useLogin()
@@ -82,7 +83,8 @@ const currentContract = ref({}),
       currentContract.value.status > 2 &&
       currentContract.value.second_party_id != appUser.value.id &&
       currentContract.value.first_party_id != appUser.value.id
-  )
+  ),
+  isBinding = ref(false)
 async function refreshData(contractId) {
   const data = await getContractDetailsRes(contractId)
   currentContract.value = data || {}
@@ -98,29 +100,32 @@ onShow(() => {
 })
 
 async function onPreviewContract() {
-  if (appUser.value.real_status == 0) {
-    navTo(`/pages/template/complete-userinfo`)
-    return
-  }
+  try {
+    if (appUser.value.real_status == 0) {
+      // 未认证，需要实名认证
+      navTo(`/pages/template/complete-userinfo`)
+      return
+    }
 
-  if (currentContract.value.first_party_id == appUser.value.id) {
-    // 甲乙方为同一人
-    toast(`甲乙方不能为同一人`)
-    return
-  }
+    if (noPreviewAuth.value) {
+      // 已绑定乙方信息，此时查看合同的人必须是甲乙方一个
+      toast(`您无权查看该合同`)
+      return
+    }
 
-  if (currentContract.value.status == 2) {
-    // 待乙方操作状态下才需要绑定乙方信息
-    await bindPartyBRes(currentContract.value.id)
-  }
+    if (
+      currentContract.value.status == 2 &&
+      currentContract.value.first_party_id != appUser.value.id
+    ) {
+      isBinding.value = true
+      // 待乙方操作状态下且当前登陆人不是甲方，绑定乙方信息
+      await bindPartyBRes(currentContract.value.id)
+    }
 
-  if (noPreviewAuth.value) {
-    // 已绑定乙方信息，此时查看合同的人必须是甲乙方一个
-    toast(`您无权查看该合同`)
-    return
+    navTo(`/pages/contract/index?id=${currentContract.value.id}`)
+  } finally {
+    isBinding.value = false
   }
-
-  navTo(`/pages/contract/index?id=${currentContract.value.id}`)
 }
 </script>
 

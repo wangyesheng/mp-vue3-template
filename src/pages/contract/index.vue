@@ -7,7 +7,7 @@
         v-for="(src, index) in currentContract.template_sign_images"
         :key="index"
         :src="src"
-        @click="previewImage(currentContract.template_sign_images)" />
+        @click="previewImage(currentContract.template_sign_images, index)" />
     </div>
 
     <div class="footer">
@@ -123,8 +123,9 @@
           <nut-button
             type="primary"
             :disabled="synthesizing"
+            :loading="synthesizing"
             @click="debounce(signatureHandler('save'))">
-            {{ synthesizing ? '签名生成中...' : '确认' }}
+            {{ synthesizing ? '正在提交...' : '确认提交' }}
           </nut-button>
         </div>
       </div>
@@ -490,7 +491,7 @@ async function onPaySubmit() {
       display: flex;
       justify-content: space-around;
       button {
-        width: 45% !important;
+        width: 46% !important;
       }
     }
   }
