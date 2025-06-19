@@ -221,8 +221,8 @@ const { appUser, merchantTel } = storeToRefs(appStore)
 
 const { bindMobileVisible, login, getPhoneNumber } = useLogin()
 
-const rechargePopupVisible = ref(false),
-  rechargeLevels = ref([])
+const rechargePopupVisible = ref(false)
+const rechargeLevels = ref([])
 async function onShowRechargePopup() {
   if (rechargeLevels.value.length > 0) {
     rechargePopupVisible.value = true

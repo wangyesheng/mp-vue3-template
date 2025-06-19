@@ -30,7 +30,8 @@ module.exports = {
     {
       files: ['*.ts', '*.mts', '*.cts', '*.tsx', '*.vue'],
       rules: {
-        'no-undef': 'off'
+        'no-undef': 'off',
+        'vue/no-v-model-argument': 'off'
       }
     }
   ]
