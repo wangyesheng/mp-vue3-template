@@ -9,11 +9,11 @@
 
 <script>
 export default {
-  name: "loading-eyes",
+  name: 'loading-eyes',
   data() {
-    return {};
-  },
-};
+    return {}
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -40,7 +40,7 @@ export default {
   left: 20rpx;
   top: 24rpx;
   position: absolute;
-  content: "";
+  content: '';
   -webkit-animation: eyeball 1s linear infinite alternate;
   -moz-animation: eyeball 1s linear infinite alternate;
   animation: eyeball 1s linear infinite alternate;

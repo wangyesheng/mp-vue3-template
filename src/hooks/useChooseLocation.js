@@ -5,8 +5,8 @@ import { qqMapWXInstance } from '../utils/location'
 export function useChooseLocation() {
   const appStore = useAppStore()
 
-  const originLocation = ref({}),
-    arrivedLocation = ref({})
+  const originLocation = ref({})
+  const arrivedLocation = ref({})
   function chooseLocation(type) {
     uni.chooseLocation({
       success: ({ latitude, longitude, address, name }) => {

@@ -11,17 +11,17 @@
 
 <script>
 export default {
-  name: "loading-atom",
+  name: 'loading-atom',
   props: {
     color: {
       type: String,
-      default: "#0396FF",
-    },
+      default: '#0396FF'
+    }
   },
   data() {
-    return {};
-  },
-};
+    return {}
+  }
+}
 </script>
 
 <style lang="scss" scoped>

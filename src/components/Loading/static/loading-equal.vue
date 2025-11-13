@@ -6,17 +6,17 @@
 
 <script>
 export default {
-  name: "loading-equal",
+  name: 'loading-equal',
   props: {
     color: {
       type: String,
-      default: "#ff1919",
-    },
+      default: '#ff1919'
+    }
   },
   data() {
-    return {};
-  },
-};
+    return {}
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -35,7 +35,7 @@ export default {
 
 .loader:before,
 .loader:after {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   background: inherit;

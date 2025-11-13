@@ -71,10 +71,11 @@
 import { onLoad, onShow } from '@dcloudio/uni-app'
 import { getComplaintsRes, getMyFeedbacksRes } from '../../api'
 import { ref } from 'vue'
-import { copy, navTo, previewImage } from '../../utils/uni'
+import { copy, navTo } from '../../utils/uni'
 
 const type = ref(1)
 const result = ref([])
+
 async function getResult() {
   const data =
     type.value == 1 ? await getComplaintsRes() : await getMyFeedbacksRes()

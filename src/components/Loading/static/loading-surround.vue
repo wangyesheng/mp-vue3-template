@@ -12,11 +12,11 @@
 
 <script>
 export default {
-  name: "loading-triangle",
+  name: 'loading-triangle',
   data() {
-    return {};
-  },
-};
+    return {}
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -59,7 +59,7 @@ $duration: 2s;
       animation: move $duration * 0.5 ease-in-out infinite alternate;
       background: $dotColor;
       border-radius: 50%;
-      content: "";
+      content: '';
       display: inline-block;
       height: 100%;
       width: 100%;

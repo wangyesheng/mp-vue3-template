@@ -15,8 +15,7 @@ class Request {
       this.interceptor.request &&
       typeof this.interceptor.request === 'function'
     ) {
-      let tmpConfig = {}
-      let interceptorRequest = this.interceptor.request(options)
+      const interceptorRequest = this.interceptor.request(options)
       if (interceptorRequest === false) {
         // 返回一个处于pending状态中的Promise，来取消原promise，避免进入then()回调
         return new Promise(() => {})
@@ -44,7 +43,7 @@ class Request {
             this.interceptor.response &&
             typeof this.interceptor.response === 'function'
           ) {
-            let resInterceptors = this.interceptor.response(response)
+            const resInterceptors = this.interceptor.response(response)
             // 如果拦截器不返回false，就将拦截器返回的内容给this.$u.post的then回调
             if (resInterceptors !== false) {
               resolve(resInterceptors)
@@ -62,7 +61,7 @@ class Request {
               this.interceptor.response &&
               typeof this.interceptor.response === 'function'
             ) {
-              let resInterceptors = this.interceptor.response(response.data)
+              const resInterceptors = this.interceptor.response(response.data)
               if (resInterceptors !== false) {
                 resolve(resInterceptors)
               } else {

@@ -16,8 +16,8 @@
 import AppContainer from '@/components/AppContainer/index'
 import { ref } from 'vue'
 
-const pdfUrl = ref('https://www.cnblogs.com/linhan8888/p/16723182.html'),
-  pdfPopupVisible = ref(false)
+const pdfUrl = ref('https://www.cnblogs.com/linhan8888/p/16723182.html')
+const pdfPopupVisible = ref(false)
 function onPreviewPDF() {
   // uni.downloadFile({
   //   url: pdfUrl.value,
@@ -34,19 +34,17 @@ function onPreviewPDF() {
   pdfPopupVisible.value = true
 }
 
-const confirm = (canvas, data) => {
-  if (data === '') {
-    console.log(canvas)
-    return false
-  }
-  const avatar =
-    'data:image/jpeg;base64,' +
-    uni.getFileSystemManager().readFileSync(data, 'base64')
-  console.log('图片地址', avatar)
-}
-const clear = () => {
-  console.log('清除事件')
-}
+// 确认签名（保留以备后续使用）
+// const confirm = (canvas, data) => {
+//   if (data === '') {
+//     console.log(canvas)
+//     return false
+//   }
+//   const avatar =
+//     'data:image/jpeg;base64,' +
+//     uni.getFileSystemManager().readFileSync(data, 'base64')
+//   console.log('图片地址', avatar)
+// }
 </script>
 
 <style lang="scss" scoped></style>

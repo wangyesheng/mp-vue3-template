@@ -10,17 +10,17 @@
 
 <script>
 export default {
-  name: "loading-sword",
+  name: 'loading-sword',
   props: {
     color: {
       type: String,
-      default: "#ED213A",
-    },
+      default: '#ED213A'
+    }
   },
   data() {
-    return {};
-  },
-};
+    return {}
+  }
+}
 </script>
 
 <style lang="scss" scoped>

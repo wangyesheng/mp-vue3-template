@@ -465,8 +465,8 @@ watch(
     }
   }
 )
-let page = 1,
-  isEnd = false
+let page = 1
+let isEnd = false
 const orders = ref([])
 async function getOrders(currentPage) {
   const current = subTabPannels.value.find(
@@ -522,25 +522,25 @@ function resetPayState() {
   selectedPayMethod.value = 'wechat'
 }
 
-const payPopupVisible = ref(false),
-  currentOrderInfo = ref({}),
-  availableCoupons = ref([]),
-  couponPopupVisible = ref(false),
-  currentSelectedCoupon = ref({}),
-  finalPriceDetails = ref({}),
-  payMethodPopupVisible = ref(false),
-  selectedPayMethod = ref('wechat'),
-  payMethods = computed(() => {
-    return [
-      { key: 'wechat', label: '微信支付', icon: wechatIcon },
-      {
-        key: 'wallet',
-        label: `余额支付（￥${appStore.appUser.totalMoney}）`,
-        icon: walletIcon
-      }
-    ]
-  }),
-  payLoading = ref(false)
+const payPopupVisible = ref(false)
+const currentOrderInfo = ref({})
+const availableCoupons = ref([])
+const couponPopupVisible = ref(false)
+const currentSelectedCoupon = ref({})
+const finalPriceDetails = ref({})
+const payMethodPopupVisible = ref(false)
+const selectedPayMethod = ref('wechat')
+const payMethods = computed(() => {
+  return [
+    { key: 'wechat', label: '微信支付', icon: wechatIcon },
+    {
+      key: 'wallet',
+      label: `余额支付（￥${appStore.appUser.totalMoney}）`,
+      icon: walletIcon
+    }
+  ]
+})
+const payLoading = ref(false)
 async function onCallPayPopup(data) {
   currentOrderInfo.value = data
   const result = await getAvailableCouponsRes(data.order_number)

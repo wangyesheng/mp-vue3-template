@@ -123,8 +123,8 @@ const uploadUrl = `${baseUrl}/api/common/upload`
 const appStore = useAppStore()
 const { appUser } = storeToRefs(appStore)
 
-const types = ref([]),
-  typePopupVisible = ref(false)
+const types = ref([])
+const typePopupVisible = ref(false)
 const formState = reactive({
   type: null,
   content: null,
@@ -142,7 +142,7 @@ function onSelectComplainType({ selectedValue }) {
   showTypePopup()
 }
 
-function onUploadSuccess({ data, option, fileItem }) {
+function onUploadSuccess({ data, fileItem }) {
   const {
     code,
     data: { fullurl },
@@ -158,7 +158,7 @@ function onUploadSuccess({ data, option, fileItem }) {
   }
 }
 
-function onDeleteFile({ files, fileList, index }) {
+function onDeleteFile({ fileList }) {
   const fileIds = fileList.map((x) => x.uid)
   formState.images = formState.images.filter((file) =>
     fileIds.includes(file.id)

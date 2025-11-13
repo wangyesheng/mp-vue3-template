@@ -66,11 +66,11 @@ import { navTo } from '../../utils/uni'
 import { isNullOrWhitespace } from '../../utils/is'
 const citySelector = requirePlugin('citySelector')
 
-let page = 1,
-  isEnd = false
-const keyword = ref(null),
-  currentCityName = ref(null),
-  cars = ref([])
+let page = 1
+let isEnd = false
+const keyword = ref(null)
+const currentCityName = ref(null)
+const cars = ref([])
 async function getResourceCars() {
   const reqData = {
     page,

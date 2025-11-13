@@ -2,19 +2,19 @@
   <view class="animations">
     <view class="box">
       <view class="gear1">
-        <view class="inner inner1"> </view>
-        <view class="inner inner2"> </view>
-        <view class="inner inner3"> </view>
+        <view class="inner inner1"></view>
+        <view class="inner inner2"></view>
+        <view class="inner inner3"></view>
       </view>
       <view class="gear2">
-        <view class="inner inner1"> </view>
-        <view class="inner inner2"> </view>
-        <view class="inner inner3"> </view>
+        <view class="inner inner1"></view>
+        <view class="inner inner2"></view>
+        <view class="inner inner3"></view>
       </view>
       <view class="gear3">
-        <view class="inner inner1"> </view>
-        <view class="inner inner2"> </view>
-        <view class="inner inner3"> </view>
+        <view class="inner inner1"></view>
+        <view class="inner inner2"></view>
+        <view class="inner inner3"></view>
       </view>
     </view>
   </view>
@@ -22,11 +22,11 @@
 
 <script>
 export default {
-  name: "loading-gear",
+  name: 'loading-gear',
   data() {
-    return {};
-  },
-};
+    return {}
+  }
+}
 </script>
 
 <style lang="scss" scoped>

@@ -10,17 +10,17 @@
 
 <script>
 export default {
-  name: "loading-wobble",
+  name: 'loading-wobble',
   props: {
     color: {
       type: String,
-      default: "#0396FF",
-    },
+      default: '#0396FF'
+    }
   },
   data() {
-    return {};
-  },
-};
+    return {}
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -41,7 +41,7 @@ $speed: 1s;
 }
 
 .three-body__dot:after {
-  content: "";
+  content: '';
   position: absolute;
   height: 0%;
   width: 100%;

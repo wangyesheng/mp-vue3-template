@@ -18,7 +18,7 @@ onLoad(async (options) => {
     uni.setNavigationBarTitle({ title: '下单流程' })
     content = await getFlowProcessRes()
   }
-  richText.value = content?.replace(/\<img/g, `<img style="width: 100%;"`)
+  richText.value = content?.replace(/<img/g, `<img style="width: 100%;"`)
 })
 </script>
 

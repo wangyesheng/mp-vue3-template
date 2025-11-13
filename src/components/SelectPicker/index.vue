@@ -61,18 +61,32 @@ const props = defineProps({
 
 const emits = defineEmits(['update:value', 'confirm'])
 
-const popupVisible = ref(false),
-  selectedPickerValue = ref([])
+const popupVisible = ref(false)
+const selectedPickerValue = ref([])
+
+// 同步 props.value 到 selectedPickerValue
+watch(
+  () => props.value,
+  (newValue) => {
+    if (isNullOrUndef(newValue)) {
+      selectedPickerValue.value = []
+    } else {
+      selectedPickerValue.value = Array.isArray(newValue)
+        ? newValue
+        : [newValue]
+    }
+  },
+  { immediate: true }
+)
+
 const titleObj = computed(() => {
   if (isNullOrUndef(props.value)) {
-    selectedPickerValue.value = []
     return {
       label: props.title,
       color: '#7a7a7a'
     }
   }
   const values = Array.isArray(props.value) ? props.value : [props.value]
-  selectedPickerValue.value = values
   return {
     label: props.options
       .filter((x) => values.includes(x.value))

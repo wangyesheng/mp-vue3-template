@@ -83,12 +83,12 @@ const emit = defineEmits(['update:visible', 'refresh'])
 
 const appStore = useAppStore()
 
-const currentSelectedLevel = ref({}),
-  customAmount = ref(null),
-  payLoading = ref(false),
-  payButtonDisabled = computed(
-    () => !currentSelectedLevel.value.id && customAmount.value <= 0
-  )
+const currentSelectedLevel = ref({})
+const customAmount = ref(null)
+const payLoading = ref(false)
+const payButtonDisabled = computed(
+  () => !currentSelectedLevel.value.id && customAmount.value <= 0
+)
 
 watch(
   () => props.visible,

@@ -13,7 +13,7 @@ function debounce(func, wait = 500, immediate = false) {
   if (timeout !== null) clearTimeout(timeout)
   // 立即执行，此类情况一般用不到
   if (immediate) {
-    var callNow = !timeout
+    const callNow = !timeout
     timeout = setTimeout(function () {
       timeout = null
     }, wait)

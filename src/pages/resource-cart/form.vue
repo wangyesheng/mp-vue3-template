@@ -231,24 +231,24 @@ const uploadUrl = `${baseUrl}/api/common/upload`
 const { appUser } = storeToRefs(useAppStore())
 
 const carFormState = ref({
-    title: null,
-    card_time: null,
-    mileage: null,
-    on_city: null,
-    pass_times: null,
-    price: null,
-    first_price: null,
-    description: null,
-    phone: appUser.value.mobile,
-    image: [],
-    images: []
-  }),
-  datePickerVisible = ref(false),
-  selectedDate = ref(new Date()),
-  maxDate = new Date(),
-  chinaCascaderVisible = ref(false),
-  chinaGeoJson = ref([]),
-  selectedCityValue = ref([])
+  title: null,
+  card_time: null,
+  mileage: null,
+  on_city: null,
+  pass_times: null,
+  price: null,
+  first_price: null,
+  description: null,
+  phone: appUser.value.mobile,
+  image: [],
+  images: []
+})
+const datePickerVisible = ref(false)
+const selectedDate = ref(new Date())
+const maxDate = new Date()
+const chinaCascaderVisible = ref(false)
+const chinaGeoJson = ref([])
+const selectedCityValue = ref([])
 
 function onShowDatePicker(value) {
   if (!isNullOrWhitespace(carFormState.value.card_time)) {
@@ -256,7 +256,7 @@ function onShowDatePicker(value) {
   }
   datePickerVisible.value = value
 }
-function onDatePickerConfirm({ date, selectedValue, selectedOptions }) {
+function onDatePickerConfirm({ selectedValue }) {
   const [year, month, day] = selectedValue
   carFormState.value.card_time = `${year}-${month}-${day}`
   onShowDatePicker(false)

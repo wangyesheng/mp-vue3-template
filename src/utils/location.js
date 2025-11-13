@@ -18,7 +18,7 @@ getQQMapWXInstance()
 export function getLocation(callback) {
   uni.authorize({
     scope: 'scope.userLocation',
-    success: (_) => {
+    success: () => {
       uni.getLocation({
         success: async (res) => {
           callback({

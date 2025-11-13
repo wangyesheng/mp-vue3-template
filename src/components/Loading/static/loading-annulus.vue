@@ -6,17 +6,17 @@
 
 <script>
 export default {
-  name: "loading-annulus",
+  name: 'loading-annulus',
   props: {
     color: {
       type: String,
-      default: "#0396FF",
-    },
+      default: '#0396FF'
+    }
   },
   data() {
-    return {};
-  },
-};
+    return {}
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -26,7 +26,7 @@ export default {
 }
 
 .loader::before {
-  content: "";
+  content: '';
   box-sizing: border-box;
   position: absolute;
   width: 60px;

@@ -28,8 +28,8 @@ import AppContainer from '@/components/AppContainer/index'
 import { onLoad, onReachBottom } from '@dcloudio/uni-app'
 import { getMoneyLogsRes } from '../../api'
 
-let page = 1,
-  isEnd = false
+let page = 1
+let isEnd = false
 const logs = ref([])
 async function getMoneyLogs() {
   let { data, total } = await getMoneyLogsRes({

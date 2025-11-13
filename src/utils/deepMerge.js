@@ -4,8 +4,8 @@ import deepClone from './deepClone'
 function deepMerge(target = {}, source = {}) {
   target = deepClone(target)
   if (typeof target !== 'object' || typeof source !== 'object') return false
-  for (var prop in source) {
-    if (!source.hasOwnProperty(prop)) continue
+  for (const prop in source) {
+    if (!Object.prototype.hasOwnProperty.call(source, prop)) continue
     if (prop in target) {
       if (typeof target[prop] !== 'object') {
         target[prop] = source[prop]

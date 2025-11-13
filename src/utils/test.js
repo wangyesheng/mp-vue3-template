@@ -18,7 +18,7 @@ function mobile(value) {
  * 验证URL格式
  */
 function url(value) {
-  return /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w-.\/?%&=]*)?/.test(value)
+  return /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?/.test(value)
 }
 
 /**
@@ -32,16 +32,14 @@ function date(value) {
  * 验证ISO类型的日期格式
  */
 function dateISO(value) {
-  return /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/.test(
-    value
-  )
+  return /^\d{4}[/-](0?[1-9]|1[012])[/-](0?[1-9]|[12][0-9]|3[01])$/.test(value)
 }
 
 /**
  * 验证十进制数字
  */
 function number(value) {
-  return /^[\+-]?(\d+\.?\d*|\.\d+|\d\.\d+e\+\d+)$/.test(value)
+  return /^[+-]?(\d+\.?\d*|\.\d+|\d\.\d+e\+\d+)$/.test(value)
 }
 
 /**
@@ -83,7 +81,7 @@ function carNo(value) {
  * 金额,只允许2位小数
  */
 function amount(value) {
-  //金额，只允许保留两位小数
+  // 金额，只允许保留两位小数
   return /^[1-9]\d*(,\d{3})*(\.\d{1,2})?$|^0\.\d{1,2}$/.test(value)
 }
 
@@ -91,7 +89,7 @@ function amount(value) {
  * 中文
  */
 function chinese(value) {
-  let reg = /^[\u4e00-\u9fa5]+$/gi
+  const reg = /^[\u4e00-\u9fa5]+$/gi
   return reg.test(value)
 }
 
@@ -106,8 +104,8 @@ function letter(value) {
  * 只能是字母或者数字
  */
 function enOrNum(value) {
-  //英文或者数字
-  let reg = /^[0-9a-zA-Z]*$/g
+  // 英文或者数字
+  const reg = /^[0-9a-zA-Z]*$/g
   return reg.test(value)
 }
 
@@ -136,7 +134,7 @@ function rangeLength(value, param) {
  * 是否固定电话
  */
 function landline(value) {
-  let reg = /^\d{3,4}-\d{7,8}(-\d{3,4})?$/
+  const reg = /^\d{3,4}-\d{7,8}(-\d{3,4})?$/
   return reg.test(value)
 }
 
@@ -155,14 +153,11 @@ function empty(value) {
       if (!value) return true
       break
     case 'number':
-      if (0 === value || isNaN(value)) return true
+      if (value === 0 || isNaN(value)) return true
       break
     case 'object':
-      if (null === value || value.length === 0) return true
-      for (var i in value) {
-        return false
-      }
-      return true
+      if (value === null || value.length === 0) return true
+      return Object.keys(value).length === 0
   }
   return false
 }
@@ -173,7 +168,7 @@ function empty(value) {
 function jsonString(value) {
   if (typeof value == 'string') {
     try {
-      var obj = JSON.parse(value)
+      const obj = JSON.parse(value)
       if (typeof obj == 'object' && obj) {
         return true
       } else {

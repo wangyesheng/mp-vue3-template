@@ -162,14 +162,12 @@
 <script>
 import LPainter from '@/components/PostPainter/l-painter/l-painter'
 import LPainterImage from '@/components/PostPainter/l-painter-image/l-painter-image'
-import LPainterQRCode from '@/components/PostPainter/l-painter-qrcode/l-painter-qrcode'
 import LPainterText from '@/components/PostPainter/l-painter-text/l-painter-text'
 import LPainterView from '@/components/PostPainter/l-painter-view/l-painter-view'
 export default {
   components: {
     LPainter,
     LPainterImage,
-    LPainterQRCode,
     LPainterText,
     LPainterView
   },
@@ -244,10 +242,10 @@ export default {
     close() {
       this.show = false
     },
-    fail(v) {
-      console.log(v)
+    fail() {
+      // 绘制失败处理
     },
-    done(v) {
+    done() {
       console.log('绘制完成:')
     },
     save() {
@@ -269,7 +267,7 @@ export default {
       // #ifndef H5
       uni.saveImageToPhotosAlbum({
         filePath: this.picture2,
-        success(res) {
+        success() {
           uni.showToast({
             title: '已保存到相册',
             icon: 'success',

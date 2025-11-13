@@ -392,9 +392,9 @@ const { appUser, merchantTel } = storeToRefs(appStore)
 const { bindMobileVisible, login, getPhoneNumber } = useLogin()
 const { originLocation, arrivedLocation, chooseLocation } = useChooseLocation()
 
-const orderType = ref('1'),
-  driverRoutes = ref([]),
-  logisticsRoutes = ref([])
+const orderType = ref('1')
+const driverRoutes = ref([])
+const logisticsRoutes = ref([])
 watch(
   () => orderType.value,
   (newType) => {
@@ -418,8 +418,8 @@ async function getRoutes(type) {
   }
 }
 
-const banners = ref([]),
-  couponUrl = ref(null)
+const banners = ref([])
+const couponUrl = ref(null)
 onLoad(async () => {
   banners.value = await getBannersRes()
   couponUrl.value = await getCouponUrlRes()

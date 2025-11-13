@@ -37,7 +37,7 @@
 <script setup>
 import { navTo } from '../../utils/uni'
 
-const props = defineProps({
+defineProps({
   data: {
     type: Object,
     default: () => ({})

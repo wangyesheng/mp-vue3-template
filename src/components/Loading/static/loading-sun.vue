@@ -17,11 +17,11 @@
 
 <script>
 export default {
-  name: "loading-sun",
+  name: 'loading-sun',
   data() {
-    return {};
-  },
-};
+    return {}
+  }
+}
 </script>
 
 <style lang="scss" scoped>

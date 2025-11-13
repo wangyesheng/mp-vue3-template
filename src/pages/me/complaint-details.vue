@@ -112,7 +112,7 @@ async function getResult(key) {
 }
 
 function processRichtext(content) {
-  return content?.replace(/\<img/g, `<img style="width: 100%;"`)
+  return content?.replace(/<img/g, `<img style="width: 100%;"`)
 }
 
 onLoad((options) => {

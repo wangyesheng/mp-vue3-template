@@ -261,25 +261,25 @@ const arrivedLocationObj = computed(() => {
   return obj
 })
 
-const loading = ref(false),
-  orderInfo = ref({
-    order_type: null,
-    vehicle_type: null,
-    user_name: null,
-    go_time: null,
-    user_phone: appStore.appUser.mobile
-  })
+const loading = ref(false)
+const orderInfo = ref({
+  order_type: null,
+  vehicle_type: null,
+  user_name: null,
+  go_time: null,
+  user_phone: appStore.appUser.mobile
+})
 
-const goTimePopupVisible = ref(false),
-  selectedGoTime = ref(new Date()),
-  minDate = new Date(),
-  maxDate = new Date().setMonth(new Date().getMonth() + 1)
+const goTimePopupVisible = ref(false)
+const selectedGoTime = ref(new Date())
+const minDate = new Date()
+const maxDate = new Date().setMonth(new Date().getMonth() + 1)
 
 function showDatePicker(value) {
   goTimePopupVisible.value = value
 }
 
-function onGoTimeConfirm({ date, selectedValue, selectedOptions }) {
+function onGoTimeConfirm({ selectedValue }) {
   const [year, month, day] = selectedValue
   orderInfo.value.go_time = `${year}-${month}-${day}`
   showDatePicker(false)
@@ -303,7 +303,7 @@ function onSubmit() {
 }
 
 async function placeOrder() {
-  if (isEmpty(orderInfo.vehicle_type)) {
+  if (isEmpty(orderInfo.value.vehicle_type)) {
     return toast('请选择订单类型')
   }
   if (isEmpty(originLocation.value)) {

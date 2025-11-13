@@ -11,11 +11,11 @@
 
 <script>
 export default {
-  name: "loading-radar",
+  name: 'loading-radar',
   data() {
-    return {};
-  },
-};
+    return {}
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -41,7 +41,7 @@ $maincolor: #2da3f6;
 }
 
 .radar::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 50%;
   left: 50%;
