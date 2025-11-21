@@ -9,13 +9,16 @@
 
 <script setup>
 const themeVars = reactive({
-  primaryColor: '#344AD9',
-  primaryColorEnd: '#344AD9'
+  primaryColor: '#8153FE',
+  primaryColorEnd: '#8153FE'
 })
 </script>
 
 <style lang="scss" scoped>
 .app-contanier {
   position: relative;
+  width: 100%;
+  overflow-x: hidden;
+  background: #e8e8e8;
 }
 </style>

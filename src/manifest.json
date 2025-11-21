@@ -42,7 +42,7 @@
   },
   "quickapp": {},
   "mp-weixin": {
-    "appid": "wxddd2a0515e004d07",
+    "appid": "wx58e3ba95ff5820d1",
     "setting": {
       "urlCheck": false
     },
@@ -56,12 +56,7 @@
       }
     },
     "requiredPrivateInfos": ["chooseLocation", "getLocation"],
-    "plugins": {
-      "citySelector": {
-        "version": "1.0.2",
-        "provider": "wx63ffb7b7894e99ae"
-      }
-    },
+    "plugins": {},
     "lazyCodeLoading": "requiredComponents"
   },
   "mp-alipay": {
