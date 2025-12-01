@@ -1,7 +1,8 @@
 :root,
 page {
   --nut-button-large-height: 90rpx;
-  background: #f7f9fc;
+  --hw-primary-color: #8153fe;
+  background: #e8e8e8;
 }
 
 .__bindMobilePopup {
@@ -19,6 +20,7 @@ page {
       margin-right: 20rpx;
     }
   }
+
   .title {
     font-size: 32rpx;
     margin-bottom: 30rpx;
@@ -26,6 +28,7 @@ page {
     color: #666;
     font-weight: 500;
   }
+
   .tips {
     color: #6b6b6b;
     font-size: 30rpx;
@@ -68,7 +71,7 @@ page {
     width: 10rpx;
     height: 50%;
     border-radius: 50%;
-    background: #344ad9;
+    background: var(--hw-primary-color);
     position: absolute;
     top: 25%;
     left: -20rpx;
@@ -78,6 +81,7 @@ page {
 .nut-empty {
   height: 100%;
   margin: auto;
+
   .nut-empty__box {
     width: 195rpx;
     height: 128rpx;
@@ -85,5 +89,85 @@ page {
 
   .nut-empty__description {
     margin-top: 30rpx;
+  }
+}
+
+.nut-tabbar__placeholder {
+  .nut-tabbar {
+    // background: rgba(255, 255, 255, 0.5);
+    // border: 2rpx solid #FFFFFF;
+
+    .nut-tabbar-item {
+      align-items: flex-end;
+
+      .custom-tabbar-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        label {
+          color: #757575 !important;
+          font-weight: 550;
+          margin-top: 12rpx;
+        }
+
+        &.me {
+          image {
+            width: 37rpx;
+            height: 43rpx;
+          }
+        }
+
+        &.home {
+          image {
+            width: 41rpx;
+            height: 43rpx;
+          }
+        }
+
+        &.active {
+          label {
+            color: var(--hw-primary-color) !important;
+          }
+        }
+      }
+
+      .scan {
+        width: 142rpx;
+        height: 156rpx;
+
+        image {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+}
+
+.richtext {
+  ::v-deep() {
+    .div,
+    .p,
+    .strong {
+      color: #333 !important;
+      font-size: 28rpx !important;
+      .span {
+        font-size: 28rpx !important;
+      }
+    }
+
+    .li {
+      color: #666 !important;
+      font-size: 28rpx !important;
+      .span {
+        font-size: 28rpx !important;
+      }
+    }
+
+    .img {
+      width: 100% !important;
+    }
   }
 }

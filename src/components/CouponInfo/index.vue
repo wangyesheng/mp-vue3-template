@@ -1,197 +1,118 @@
 <template>
-  <div :class="['coupon', couponClassname]">
-    <div class="inner">
-      <div class="value money w-[50%]" v-if="data.result == 1">
-        <span>￥</span>
-        <span>{{ moneyOrDiscount }}</span>
-      </div>
-      <div class="value discount" v-if="data.result == 0">
-        <span>
-          {{ moneyOrDiscount }}
+  <div :class="['coupon']" @click="onClick">
+    <div :class="['inner', selected ? 'selected' : '']">
+      <div class="left">
+        <span class="price">{{ data.amount_text }}</span>
+        <span class="tips" v-if="data.type == 2">
+          最高可减{{ data.max_discount }}元
         </span>
-        <span>折</span>
       </div>
-      <div class="description w-[50%]">
-        <div>
-          {{ data.name }}
+      <div class="right">
+        <span class="type">{{ data.type_text }}</span>
+        <span class="name">{{ data.name }}</span>
+        <div @click.stop>
+          <slot name="action" :data="data"></slot>
         </div>
-        <div class="divider"></div>
-        <div>
-          {{ data.result_name }}
-        </div>
-      </div>
-    </div>
-    <div class="mask" v-if="data.status == 2">
-      <div class="mask-inner">
-        <div>未开始</div>
-        <div class="divider"></div>
-        <div>开始时间：{{ data.begin_time }}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { COUPON_STATUS } from '../../constant'
-
 const props = defineProps({
   data: {
     type: Object,
     default: () => ({})
+  },
+  selected: {
+    type: Boolean,
+    default: false
   }
 })
 
-const moneyOrDiscount = computed(
-  () => JSON.parse(props.data.result_data)?.number
-)
-const couponClassname = computed(() => {
-  if (props.data.is_get == 1) {
-    return 'received'
-  }
-  return COUPON_STATUS[props.data.status]?.key
-})
+const emit = defineEmits(['click'])
+function onClick() {
+  emit('click', props.data)
+}
 </script>
 
 <style lang="scss" scoped>
 .coupon {
   position: relative;
   width: 100%;
-  height: 282rpx;
-  background-image: url(../../static/images/coupon/available.png);
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  margin-bottom: 20rpx;
-
-  &.used {
-    background-image: url(../../static/images/coupon/used.png);
-  }
-
-  &.expired {
-    background-image: url(../../static/images/coupon/expired.png);
-  }
-
-  &.received {
-    background-image: url(../../static/images/coupon/received.png);
-  }
-
-  &.used,
-  &.expired {
-    .value,
-    .description {
-      color: rgba(125, 125, 125, 1) !important;
-    }
-
-    .divider {
-      background: rgba(125, 125, 125, 1) !important;
-    }
-  }
-
-  &.notStarted {
-    .mask {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: 15px;
-      background: linear-gradient(
-        134.76deg,
-        rgba(168, 150, 130, 0.65) 0.87%,
-        rgba(115, 57, 22, 0.49) 49.14%,
-        rgba(212, 114, 114, 0.68) 100%
-      );
-      backdrop-filter: blur(4px);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      .mask-inner {
-        display: flex;
-        flex-direction: column;
-        color: #fff;
-        text-align: center;
-
-        view:first-child {
-          font-size: 32rpx;
-          font-weight: 700;
-        }
-
-        view:last-child {
-          font-size: 22rpx;
-          font-weight: 500;
-        }
-
-        .divider {
-          width: 320rpx;
-          height: 2rpx;
-          background: #fff;
-          margin: 10rpx 0;
-        }
-      }
-    }
-  }
 
   .inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    padding: 20rpx 40rpx;
+    background: #fff;
     display: flex;
-    justify-content: space-between;
+    padding: 20rpx 0;
+    box-sizing: border-box;
+    border: 2rpx solid var(--hw-primary-color);
+    border-radius: 10rpx;
+
+    &.selected::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 48rpx;
+      height: 48rpx;
+      background-image: url(https://hwly.tuomuit.com/wechat/img/selected.png);
+      background-size: 100% 100%;
+      background-repeat: no-repeat3;
+    }
+  }
+
+  &.history::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  .left {
+    width: 35%;
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    row-gap: 10rpx;
+    border-right: 2rpx dashed var(--hw-primary-color);
 
-    .value {
-      font-size: 40rpx;
-      font-weight: 600;
-      color: rgba(242, 69, 68, 1);
-      text-shadow: inset 0 2rpx 4rpx rgba(163, 28, 13, 1);
-      display: flex;
-      align-items: flex-end;
-
-      &.money {
-        label:last-child {
-          font-size: 100rpx;
-          font-weight: 700;
-          line-height: 80rpx;
-        }
-      }
-      &.discount {
-        label:first-child {
-          margin-right: 5rpx;
-          font-size: 100rpx;
-          font-weight: 700;
-          line-height: 80rpx;
-        }
-      }
+    .price {
+      font-size: 38rpx;
+      font-weight: 550;
+      color: var(--hw-primary-color);
     }
 
-    .description {
-      display: flex;
-      flex-direction: column;
-      color: rgba(242, 69, 68, 1);
-      text-align: center;
-      min-width: 320rpx;
-      transform: translateY(-10rpx);
+    .tips {
+      font-size: 24rpx;
+      color: var(--hw-primary-color);
+    }
+  }
 
-      view:first-child {
-        font-size: 40rpx;
-        font-weight: 500;
-      }
+  .right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    row-gap: 20rpx;
+    padding: 0 20rpx;
+    box-sizing: border-box;
 
-      view:last-child {
-        font-size: 28rpx;
-        font-weight: 400;
-      }
+    .type {
+      font-size: 30rpx;
+      font-weight: 500;
+      color: var(--hw-primary-color);
+    }
 
-      .divider {
-        margin-top: 10rpx;
-        margin-bottom: 10rpx;
-        width: 100%;
-        height: 2rpx;
-        background: rgba(242, 69, 68, 1);
-      }
+    .name {
+      font-size: 26rpx;
+      font-weight: 400;
+      color: var(--hw-primary-color);
     }
   }
 }

@@ -78,12 +78,7 @@ export function useLogin() {
       mobile: phoneInfo.phoneNumber
     }
     const { userinfo } = await checkLoginRes(reqData)
-    const newUserInfo = {
-      ...userinfo,
-      totalMoney: (
-        parseFloat(userinfo.money) + parseFloat(userinfo.gift_money)
-      ).toFixed(2)
-    }
+    const newUserInfo = userinfo
     appStore.setAppUser(newUserInfo)
     uni.setStorageSync('APP_USER', newUserInfo)
     bindMobileVisible.value = false

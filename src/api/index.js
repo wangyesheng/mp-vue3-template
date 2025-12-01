@@ -33,7 +33,22 @@ export function updateUserRes(data) {
 
 export function getBannersRes() {
   return request({
-    url: '/api/banner/list?type=1',
+    url: '/api/banner/list',
+    method: 'get'
+  })
+}
+
+export function getTicketsRes(data) {
+  return request({
+    url: '/api/ticket/list',
+    method: 'get',
+    data
+  })
+}
+
+export function getTicketDetailsRes(id) {
+  return request({
+    url: `/api/ticket/detail?id=${id}`,
     method: 'get'
   })
 }
@@ -70,7 +85,7 @@ export function getOrderDetailsRes(order_number) {
 
 export function callPayRes(data) {
   return request({
-    url: `/api/order/pay_order`,
+    url: `/api/order/pay`,
     method: 'post',
     data
   })
@@ -93,41 +108,56 @@ export function confirmOrderRes(order_number) {
   })
 }
 
-export function getCouponsRes() {
+export function getWalletInfoRes(data) {
   return request({
-    url: `/api/coupon/get_coupon_list`,
-    method: 'get'
+    url: `/api/user/mycard`,
+    method: 'get',
+    data
+  })
+}
+
+export function getCouponsRes(data) {
+  return request({
+    url: `/api/coupon/list`,
+    method: 'get',
+    data
   })
 }
 
 export function receiveCouponRes(coupon_id) {
   return request({
-    url: `/api/coupon/get_coupon?coupon_id=${coupon_id}`,
-    method: 'get'
+    url: `/api/coupon/receive`,
+    method: 'post',
+    data: {
+      coupon_id
+    }
   })
 }
 
-export function getMyCouponsRes() {
+export function getMyCouponsRes(data) {
   return request({
-    url: `/api/coupon/my_coupon_list`,
-    method: 'get'
+    url: `/api/coupon/my`,
+    method: 'get',
+    data
   })
 }
 
-export function getAvailableCouponsRes(order_number) {
+export function getAvailableCouponsRes(data) {
   return request({
-    url: `/api/coupon/get_used_list?order_number=${order_number}`,
-    method: 'get'
+    url: `/api/coupon/usable`,
+    method: 'get',
+    data
   })
 }
 
-export function getPriceDetailsRes(data) {
+export function getTicketPriceRes(data) {
   return request({
-    url: `/api/order/get_price_detail`,
+    url: `/api/order/settlement`,
     method: 'post',
     data
   })
 }
+
 export function getRechargeLevelsRes() {
   return request({
     url: `/api/recharge/get_list`,
@@ -291,5 +321,12 @@ export function addFeedbackRes(data) {
     url: `/api/feedback/add_feedback`,
     method: 'post',
     data
+  })
+}
+
+export function getQRCodeRes() {
+  return request({
+    url: `/api/user/mycode`,
+    method: 'get'
   })
 }

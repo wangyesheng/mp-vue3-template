@@ -1,36 +1,45 @@
 <template>
-  <div class="__couponWrap">
-    <div class="content" v-if="coupons.length > 0">
-      <div
-        v-for="item in coupons"
-        :key="item.id"
-        @click="onReceiveCoupon(item)">
-        <CouponInfo :data="item" />
+  <AppContainer>
+    <div class="__couponWrap">
+      <div class="content" v-if="coupons.length > 0">
+        <CouponInfo :data="item" v-for="item in coupons" :key="item.id">
+          <template #action="{ data }">
+            <nut-button
+              type="primary"
+              size="small"
+              @click="debounce(() => onReceiveCoupon(data))">
+              立即领取
+            </nut-button>
+          </template>
+        </CouponInfo>
+      </div>
+      <div v-else>
+        <nut-empty image="empty" description="暂无数据">
+          <template #image>
+            <img src="../../static/images/no-data.png" alt="" />
+          </template>
+        </nut-empty>
       </div>
     </div>
-    <div v-else class="h-screen">
-      <nut-empty image="empty" description="暂无数据">
-        <template #image>
-          <img src="../../static/images/no-data.png" alt="" />
-        </template>
-      </nut-empty>
-    </div>
-  </div>
+  </AppContainer>
 </template>
 
 <script setup>
+import AppContainer from '@/components/AppContainer/index'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import { getCouponsRes, receiveCouponRes } from '../../api'
 import CouponInfo from '@/components/CouponInfo/index'
 import { toast } from '../../utils/uni'
+import debounce from '../../utils/debounce'
 
-onLoad(() => {
-  getCoupons()
-})
 const coupons = ref([])
 async function getCoupons() {
-  coupons.value = await getCouponsRes()
+  const { data } = await getCouponsRes({
+    page: 1,
+    limit: 100
+  })
+  coupons.value = data
 }
 
 async function onReceiveCoupon(scope) {
@@ -41,19 +50,22 @@ async function onReceiveCoupon(scope) {
   toast('领取成功！')
   getCoupons()
 }
+
+onLoad(() => {
+  getCoupons()
+})
 </script>
 
 <style lang="scss" scoped>
 .__couponWrap {
   width: 100%;
-  min-height: 100vh;
-  position: relative;
+  padding: 34rpx 32rpx;
+  box-sizing: border-box;
 
   .content {
-    height: 100%;
-    box-sizing: border-box;
-    padding: 30rpx;
-    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20rpx;
   }
 }
 </style>

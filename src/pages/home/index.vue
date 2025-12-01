@@ -1,8 +1,6 @@
 <style lang="scss" scoped>
-.home {
+.__home {
   position: relative;
-  width: 100%;
-  min-height: 100vh;
 }
 
 .swiper {
@@ -49,7 +47,7 @@
 }
 
 .funcs {
-  padding: 30rpx 34rpx;
+  padding: 30rpx 34rpx 80rpx;
   box-sizing: border-box;
 
   .common {
@@ -58,16 +56,14 @@
       0rpx 2rpx 4rpx 0rpx rgba(0, 0, 0, 0.3);
     border-radius: 24rpx;
     background: #fff;
-    padding: 24rpx 22rpx;
     box-sizing: border-box;
-    color: #000000;
+    color: #000;
     display: flex;
     flex-direction: column;
 
     label:first-child {
       font-weight: 550;
       font-size: 40rpx;
-      margin-bottom: 8rpx;
     }
 
     label:last-child {
@@ -78,21 +74,45 @@
 
   .entry {
     display: flex;
-    justify-content: space-between;
+    column-gap: 16rpx;
 
     .ticket {
       width: 336rpx;
-      height: 336rpx;
+      padding: 24rpx 22rpx;
+
+      & > view {
+        display: flex;
+        flex-direction: column;
+      }
+
+      image {
+        width: 292rpx;
+        height: 190rpx;
+      }
     }
 
     .third-mp {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      row-gap: 16rpx;
 
-      view {
+      & > view {
         width: 334rpx;
-        height: 160rpx;
+        min-height: 160rpx;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8rpx 22rpx 8rpx 40rpx;
+
+        & > view {
+          display: flex;
+          flex-direction: column;
+        }
+
+        image {
+          width: 110rpx;
+          height: 144rpx;
+        }
       }
     }
   }
@@ -100,19 +120,20 @@
   .extra {
     margin-top: 16rpx;
     width: 686rpx;
-    height: 238rpx;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 28rpx 30rpx !important;
+    padding: 28rpx 30rpx;
 
     & > view {
-      view {
+      display: flex;
+      flex-direction: column;
+      image {
         width: 112rpx;
         height: 112rpx;
-        background: #8153fe;
         border-radius: 8rpx;
+        margin-bottom: 16rpx;
       }
     }
   }
@@ -120,8 +141,8 @@
   .activity {
     margin-top: 16rpx;
     width: 686rpx;
-    height: 354rpx;
     background: #94dc23;
+    padding: 18rpx 24rpx;
 
     .title {
       font-weight: bold;
@@ -138,13 +159,12 @@
     .scroll-content {
       display: flex;
       gap: 16rpx;
-      padding-right: 22rpx;
     }
 
     .activity-item {
       flex-shrink: 0;
-      width: 480rpx;
       height: 280rpx;
+      width: var(--w);
       border-radius: 16rpx;
       overflow: hidden;
       background: #fff;
@@ -161,7 +181,7 @@
 
 <template>
   <AppContainer>
-    <div class="home">
+    <div class="__home">
       <div class="swiper">
         <nut-swiper :auto-play="3000">
           <nut-swiper-item v-for="banner in banners" :key="banner.id">
@@ -178,35 +198,57 @@
           </div>
         </div>
       </div>
-
       <div class="funcs">
         <div class="entry">
-          <div class="ticket common">
-            <span>门票购买</span>
-            <span>menpiaogoumai</span>
+          <div
+            class="ticket common"
+            @click="navTo('/pages/ticket/index', false)">
+            <div>
+              <span>门票购买</span>
+              <span>menpiaogoumai</span>
+            </div>
+            <image
+              src="../../static/images/home/ticket.png"
+              mode="aspectFill" />
           </div>
           <div class="third-mp">
             <div class="common">
-              <span>电玩</span>
-              <span>dianwan</span>
+              <div>
+                <span>电玩</span>
+                <span>dianwan</span>
+              </div>
+              <image
+                src="../../static/images/home/game.png"
+                mode="aspectFill" />
             </div>
             <div class="common">
-              <span>简餐</span>
-              <span>jiancan</span>
+              <div>
+                <span>简餐</span>
+                <span>jiancan</span>
+              </div>
+              <image
+                src="../../static/images/home/dinner.png"
+                mode="aspectFill" />
             </div>
           </div>
         </div>
         <div class="extra common">
-          <div>
-            <div></div>
+          <div @click="switchTab('/pages/scan/index', false)">
+            <image
+              src="../../static/images/home/writeOff.png"
+              mode="aspectFill" />
             <span>券码核销</span>
           </div>
-          <div>
-            <div></div>
+          <div @click="navTo('/pages/help/customer-service', false)">
+            <image
+              src="../../static/images/home/contract.png"
+              mode="aspectFill" />
             <span>客服中心</span>
           </div>
           <div>
-            <div></div>
+            <image
+              src="../../static/images/home/activity.png"
+              mode="aspectFill" />
             <span>活动信息</span>
           </div>
         </div>
@@ -220,6 +262,7 @@
               <div
                 v-for="(activity, index) in banners"
                 :key="index"
+                :style="{ '--w': banners.length === 1 ? '100%' : '80%' }"
                 class="activity-item">
                 <image :src="activity.image" mode="aspectFill" />
               </div>
@@ -227,135 +270,46 @@
           </scroll-view>
         </div>
       </div>
+
+      <BindMobile
+        v-model:visible="bindMobileVisible"
+        :getPhoneNumber="getPhoneNumber" />
     </div>
   </AppContainer>
 </template>
 <script setup>
 import AppContainer from '@/components/AppContainer/index'
 import BindMobile from '@/components/BindMobile/index'
-import { ref, watch } from 'vue'
-import { useChooseLocation } from '../../hooks/useChooseLocation'
+import { ref } from 'vue'
 import { useLogin } from '../../hooks/useLogin'
 import { useAppStore } from '../../stores/app'
 import { storeToRefs } from 'pinia'
 import { onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
-import {
-  getBannersRes,
-  getCouponUrlRes,
-  getTelRes,
-  getRoutesRes
-} from '../../api'
-import { callPhone, navTo } from '../../utils/uni'
-import { isNullOrUndef } from '../../utils/is'
-
-import positionBg from '../../static/images/home/position.png'
+import { getBannersRes } from '../../api'
+import { callPhone, navTo, switchTab } from '../../utils/uni'
 
 const appStore = useAppStore()
 const { appUser, merchantTel } = storeToRefs(appStore)
 
 const { bindMobileVisible, login, getPhoneNumber } = useLogin()
-const { originLocation, arrivedLocation, chooseLocation } = useChooseLocation()
-
-const orderType = ref('1')
-const driverRoutes = ref([])
-const logisticsRoutes = ref([])
-watch(
-  () => orderType.value,
-  (newType) => {
-    if (newType == 1 && driverRoutes.value.length === 0) {
-      getRoutes(newType)
-    } else if (newType == 2 && logisticsRoutes.value.length === 0) {
-      getRoutes(newType)
-    }
-  },
-  {
-    immediate: true
-  }
-)
-
-async function getRoutes(type) {
-  const data = await getRoutesRes(type)
-  if (type == 1) {
-    driverRoutes.value = data
-  } else if (type == 2) {
-    logisticsRoutes.value = data
-  }
-}
 
 const banners = ref([])
-const couponUrl = ref(null)
-
-// 活动数据 - 示例数据，可以从API获取
-const activities = ref([
-  {
-    image: 'https://via.placeholder.com/480x280/FF6B6B/ffffff?text=Activity+1'
-  },
-  {
-    image: 'https://via.placeholder.com/480x280/4ECDC4/ffffff?text=Activity+2'
-  },
-  {
-    image: 'https://via.placeholder.com/480x280/45B7D1/ffffff?text=Activity+3'
-  },
-  {
-    image: 'https://via.placeholder.com/480x280/FFA07A/ffffff?text=Activity+4'
-  }
-])
 
 onLoad(async () => {
-  banners.value = await getBannersRes()
-  couponUrl.value = await getCouponUrlRes()
-  const tel = await getTelRes()
-  appStore.setMerchantTel(tel)
+  const data = await getBannersRes()
+  banners.value = data
 })
-
-function onSwitchTab(type, route) {
-  if (isNullOrUndef(route)) {
-    appStore.setOriginLocation()
-    appStore.setArrivedLocation()
-  } else if (route.order_amount) {
-    appStore.setOriginLocation({
-      province: route.s_province,
-      city: route.s_city,
-      district: route.s_area,
-      orderAmount: route.order_amount
-    })
-    appStore.setArrivedLocation({
-      province: route.r_province,
-      city: route.r_city,
-      district: route.r_area,
-      orderAmount: route.order_amount
-    })
-  } else {
-    appStore.setOriginLocation(originLocation.value)
-    appStore.setArrivedLocation(arrivedLocation.value)
-  }
-  appStore.setOrderType(type)
-  uni.switchTab({ url: '/pages/place-order/index' })
-}
-
-function onClickComingSoonFunc() {
-  uni.showModal({
-    title: '请拨打平台热线电话',
-    content: `平台热线：${merchantTel.value}`,
-    confirmText: '拨打热线',
-    success({ confirm }) {
-      if (confirm) {
-        callPhone(merchantTel.value)
-      }
-    }
-  })
-}
 
 onShareAppMessage(() => {
   return {
-    title: '车捷速',
+    title: 'HAOWEN LAND',
     path: '/pages/home/index'
   }
 })
 
 onShareTimeline(() => {
   return {
-    title: '车捷速',
+    title: 'HAOWEN LAND',
     path: '/pages/home/index'
   }
 })

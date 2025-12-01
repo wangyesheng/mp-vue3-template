@@ -18,10 +18,59 @@
       }
     },
     {
+      "path": "pages/me/wallet",
+      "style": {
+        "navigationBarTitleText": "我的卡包"
+      }
+    },
+    {
+      "path": "pages/ticket/details",
+      "style": {
+        "navigationBarTitleText": "门票详情"
+      }
+    },
+    {
+      "path": "pages/coupon/index",
+      "style": {
+        "navigationBarTitleText": "领券中心"
+      }
+    },
+    {
+      "path": "pages/coupon/my",
+      "style": {
+        "navigationBarTitleText": "我的券包"
+      }
+    },
+    {
+      "path": "pages/ticket/index",
+      "style": {
+        "navigationBarTitleText": "门票列表"
+      }
+    },
+    {
+      "path": "pages/me/gift",
+      "style": {
+        "navigationBarTitleText": "积分商城",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/coupon/history",
+      "style": {
+        "navigationBarTitleText": "历史优惠券"
+      }
+    },
+    {
+      "path": "pages/help/customer-service",
+      "style": {
+        "navigationBarTitleText": "联系客服"
+      }
+    },
+
+    {
       "path": "pages/me/index",
       "style": {
-        "navigationBarTitleText": "我的",
-        "navigationStyle": "custom"
+        "navigationBarTitleText": "HAOWEN LAND"
       }
     },
     {
@@ -80,18 +129,6 @@
       }
     },
     {
-      "path": "pages/coupon/my",
-      "style": {
-        "navigationBarTitleText": "我的优惠券"
-      }
-    },
-    {
-      "path": "pages/coupon/index",
-      "style": {
-        "navigationBarTitleText": "领券中心"
-      }
-    },
-    {
       "path": "pages/order/details",
       "style": {
         "navigationBarTitleText": "订单详情"
@@ -127,43 +164,39 @@
         "navigationBarTitleText": "下单",
         "navigationStyle": "custom"
       }
+    },
+    {
+      "path": "pages/scan/index",
+      "style": {
+        "navigationBarTitleText": "HAOWEN LAND"
+      }
     }
   ],
   "globalStyle": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "车无忧",
-    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "HAOWEN LAND",
+    "navigationBarBackgroundColor": "#8153FE",
     "backgroundColor": "#ffffff"
   },
+
   "tabBar": {
-    "color": "#909399",
-    "selectedColor": "#303133",
+    "custom": true,
+    "color": "#666666",
+    "selectedColor": "#8153FE",
     "backgroundColor": "#FFFFFF",
-    "borderStyle": "black",
+    "borderStyle": "white",
     "list": [
       {
-        "iconPath": "static/images/tabbar/home.png",
-        "selectedIconPath": "static/images/tabbar/home-selected.png",
-        "text": "首页",
-        "pagePath": "pages/home/index"
+        "pagePath": "pages/home/index",
+        "text": "首页"
       },
       {
-        "iconPath": "static/images/tabbar/place-order.png",
-        "selectedIconPath": "static/images/tabbar/place-order-selected.png",
-        "text": "下单",
-        "pagePath": "pages/place-order/index"
+        "pagePath": "pages/scan/index",
+        "text": "扫码核销"
       },
       {
-        "iconPath": "static/images/tabbar/order.png",
-        "selectedIconPath": "static/images/tabbar/order-selected.png",
-        "text": "订单",
-        "pagePath": "pages/order/index"
-      },
-      {
-        "iconPath": "static/images/tabbar/me.png",
-        "selectedIconPath": "static/images/tabbar/me-selected.png",
-        "text": "我的",
-        "pagePath": "pages/me/index"
+        "pagePath": "pages/me/index",
+        "text": "我的"
       }
     ]
   }

@@ -1,5 +1,7 @@
 <style lang="scss" scoped>
 .__me {
+  position: relative;
+  min-height: 100vh;
   .wallet {
     ::v-deep() {
       .nut-button {
@@ -12,29 +14,17 @@
     }
   }
 
-  .avatar {
-    margin: 0;
-    padding: 0;
-    width: 128rpx;
-    height: 128rpx;
-    border-radius: 50%;
-
-    &::after {
-      border: none;
-    }
-
-    image {
-      max-width: 100%;
-      max-height: 100%;
-    }
-  }
-
   .noLoginUser {
-    width: 50vw;
-    margin: 180rpx auto 80rpx;
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-size: 32rpx;
+    color: #fff;
+    position: absolute;
+    top: 80rpx;
+    left: 50%;
+    transform: translateX(-50%);
+
     .avatar-wrap {
       width: 180rpx;
       height: 180rpx;
@@ -50,11 +40,213 @@
         height: 100rpx;
       }
     }
+  }
 
-    span {
-      font-size: 32rpx;
-      font-weight: 550;
-      color: #666;
+  .userInfo {
+    width: 100%;
+    height: 560rpx;
+    background: #8153fe;
+    position: relative;
+
+    & > .inner {
+      padding: 20rpx 70rpx 0;
+      box-sizing: border-box;
+
+      .header {
+        display: flex;
+
+        .avatar {
+          width: 120rpx;
+          height: 120rpx;
+          border-radius: 50%;
+          margin-right: 16rpx;
+        }
+
+        .name {
+          display: flex;
+          align-items: center;
+
+          label {
+            font-size: 40rpx;
+            font-weight: 550;
+            color: #000;
+            margin-right: 48rpx;
+          }
+          image {
+            width: 44rpx;
+            height: 44rpx;
+          }
+        }
+
+        .vip {
+          margin-top: 22rpx;
+          width: 152rpx;
+          height: 44rpx;
+          line-height: 44rpx;
+          background: #94dc23;
+          border-radius: 8rpx;
+          color: #fff;
+          font-size: 28rpx;
+          text-align: center;
+        }
+      }
+
+      .cardInfo {
+        margin-top: 62rpx;
+        display: flex;
+        justify-content: space-between;
+
+        .item {
+          padding: 16rpx 28rpx;
+          box-sizing: border-box;
+          border-radius: 16rpx;
+          border: 2rpx solid #fff;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          color: #fff;
+
+          label:first-child {
+            font-weight: 550;
+            font-size: 40rpx;
+          }
+          label:last-child {
+            font-weight: 400;
+            font-size: 28rpx;
+          }
+
+          view {
+            height: 2rpx;
+            width: 100%;
+            background: #fff;
+            margin: 8rpx 0;
+            position: relative;
+
+            &::before {
+              content: '';
+              width: 6px;
+              height: 6px;
+              background: #fff;
+              border-radius: 50%;
+              position: absolute;
+              top: -3px;
+              left: 0;
+            }
+
+            &::after {
+              content: '';
+              width: 6px;
+              height: 6px;
+              background: #fff;
+              border-radius: 50%;
+              position: absolute;
+              top: -3px;
+              right: 0;
+            }
+          }
+        }
+      }
+    }
+
+    .position {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      z-index: 2;
+
+      & > .inner {
+        background: url(https://hwly.tuomuit.com/wechat/img/me-position-bg.png);
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        width: 750rpx;
+        height: 138rpx;
+        padding: 32rpx 88rpx;
+        box-sizing: border-box;
+
+        view {
+          display: flex;
+          align-items: center;
+          image {
+            width: 40rpx;
+            height: 40rpx;
+            margin-right: 16rpx;
+          }
+
+          label {
+            color: #000;
+            font-size: 28rpx;
+          }
+        }
+      }
+    }
+  }
+
+  .funcs {
+    padding: 24rpx 52rpx 48rpx;
+    box-sizing: border-box;
+    background: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 24rpx; // 在第一行与第二行之间产生 24rpx 的间距
+
+    // 1. 将容器设置为 Grid 网格布局 2. 容器内的直接子元素自动成为网格项
+    // display: grid;
+
+    // grid-template-columns: repeat(4, 1fr);
+    // 定义列的结构，
+    // 1. repeat(4, 1fr) - 重复4次，每次1份
+    // 2. 完整写法等同于：1fr 1fr 1fr 1fr
+    // 3. 1fr = 1个"份额"单位（fraction），表示可用空间的一份
+    // 4. 结果：创建 4列，每列宽度相等（平分容器宽度）
+    // 5. 其他写法
+    // 固定宽度
+    // grid-template-columns: 100rpx 100rpx 100rpx 100rpx;
+    // 混合单位
+    // grid-template-columns: 200rpx 1fr 1fr 2fr; // 第一列固定200rpx，后面按比例分配
+    // 百分比
+    // grid-template-columns: 25% 25% 25% 25%;
+
+    // 定义行的结构
+    // 1. repeat(2, 148rpx) - 重复2次，每次148rpx
+    // 2. 完整写法等同于：148rpx 148rpx
+    // 3. 结果：创建 2行，每行高度固定为 148rpx
+    // grid-template-rows: repeat(2, 148rpx);
+
+    // 定义网格项之间的间隙
+    // 1. 行间距和列间距都是 24rpx
+    // 2. 完整写法：gap: 24rpx 24rpx;（行间距 列间距）
+    // 3. 旧属性名：grid-gap
+    // gap: 24rpx;
+
+    .item {
+      width: 25%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      // 选中第一行的四个元素
+      // &:nth-child(-n + 4) {
+      //   margin-bottom: 24rpx;
+      // }
+
+      // 选中第二行的四个元素
+      // &:nth-child(n + 5) {
+      //   margin-top: 24rpx;
+      // }
+
+      image {
+        width: 92rpx;
+        height: 92rpx;
+        border-radius: 8rpx;
+        margin-bottom: 16rpx;
+      }
+
+      label {
+        font-weight: 400;
+        font-size: 28rpx;
+        color: #000;
+      }
     }
   }
 }
@@ -62,138 +254,66 @@
 
 <template>
   <AppContainer>
-    <div class="relative min-h-screen overflow-auto box-border px-[40rpx] __me">
-      <div v-if="appUser.id">
-        <div class="box-border px-[10rpx] mt-[180rpx] flex items-center">
-          <button
-            class="avatar"
-            open-type="chooseAvatar"
-            @chooseavatar="onChooseAvatar">
-            <image :src="appUser.avatar" mode="scaleToFill" />
-          </button>
-          <div class="flex flex-col justify-between h-[110rpx] ml-[24rpx]">
-            <input
-              class="text-[#121836] text-[44rpx] font-[400]"
-              type="nickname"
-              placeholder="请输入用户名"
-              maxlength="14"
-              :value="appUser.nickname"
-              @change="onNicknameChange" />
-            <span class="text-[#121836] text-[28rpx] font-[400]">
-              {{ appUser.mobile }}
-            </span>
-          </div>
-        </div>
-        <div
-          class="bg-[#292f45] text-[#fff] mt-[40rpx] box-border px-[60rpx] py-[40rpx] rounded-[20rpx] flex justify-between wallet">
-          <div class="flex flex-col items-center">
-            <span class="mb-[10rpx] text-[36rpx]">
-              {{ appUser.totalMoney }}
-            </span>
-            <span class="text-[24rpx] text-[#C2C2C2]">余额（元）</span>
-          </div>
-          <div class="flex flex-col items-center">
-            <span
-              class="mb-[20rpx] text-[24rpx] self-end"
-              @click="navTo(`/pages/me/money-log`)">
-              消费记录
-            </span>
-            <nut-button type="warning" @click="onShowRechargePopup">
-              充值
-            </nut-button>
-          </div>
-        </div>
-      </div>
-
-      <div v-else class="noLoginUser" open-type="getUserInfo" @click="login">
-        <div class="avatar-wrap">
-          <img src="../../static/images/me/noLoginUser.png" alt="" />
-        </div>
-        <span>请登录</span>
-      </div>
-
-      <div
-        class="mt-[40rpx] rounded-[30rpx] box-border px-[40rpx] pt-[30rpx] text-[26rpx] bg-[#fff]">
-        <div class="mb-[40rpx] text-[32rpx]">我的服务</div>
-        <div class="flex justify-between flex-wrap">
-          <div
-            class="w-[30%] mb-[50rpx] flex flex-col justify-between items-center"
-            @click="navTo('/pages/me/personal', false)">
-            <img
-              class="w-[90rpx] h-[90rpx] mb-[16rpx]"
-              src="../../static/images/me/personal.png"
-              alt="" />
-            <span>个人中心</span>
-          </div>
-          <div
-            class="w-[30%] mb-[50rpx] flex flex-col justify-between items-center"
-            @click="navTo('/pages/coupon/my')">
-            <div
-              class="w-[90rpx] h-[90rpx] flex justify-center items-center mb-[16rpx]">
-              <image
-                class="w-[63rpx] h-[56rpx]"
-                mode="aspectFit"
-                src="../../static/images/me/coupons.png"
-                alt="" />
+    <div class="__me">
+      <div class="userInfo">
+        <div class="inner" v-if="appUser.id">
+          <div class="header">
+            <image class="avatar" :src="appUser.avatar" mode="aspectFill" />
+            <div>
+              <div class="name">
+                <span>{{ appUser.nickname }}</span>
+                <image
+                  src="../../static/images/me/edit.png"
+                  mode="aspectFill" />
+              </div>
+              <div class="vip">儿童会员</div>
             </div>
-            <span>优惠券</span>
           </div>
-          <div
-            class="w-[30%] mb-[50rpx] flex flex-col justify-between items-center"
-            @click="navTo(`/pages/me/richtext?type=flowProcess`)">
-            <img
-              class="w-[90rpx] h-[90rpx] mb-[16rpx]"
-              src="../../static/images/me/place-order.png"
-              alt="" />
-
-            <span>下单流程</span>
+          <div class="cardInfo">
+            <div class="item">
+              <span>10</span>
+              <div></div>
+              <span>券票/张</span>
+            </div>
+            <div class="item">
+              <span>10</span>
+              <div></div>
+              <span>次卡/次</span>
+            </div>
+            <div class="item">
+              <span>10</span>
+              <div></div>
+              <span>年卡/天</span>
+            </div>
           </div>
-          <div
-            class="w-[30%] mb-[50rpx] flex flex-col justify-between items-center"
-            @click="navTo('/pages/me/complaint?type=2')">
-            <img
-              class="w-[90rpx] h-[90rpx] mb-[16rpx]"
-              src="../../static/images/me/feedback.png"
-              alt="" />
-            <span>意见反馈</span>
+        </div>
+        <div v-else class="noLoginUser" open-type="getUserInfo" @click="login">
+          <div class="avatar-wrap">
+            <img src="../../static/images/me/noLoginUser.png" alt="" />
           </div>
-          <div
-            class="w-[30%] mb-[50rpx] flex flex-col justify-between items-center"
-            @click="navTo('/pages/me/complaint?type=1')">
-            <img
-              class="w-[90rpx] h-[90rpx] mb-[16rpx]"
-              src="../../static/images/me/complaint.png"
-              alt="" />
-
-            <span>订单投诉</span>
-          </div>
-          <div
-            class="w-[30%] mb-[50rpx] flex flex-col justify-between items-center"
-            @click="navTo(`/pages/me/richtext?type=aboutUs`)">
-            <img
-              class="w-[90rpx] h-[90rpx] mb-[16rpx]"
-              src="../../static/images/me/aboutUs.png"
-              alt="" />
-
-            <span>关于我们</span>
+          <span>请登录</span>
+        </div>
+        <div class="position">
+          <div class="inner">
+            <div>
+              <img src="../../static/images/home/map.png" alt="" />
+              <span>HAOWEN LAND北京密云店</span>
+            </div>
           </div>
         </div>
       </div>
-      <div
-        class="mt-[40rpx] rounded-[30rpx] box-border px-[40rpx] py-[30rpx] text-[28rpx] bg-[#fff] flex justify-between items-center"
-        @click="callPhone(merchantTel)">
-        <div class="flex items-center">
-          <img
-            class="w-[90rpx] h-[90rpx] mr-[20rpx]"
-            src="../../static/images/me/phone.png"
-            alt="" />
-          <span>联系我们</span>
+
+      <div class="funcs">
+        <div
+          class="item"
+          v-for="item in funcs"
+          :key="item.label"
+          @click="navTo(item.page)">
+          <image :src="item.icon" mode="aspectFill" />
+          <span>{{ item.label }}</span>
         </div>
-        <img
-          class="w-[20rpx] h-[20rpx]"
-          src="../../static/images/me/right-arrow.png"
-          alt="" />
       </div>
+
       <Recharge
         v-model:visible="rechargePopupVisible"
         :levels="rechargeLevels" />
@@ -208,38 +328,68 @@ import AppContainer from '@/components/AppContainer/index'
 import Recharge from '@/components/Recharge/index'
 import { useAppStore } from '../../stores/app'
 import { storeToRefs } from 'pinia'
-import { getRechargeLevelsRes, updateUserRes } from '../../api'
+import { updateUserRes } from '../../api'
 import { ref } from 'vue'
 import { useLogin } from '../../hooks/useLogin'
 import { callPhone, navTo, toast } from '../../utils/uni'
+import orderIcon from '../../static/images/me/order.png'
+import appointmentIcon from '../../static/images/me/appointment.png'
+import babyIcon from '../../static/images/me/baby.png'
+import contractIcon from '../../static/images/me/contract.png'
+import couponIcon from '../../static/images/me/coupon.png'
+import giftIcon from '../../static/images/me/gift.png'
+import settingIcon from '../../static/images/me/setting.png'
+import walletIcon from '../../static/images/me/wallet.png'
 
 const baseUrl = import.meta.env.VITE_BASE_API
 const uploadUrl = `${baseUrl}/api/common/upload`
+
+const funcs = [
+  {
+    label: '我的订单',
+    icon: orderIcon
+    // page: '/pages/order/index'
+  },
+  {
+    label: '入园预约',
+    icon: appointmentIcon
+  },
+  {
+    label: '我的卡包',
+    icon: walletIcon,
+    page: '/pages/me/wallet'
+  },
+  {
+    label: '我的券包',
+    icon: couponIcon,
+    page: '/pages/coupon/my'
+  },
+  {
+    label: '联系客服',
+    icon: contractIcon,
+    page: '/pages/help/customer-service'
+  },
+  {
+    label: '宝贝管理',
+    icon: babyIcon,
+    page: '/pages/me/baby'
+  },
+  {
+    label: '兑换中心',
+    icon: giftIcon,
+    page: '/pages/me/gift'
+  },
+  {
+    label: '设置',
+    icon: settingIcon,
+    page: '/pages/me/setting'
+  }
+]
 
 const appStore = useAppStore()
 const { appUser, merchantTel } = storeToRefs(appStore)
 
 const { bindMobileVisible, login, getPhoneNumber } = useLogin()
-
-const rechargePopupVisible = ref(false)
-const rechargeLevels = ref([])
-async function onShowRechargePopup() {
-  if (rechargeLevels.value.length > 0) {
-    rechargePopupVisible.value = true
-    return
-  }
-  try {
-    uni.showLoading({
-      title: '充值档次获取中...',
-      mask: true
-    })
-    const data = await getRechargeLevelsRes()
-    rechargeLevels.value = data
-    rechargePopupVisible.value = true
-  } finally {
-    uni.hideLoading()
-  }
-}
 
 async function onChooseAvatar(e) {
   const {

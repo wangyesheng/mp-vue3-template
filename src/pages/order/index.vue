@@ -351,7 +351,7 @@ import {
   callPayRes,
   getAvailableCouponsRes,
   getOrdersRes,
-  getPriceDetailsRes
+  getTicketPriceRes
 } from '../../api'
 import { ORDER_STATUS } from '../../constant'
 import { useAppStore } from '../../stores/app'
@@ -489,7 +489,7 @@ async function onCouponClick(scope) {
         title: '优惠金额计算中...',
         mask: true
       })
-      finalPriceDetails.value = await getPriceDetailsRes({
+      finalPriceDetails.value = await getTicketPriceRes({
         order_number: currentOrderInfo.value.order_number,
         user_coupon_id: scope.id
       })
