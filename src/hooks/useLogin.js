@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { decryUserPhoneRes, checkLoginRes } from '@/api'
 import { useAppStore } from '@/stores/app'
 
-export function useLogin() {
+export function useLogin(cb) {
   const appStore = useAppStore()
   const bindMobileVisible = ref(false)
   let bindMobileUserProfile = {}
@@ -77,11 +77,14 @@ export function useLogin() {
       avatar: bindMobileUserProfile.current.avatarUrl,
       mobile: phoneInfo.phoneNumber
     }
-    const { userinfo } = await checkLoginRes(reqData)
-    const newUserInfo = userinfo
-    appStore.setAppUser(newUserInfo)
-    uni.setStorageSync('APP_USER', newUserInfo)
+    const {
+      userinfo: { token }
+    } = await checkLoginRes(reqData)
+    uni.setStorageSync('APP_TOKEN', token)
+    appStore.setAppToken(token)
+    appStore.refreshAppUser()
     bindMobileVisible.value = false
+    cb?.()
   }
 
   return {

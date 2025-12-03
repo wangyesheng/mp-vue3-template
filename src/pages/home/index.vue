@@ -1,3 +1,141 @@
+<template>
+  <AppContainer>
+    <div class="__home">
+      <div class="swiper">
+        <nut-swiper :auto-play="3000">
+          <nut-swiper-item v-for="banner in banners" :key="banner.id">
+            <img :src="banner.image" class="w-full h-full" draggable="false" />
+          </nut-swiper-item>
+        </nut-swiper>
+      </div>
+
+      <div class="position">
+        <div class="inner">
+          <div>
+            <img src="../../static/images/home/map.png" alt="" />
+            <span>HAOWEN LAND北京密云店</span>
+          </div>
+        </div>
+      </div>
+      <div class="funcs">
+        <div class="entry">
+          <div
+            class="ticket common"
+            @click="navTo('/pages/ticket/index', false)">
+            <div>
+              <span>门票购买</span>
+              <span>menpiaogoumai</span>
+            </div>
+            <image
+              src="../../static/images/home/ticket.png"
+              mode="aspectFill" />
+          </div>
+          <div class="third-mp">
+            <div class="common">
+              <div>
+                <span>电玩</span>
+                <span>dianwan</span>
+              </div>
+              <image
+                src="../../static/images/home/game.png"
+                mode="aspectFill" />
+            </div>
+            <div class="common">
+              <div>
+                <span>简餐</span>
+                <span>jiancan</span>
+              </div>
+              <image
+                src="../../static/images/home/dinner.png"
+                mode="aspectFill" />
+            </div>
+          </div>
+        </div>
+        <div class="extra common">
+          <div @click="onScan">
+            <image
+              src="../../static/images/home/writeOff.png"
+              mode="aspectFill" />
+            <span>券码核销</span>
+          </div>
+          <div @click="navTo('/pages/help/customer-service', false)">
+            <image
+              src="../../static/images/home/contract.png"
+              mode="aspectFill" />
+            <span>客服中心</span>
+          </div>
+          <div>
+            <image
+              src="../../static/images/home/activity.png"
+              mode="aspectFill" />
+            <span>活动信息</span>
+          </div>
+        </div>
+        <div class="activity common">
+          <div class="title">HAOWEN LAND活动2</div>
+          <scroll-view
+            class="scroll-container"
+            scroll-x
+            :show-scrollbar="false">
+            <div class="scroll-content">
+              <div
+                v-for="(activity, index) in banners"
+                :key="index"
+                :style="{ '--w': banners.length === 1 ? '100%' : '80%' }"
+                class="activity-item">
+                <image :src="activity.image" mode="aspectFill" />
+              </div>
+            </div>
+          </scroll-view>
+        </div>
+      </div>
+    </div>
+  </AppContainer>
+</template>
+
+<script setup>
+import { useLogin } from '../../hooks/useLogin'
+import { useAppStore } from '../../stores/app'
+import { onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
+import { getBannersRes } from '@/api'
+import { navTo } from '../../utils/uni'
+
+const appStore = useAppStore()
+const { appUser, merchantTel } = storeToRefs(appStore)
+
+const { bindMobileVisible, login, getPhoneNumber } = useLogin()
+
+const banners = ref([])
+
+onLoad(async () => {
+  const data = await getBannersRes()
+  banners.value = data
+})
+
+function onScan() {
+  uni.scanCode({
+    onlyFromCamera: true,
+    success({ result }) {
+      navTo(`/pages/scan/verification?code=${result}`)
+    }
+  })
+}
+
+onShareAppMessage(() => {
+  return {
+    title: 'HAOWEN LAND',
+    path: '/pages/home/index'
+  }
+})
+
+onShareTimeline(() => {
+  return {
+    title: 'HAOWEN LAND',
+    path: '/pages/home/index'
+  }
+})
+</script>
+
 <style lang="scss" scoped>
 .__home {
   position: relative;
@@ -74,11 +212,12 @@
 
   .entry {
     display: flex;
-    column-gap: 16rpx;
+    justify-content: space-between;
 
     .ticket {
-      width: 336rpx;
+      width: 334rpx;
       padding: 24rpx 22rpx;
+      row-gap: 10rpx;
 
       & > view {
         display: flex;
@@ -94,7 +233,7 @@
     .third-mp {
       display: flex;
       flex-direction: column;
-      row-gap: 16rpx;
+      justify-content: space-between;
 
       & > view {
         width: 334rpx;
@@ -102,7 +241,7 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        padding: 8rpx 22rpx 8rpx 40rpx;
+        padding: 10rpx 22rpx 10rpx 40rpx;
 
         & > view {
           display: flex;
@@ -141,8 +280,8 @@
   .activity {
     margin-top: 16rpx;
     width: 686rpx;
-    background: #94dc23;
     padding: 18rpx 24rpx;
+    background: #94dc23;
 
     .title {
       font-weight: bold;
@@ -178,139 +317,3 @@
   }
 }
 </style>
-
-<template>
-  <AppContainer>
-    <div class="__home">
-      <div class="swiper">
-        <nut-swiper :auto-play="3000">
-          <nut-swiper-item v-for="banner in banners" :key="banner.id">
-            <img :src="banner.image" class="w-full h-full" draggable="false" />
-          </nut-swiper-item>
-        </nut-swiper>
-      </div>
-
-      <div class="position">
-        <div class="inner">
-          <div>
-            <img src="../../static/images/home/map.png" alt="" />
-            <span>HAOWEN LAND北京密云店</span>
-          </div>
-        </div>
-      </div>
-      <div class="funcs">
-        <div class="entry">
-          <div
-            class="ticket common"
-            @click="navTo('/pages/ticket/index', false)">
-            <div>
-              <span>门票购买</span>
-              <span>menpiaogoumai</span>
-            </div>
-            <image
-              src="../../static/images/home/ticket.png"
-              mode="aspectFill" />
-          </div>
-          <div class="third-mp">
-            <div class="common">
-              <div>
-                <span>电玩</span>
-                <span>dianwan</span>
-              </div>
-              <image
-                src="../../static/images/home/game.png"
-                mode="aspectFill" />
-            </div>
-            <div class="common">
-              <div>
-                <span>简餐</span>
-                <span>jiancan</span>
-              </div>
-              <image
-                src="../../static/images/home/dinner.png"
-                mode="aspectFill" />
-            </div>
-          </div>
-        </div>
-        <div class="extra common">
-          <div @click="switchTab('/pages/scan/index', false)">
-            <image
-              src="../../static/images/home/writeOff.png"
-              mode="aspectFill" />
-            <span>券码核销</span>
-          </div>
-          <div @click="navTo('/pages/help/customer-service', false)">
-            <image
-              src="../../static/images/home/contract.png"
-              mode="aspectFill" />
-            <span>客服中心</span>
-          </div>
-          <div>
-            <image
-              src="../../static/images/home/activity.png"
-              mode="aspectFill" />
-            <span>活动信息</span>
-          </div>
-        </div>
-        <div class="activity common">
-          <div class="title">HAOWEN LAND活动</div>
-          <scroll-view
-            class="scroll-container"
-            scroll-x
-            :show-scrollbar="false">
-            <div class="scroll-content">
-              <div
-                v-for="(activity, index) in banners"
-                :key="index"
-                :style="{ '--w': banners.length === 1 ? '100%' : '80%' }"
-                class="activity-item">
-                <image :src="activity.image" mode="aspectFill" />
-              </div>
-            </div>
-          </scroll-view>
-        </div>
-      </div>
-
-      <BindMobile
-        v-model:visible="bindMobileVisible"
-        :getPhoneNumber="getPhoneNumber" />
-    </div>
-  </AppContainer>
-</template>
-<script setup>
-import AppContainer from '@/components/AppContainer/index'
-import BindMobile from '@/components/BindMobile/index'
-import { ref } from 'vue'
-import { useLogin } from '../../hooks/useLogin'
-import { useAppStore } from '../../stores/app'
-import { storeToRefs } from 'pinia'
-import { onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
-import { getBannersRes } from '../../api'
-import { callPhone, navTo, switchTab } from '../../utils/uni'
-
-const appStore = useAppStore()
-const { appUser, merchantTel } = storeToRefs(appStore)
-
-const { bindMobileVisible, login, getPhoneNumber } = useLogin()
-
-const banners = ref([])
-
-onLoad(async () => {
-  const data = await getBannersRes()
-  banners.value = data
-})
-
-onShareAppMessage(() => {
-  return {
-    title: 'HAOWEN LAND',
-    path: '/pages/home/index'
-  }
-})
-
-onShareTimeline(() => {
-  return {
-    title: 'HAOWEN LAND',
-    path: '/pages/home/index'
-  }
-})
-</script>

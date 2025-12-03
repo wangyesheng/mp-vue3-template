@@ -3,7 +3,9 @@
     "autoscan": true,
     "custom": {
       "^nut-(.*)?-(.*)": "nutui-uniapp/components/$1$2/$1$2.vue",
-      "^nut-(.*)": "nutui-uniapp/components/$1/$1.vue"
+      "^nut-(.*)": "nutui-uniapp/components/$1/$1.vue",
+      "^Wallet(Item|Verification)$": "@/components/WalletList/$1.vue",
+      "^(?!nut-|Wallet)([A-Z][a-zA-Z]*)$": "@/components/$1/index.vue"
     }
   },
   "usingComponents": {
@@ -21,6 +23,19 @@
       "path": "pages/me/wallet",
       "style": {
         "navigationBarTitleText": "我的卡包"
+      }
+    },
+    {
+      "path": "pages/mall/index",
+      "style": {
+        "navigationBarTitleText": "积分商城",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/scan/verification",
+      "style": {
+        "navigationBarTitleText": "核销"
       }
     },
     {
@@ -45,13 +60,6 @@
       "path": "pages/ticket/index",
       "style": {
         "navigationBarTitleText": "门票列表"
-      }
-    },
-    {
-      "path": "pages/me/gift",
-      "style": {
-        "navigationBarTitleText": "积分商城",
-        "navigationStyle": "custom"
       }
     },
     {
@@ -80,12 +88,6 @@
       }
     },
     {
-      "path": "pages/resource-cart/form",
-      "style": {
-        "navigationBarTitleText": "新增车辆"
-      }
-    },
-    {
       "path": "pages/complaint/index",
       "style": {
         "navigationBarTitleText": "订单投诉"
@@ -111,18 +113,6 @@
       }
     },
     {
-      "path": "pages/resource-cart/index",
-      "style": {
-        "navigationBarTitleText": "资源车"
-      }
-    },
-    {
-      "path": "pages/resource-cart/my",
-      "style": {
-        "navigationBarTitleText": "我的资源车"
-      }
-    },
-    {
       "path": "pages/me/complaint",
       "style": {
         "navigationBarTitleText": "我的订单投诉"
@@ -135,34 +125,9 @@
       }
     },
     {
-      "path": "pages/me/signature",
-      "style": {
-        "navigationBarTitleText": "signature"
-      }
-    },
-    {
-      "path": "pages/me/poster",
-      "style": {
-        "navigationBarTitleText": "海报"
-      }
-    },
-    {
       "path": "pages/me/richtext",
       "style": {
         "navigationBarTitleText": "关于我们"
-      }
-    },
-    {
-      "path": "pages/resource-cart/details",
-      "style": {
-        "navigationBarTitleText": "车辆详情"
-      }
-    },
-    {
-      "path": "pages/place-order/index",
-      "style": {
-        "navigationBarTitleText": "下单",
-        "navigationStyle": "custom"
       }
     },
     {

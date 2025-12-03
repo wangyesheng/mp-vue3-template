@@ -162,9 +162,7 @@
 </template>
 
 <script setup>
-import AppContainer from '@/components/AppContainer/index'
 import { onLoad } from '@dcloudio/uni-app'
-import { ref } from 'vue'
 import {
   callPayRes,
   getAvailableCouponsRes,
@@ -178,7 +176,7 @@ import CouponInfo from '@/components/CouponInfo/index'
 
 const ticketInfo = ref({})
 const selectedPaneKey = ref('1')
-onLoad(async ({ id = 1 }) => {
+onLoad(async ({ id }) => {
   ticketInfo.value = await getTicketDetailsRes(id)
 })
 
@@ -193,7 +191,7 @@ async function callPayPopup() {
   try {
     payPopupVisible.value = true
     uni.showLoading({
-      title: '订单金额获取中...',
+      title: '价格明细计算中...',
       mask: true
     })
     const { data } = await getAvailableCouponsRes({
@@ -313,8 +311,8 @@ async function onPaySubmit() {
 
     .price {
       font-weight: 550;
-      font-size: 42rpx;
-      color: #8153fe;
+      font-size: 50rpx;
+      color: var(--hw-primary-color);
       margin-bottom: 20rpx;
     }
 

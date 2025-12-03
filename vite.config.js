@@ -13,7 +13,17 @@ export default defineConfig({
   // uvtw 一定要放在 uni 后面
   plugins: [
     Components({
-      resolvers: [NutResolver()]
+      resolvers: [NutResolver()],
+      dirs: ['src/components'],
+      deep: true,
+      dts: './components.d.ts',
+      globs: [
+        'src/components/**/index.vue',
+        'src/components/**/*.vue',
+        // 排除 WalletList 下的非 index 文件
+        '!src/components/WalletList/Item.vue',
+        '!src/components/WalletList/Verification.vue'
+      ]
     }),
     uni(),
     vueJsx(),

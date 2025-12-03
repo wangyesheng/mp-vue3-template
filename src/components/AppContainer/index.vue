@@ -12,14 +12,21 @@
       @tab-switch="onSwitchTab">
       <nut-tabbar-item v-for="item in tabbarList" :key="item.title">
         <template #icon>
+          <nut-animate type="flicker" loop v-if="item.key == 'scan'">
+            <div :class="['custom-tabbar-item', item.key]">
+              <image :src="getTabberIcon(item)" mode="aspectFill" />
+            </div>
+          </nut-animate>
+
           <div
+            v-else
             :class="[
               'custom-tabbar-item',
               item.key,
               item.path.includes(currentPath) ? 'active' : ''
             ]">
             <image :src="getTabberIcon(item)" mode="aspectFill" />
-            <span v-if="item.key !== 'scan'">{{ item.title }}</span>
+            <span>{{ item.title }}</span>
           </div>
         </template>
       </nut-tabbar-item>

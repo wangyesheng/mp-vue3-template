@@ -18,7 +18,7 @@ export function checkLoginRes(data) {
 
 export function getUserInfoRes() {
   return request({
-    url: '/api/user/userinfo',
+    url: '/api/user/info',
     method: 'get'
   })
 }
@@ -181,43 +181,6 @@ export function getMoneyLogsRes(data) {
   })
 }
 
-export function getRoutesRes(type = 1) {
-  return request({
-    url: `/api/route/get_route_list?type=${type}`,
-    method: 'get'
-  })
-}
-
-export function getResourceCarsRes(data) {
-  return request({
-    url: `/api/resource/get_list`,
-    method: 'get',
-    data
-  })
-}
-
-export function addOrUpdateResourceCarRes(data) {
-  return request({
-    url: `/api/resource/add_resource`,
-    method: 'post',
-    data
-  })
-}
-
-export function getMyResourceCarsRes() {
-  return request({
-    url: `/api/resource/my_resource`,
-    method: 'get'
-  })
-}
-
-export function getSingleResourceCarRes(id) {
-  return request({
-    url: `/api/resource/get_detail?resource_id=${id}`,
-    method: 'get'
-  })
-}
-
 export function getFlowProcessRes() {
   return request({
     url: `/api/index/get_flow`,
@@ -235,20 +198,6 @@ export function getAboutUsRes() {
 export function getTelRes() {
   return request({
     url: `/api/index/get_tel`,
-    method: 'get'
-  })
-}
-
-export function getChinaGeoJsonRes() {
-  return request({
-    url: `/api/index/get_area_list`,
-    method: 'get'
-  })
-}
-
-export function getCouponUrlRes() {
-  return request({
-    url: `/api/index/get_coupon_url`,
     method: 'get'
   })
 }
@@ -271,12 +220,6 @@ export function addComplaintRes(data) {
 export function getComplaintTypesRes() {
   return request({
     url: `/api/index/get_complaint_type`,
-    method: 'get'
-  })
-}
-export function getTemplateIdsRes() {
-  return request({
-    url: `/api/index/get_template_ids`,
     method: 'get'
   })
 }
@@ -327,6 +270,38 @@ export function addFeedbackRes(data) {
 export function getQRCodeRes() {
   return request({
     url: `/api/user/mycode`,
+    method: 'get'
+  })
+}
+
+export function getUserWalletsByScanRes(data) {
+  return request({
+    url: `/api/user/scan`,
+    method: 'get',
+    data
+  })
+}
+
+export function verifyRes(id) {
+  return request({
+    url: `/api/ticket/verify`,
+    method: 'post',
+    data: {
+      id
+    }
+  })
+}
+
+export function getMallGoodsRes(data) {
+  return request({
+    url: `/api/mall/list`,
+    method: 'get',
+    data
+  })
+}
+export function getUserTabletRes() {
+  return request({
+    url: `/api/user/tablet`,
     method: 'get'
   })
 }

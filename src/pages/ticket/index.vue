@@ -14,12 +14,10 @@
                 {{ ticket.title }}
               </div>
               <div class="tag">
-                <nut-tag custom-color="#e9e9e9" text-color="#999999">
+                <nut-tag plain custom-color="#999">
                   {{ ticket.use_time_text }}
                 </nut-tag>
-                <nut-tag custom-color="#e9e9e9" text-color="#999999">
-                  免预约
-                </nut-tag>
+                <nut-tag plain custom-color="#999">免预约</nut-tag>
               </div>
               <div class="price">
                 <span>¥ {{ ticket.price }}</span>
@@ -34,7 +32,6 @@
 </template>
 
 <script setup>
-import AppContainer from '@/components/AppContainer/index'
 import { onLoad, onReachBottom } from '@dcloudio/uni-app'
 import { getTicketsRes } from '../../api'
 import { ref } from 'vue'
@@ -68,8 +65,8 @@ onLoad(() => {
 })
 
 onReachBottom(() => {
-  if (!isEnd) {
-    page++
+  if (!ticketInfo.value.end) {
+    ticketInfo.value.page++
     getTickets()
   }
 })
@@ -85,7 +82,7 @@ onReachBottom(() => {
   row-gap: 20rpx;
 
   &-item {
-    border-radius: 24rpx;
+    border-radius: 15rpx;
     // 如果不设置该属性，则会导致子元素的圆角效果无法显示（子元素添加背景色溢出导致圆角被遮盖）
     overflow: hidden;
 
@@ -96,7 +93,7 @@ onReachBottom(() => {
       align-items: center;
 
       image {
-        width: 200rpx;
+        width: 220rpx;
         height: auto;
         align-self: stretch; // 拉伸填充父元素高度
       }
@@ -116,13 +113,15 @@ onReachBottom(() => {
           row-gap: 10rpx;
 
           .title {
-            font-weight: 550;
+            font-weight: 500;
             font-size: 30rpx;
           }
 
           .tag {
             display: flex;
+            flex-wrap: wrap;
             column-gap: 10rpx;
+            row-gap: 10rpx;
 
             ::v-deep() {
               .nut-tag {
@@ -134,7 +133,7 @@ onReachBottom(() => {
           .price {
             color: var(--hw-primary-color);
             font-weight: 550;
-            font-size: 36rpx;
+            font-size: 40rpx;
             display: flex;
             justify-content: space-between;
             align-items: center;

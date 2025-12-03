@@ -1,3 +1,207 @@
+<template>
+  <AppContainer>
+    <div class="__me">
+      <div class="userInfo">
+        <div class="inner" v-if="appUser.id">
+          <div class="header">
+            <image class="avatar" :src="appUser.avatar" mode="aspectFill" />
+            <div>
+              <div class="name">
+                <span>{{ appUser.nickname }}</span>
+                <image
+                  src="../../static/images/me/edit.png"
+                  mode="aspectFill" />
+              </div>
+              <div class="vip">儿童会员</div>
+            </div>
+          </div>
+          <div class="cardInfo">
+            <div class="item">
+              <span>{{ userTabletInfo.coupon_num ?? appUser.coupon_num }}</span>
+              <div></div>
+              <span>券票/张</span>
+            </div>
+            <div class="item">
+              <span>{{ userTabletInfo.ticket_num ?? appUser.ticket_num }}</span>
+              <div></div>
+              <span>次卡/次</span>
+            </div>
+            <div class="item">
+              <span>
+                {{ userTabletInfo.year_card_num ?? appUser.year_card_num }}
+              </span>
+              <div></div>
+              <span>年卡/天</span>
+            </div>
+          </div>
+        </div>
+        <div v-else class="noLoginUser" open-type="getUserInfo" @click="login">
+          <div class="avatar-wrap">
+            <img src="../../static/images/me/noLoginUser.png" alt="" />
+          </div>
+          <span>请登录</span>
+        </div>
+        <div class="position">
+          <div class="inner">
+            <div>
+              <img src="../../static/images/home/map.png" alt="" />
+              <span>HAOWEN LAND北京密云店</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="funcs">
+        <div
+          class="item"
+          v-for="item in funcs"
+          :key="item.label"
+          @click="item.handler ? item.handler() : navTo(item.page)">
+          <image :src="item.icon" mode="aspectFill" />
+          <span>{{ item.label }}</span>
+        </div>
+      </div>
+
+      <Recharge
+        v-model:visible="rechargePopupVisible"
+        :levels="rechargeLevels" />
+      <BindMobile
+        v-model:visible="bindMobileVisible"
+        :getPhoneNumber="getPhoneNumber" />
+    </div>
+  </AppContainer>
+</template>
+
+<script setup>
+import Recharge from '@/components/Recharge/index'
+import { useAppStore } from '../../stores/app'
+import { storeToRefs } from 'pinia'
+import { getUserTabletRes } from '../../api'
+import { ref } from 'vue'
+import { useLogin } from '../../hooks/useLogin'
+import { navTo, toast } from '../../utils/uni'
+import orderIcon from '../../static/images/me/order.png'
+import appointmentIcon from '../../static/images/me/appointment.png'
+import babyIcon from '../../static/images/me/baby.png'
+import contractIcon from '../../static/images/me/contract.png'
+import couponIcon from '../../static/images/me/coupon.png'
+import giftIcon from '../../static/images/me/gift.png'
+import settingIcon from '../../static/images/me/setting.png'
+import walletIcon from '../../static/images/me/wallet.png'
+import { onShow } from '@dcloudio/uni-app'
+
+const funcs = [
+  {
+    label: '我的订单',
+    icon: orderIcon
+    // page: '/pages/order/index'
+  },
+  {
+    label: '入园预约',
+    icon: appointmentIcon,
+    handler() {
+      return toast('Coming Soon')
+    }
+  },
+  {
+    label: '我的卡包',
+    icon: walletIcon,
+    page: '/pages/me/wallet'
+  },
+  {
+    label: '我的券包',
+    icon: couponIcon,
+    page: '/pages/coupon/my'
+  },
+  {
+    label: '联系客服',
+    icon: contractIcon,
+    page: '/pages/help/customer-service'
+  },
+  {
+    label: '宝贝管理',
+    icon: babyIcon,
+    page: '/pages/me/baby'
+  },
+  {
+    label: '兑换中心',
+    icon: giftIcon,
+    page: '/pages/mall/index'
+  },
+  {
+    label: '设置',
+    icon: settingIcon,
+    page: '/pages/me/setting'
+  }
+]
+
+const appStore = useAppStore()
+const { appUser } = storeToRefs(appStore)
+const { bindMobileVisible, login, getPhoneNumber } = useLogin(getUserTablet)
+
+const userTabletInfo = ref({})
+async function getUserTablet() {
+  if (appUser.value.id) {
+    const data = await getUserTabletRes()
+    userTabletInfo.value = data
+  }
+}
+onShow(getUserTablet)
+
+// const baseUrl = import.meta.env.VITE_BASE_API
+// const uploadUrl = `${baseUrl}/api/common/upload`
+// async function onChooseAvatar(e) {
+//   const {
+//     detail: { avatarUrl }
+//   } = e
+
+//   uni.uploadFile({
+//     url: uploadUrl,
+//     filePath: avatarUrl,
+//     name: 'file',
+//     header: {
+//       token: appUser.value.token,
+//       'content-type': 'multipart/form-data'
+//     },
+//     success: async (result) => {
+//       const {
+//         code,
+//         data: { fullurl },
+//         msg
+//       } = JSON.parse(result.data)
+//       if (code !== 1) {
+//         toast(msg)
+//       } else {
+//         await updateUserRes({ avatar: fullurl })
+//         const newUserInfo = {
+//           ...appUser.value,
+//           avatar: fullurl
+//         }
+//         appStore.setAppUser(newUserInfo)
+//         uni.setStorageSync('APP_USER', newUserInfo)
+//       }
+//     },
+//     fail: (uploadFileErr) => {
+//       console.log('upload::error', uploadFileErr)
+//       toast('上传失败！')
+//     }
+//   })
+// }
+
+// async function onNicknameChange(e) {
+//   const value = e.detail.value
+//   if (value) {
+//     await updateUserRes({ nickname: value, username: value })
+//     appStore.setAppUser({
+//       ...appUser.value,
+//       nickname: value,
+//       username: value
+//     })
+//     uni.setStorageSync('APP_USER', appUser.value)
+//   }
+// }
+</script>
+
 <style lang="scss" scoped>
 .__me {
   position: relative;
@@ -251,194 +455,3 @@
   }
 }
 </style>
-
-<template>
-  <AppContainer>
-    <div class="__me">
-      <div class="userInfo">
-        <div class="inner" v-if="appUser.id">
-          <div class="header">
-            <image class="avatar" :src="appUser.avatar" mode="aspectFill" />
-            <div>
-              <div class="name">
-                <span>{{ appUser.nickname }}</span>
-                <image
-                  src="../../static/images/me/edit.png"
-                  mode="aspectFill" />
-              </div>
-              <div class="vip">儿童会员</div>
-            </div>
-          </div>
-          <div class="cardInfo">
-            <div class="item">
-              <span>10</span>
-              <div></div>
-              <span>券票/张</span>
-            </div>
-            <div class="item">
-              <span>10</span>
-              <div></div>
-              <span>次卡/次</span>
-            </div>
-            <div class="item">
-              <span>10</span>
-              <div></div>
-              <span>年卡/天</span>
-            </div>
-          </div>
-        </div>
-        <div v-else class="noLoginUser" open-type="getUserInfo" @click="login">
-          <div class="avatar-wrap">
-            <img src="../../static/images/me/noLoginUser.png" alt="" />
-          </div>
-          <span>请登录</span>
-        </div>
-        <div class="position">
-          <div class="inner">
-            <div>
-              <img src="../../static/images/home/map.png" alt="" />
-              <span>HAOWEN LAND北京密云店</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="funcs">
-        <div
-          class="item"
-          v-for="item in funcs"
-          :key="item.label"
-          @click="navTo(item.page)">
-          <image :src="item.icon" mode="aspectFill" />
-          <span>{{ item.label }}</span>
-        </div>
-      </div>
-
-      <Recharge
-        v-model:visible="rechargePopupVisible"
-        :levels="rechargeLevels" />
-      <BindMobile
-        v-model:visible="bindMobileVisible"
-        :getPhoneNumber="getPhoneNumber" />
-    </div>
-  </AppContainer>
-</template>
-<script setup>
-import AppContainer from '@/components/AppContainer/index'
-import Recharge from '@/components/Recharge/index'
-import { useAppStore } from '../../stores/app'
-import { storeToRefs } from 'pinia'
-import { updateUserRes } from '../../api'
-import { ref } from 'vue'
-import { useLogin } from '../../hooks/useLogin'
-import { callPhone, navTo, toast } from '../../utils/uni'
-import orderIcon from '../../static/images/me/order.png'
-import appointmentIcon from '../../static/images/me/appointment.png'
-import babyIcon from '../../static/images/me/baby.png'
-import contractIcon from '../../static/images/me/contract.png'
-import couponIcon from '../../static/images/me/coupon.png'
-import giftIcon from '../../static/images/me/gift.png'
-import settingIcon from '../../static/images/me/setting.png'
-import walletIcon from '../../static/images/me/wallet.png'
-
-const baseUrl = import.meta.env.VITE_BASE_API
-const uploadUrl = `${baseUrl}/api/common/upload`
-
-const funcs = [
-  {
-    label: '我的订单',
-    icon: orderIcon
-    // page: '/pages/order/index'
-  },
-  {
-    label: '入园预约',
-    icon: appointmentIcon
-  },
-  {
-    label: '我的卡包',
-    icon: walletIcon,
-    page: '/pages/me/wallet'
-  },
-  {
-    label: '我的券包',
-    icon: couponIcon,
-    page: '/pages/coupon/my'
-  },
-  {
-    label: '联系客服',
-    icon: contractIcon,
-    page: '/pages/help/customer-service'
-  },
-  {
-    label: '宝贝管理',
-    icon: babyIcon,
-    page: '/pages/me/baby'
-  },
-  {
-    label: '兑换中心',
-    icon: giftIcon,
-    page: '/pages/me/gift'
-  },
-  {
-    label: '设置',
-    icon: settingIcon,
-    page: '/pages/me/setting'
-  }
-]
-
-const appStore = useAppStore()
-const { appUser, merchantTel } = storeToRefs(appStore)
-
-const { bindMobileVisible, login, getPhoneNumber } = useLogin()
-
-async function onChooseAvatar(e) {
-  const {
-    detail: { avatarUrl }
-  } = e
-
-  uni.uploadFile({
-    url: uploadUrl,
-    filePath: avatarUrl,
-    name: 'file',
-    header: {
-      token: appUser.value.token,
-      'content-type': 'multipart/form-data'
-    },
-    success: async (result) => {
-      const {
-        code,
-        data: { fullurl },
-        msg
-      } = JSON.parse(result.data)
-      if (code !== 1) {
-        toast(msg)
-      } else {
-        await updateUserRes({ avatar: fullurl })
-        const newUserInfo = {
-          ...appUser.value,
-          avatar: fullurl
-        }
-        appStore.setAppUser(newUserInfo)
-        uni.setStorageSync('APP_USER', newUserInfo)
-      }
-    },
-    fail: (uploadFileErr) => {
-      console.log('upload::error', uploadFileErr)
-      toast('上传失败！')
-    }
-  })
-}
-
-async function onNicknameChange(e) {
-  const value = e.detail.value
-  if (value) {
-    await updateUserRes({ nickname: value, username: value })
-    appStore.setAppUser({
-      ...appUser.value,
-      nickname: value,
-      username: value
-    })
-    uni.setStorageSync('APP_USER', appUser.value)
-  }
-}
-</script>
