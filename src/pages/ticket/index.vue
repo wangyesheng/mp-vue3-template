@@ -1,75 +1,41 @@
 <template>
   <AppContainer>
     <div class="ticket">
-      <div
-        class="ticket-item"
-        v-for="ticket in ticketInfo.data"
-        :key="ticket.id"
-        @click="navTo(`/pages/ticket/details?id=${ticket.id}`)">
-        <div class="inner">
-          <image :src="ticket.image" mode="aspectFill" />
-          <div class="info">
-            <div class="info-left">
-              <div class="title">
-                {{ ticket.title }}
-              </div>
-              <div class="tag">
-                <nut-tag plain custom-color="#999">
-                  {{ ticket.use_time_text }}
-                </nut-tag>
-                <nut-tag plain custom-color="#999">免预约</nut-tag>
-              </div>
-              <div class="price">
-                <span>¥ {{ ticket.price }}</span>
-                <nut-button type="primary" size="mini">购买</nut-button>
+      <PageList :api="getTicketsRes">
+        <template #item="{ data }">
+          <div
+            class="ticket-item"
+            @click="navTo(`/pages/ticket/details?id=${data.id}`, false)">
+            <div class="inner">
+              <image :src="data.image" mode="aspectFill" />
+              <div class="info">
+                <div class="info-left">
+                  <div class="title">
+                    {{ data.title }}
+                  </div>
+                  <div class="tag">
+                    <nut-tag plain custom-color="#999">
+                      {{ data.use_time_text }}
+                    </nut-tag>
+                    <nut-tag plain custom-color="#999">免预约</nut-tag>
+                  </div>
+                  <div class="price">
+                    <span>¥ {{ data.price }}</span>
+                    <nut-button type="primary" size="mini">购买</nut-button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </template>
+      </PageList>
     </div>
   </AppContainer>
 </template>
 
 <script setup>
-import { onLoad, onReachBottom } from '@dcloudio/uni-app'
 import { getTicketsRes } from '../../api'
-import { ref } from 'vue'
 import { navTo } from '../../utils/uni'
-
-const ticketInfo = ref({
-  loading: false,
-  data: [],
-  page: 1,
-  end: false
-})
-
-async function getTickets(page) {
-  if (page == 1) {
-    ticketInfo.value.page = page
-    ticketInfo.value.end = false
-  }
-
-  const { data, total } = await getTicketsRes({
-    page: ticketInfo.value.page,
-    limit: 10
-  })
-  ticketInfo.value.data =
-    ticketInfo.value.page == 1 ? data : ticketInfo.value.data.concat(data)
-  if (total === ticketInfo.value.data.length) {
-    ticketInfo.value.end = true
-  }
-}
-onLoad(() => {
-  getTickets(1)
-})
-
-onReachBottom(() => {
-  if (!ticketInfo.value.end) {
-    ticketInfo.value.page++
-    getTickets()
-  }
-})
 </script>
 
 <style lang="scss" scoped>
@@ -77,9 +43,6 @@ onReachBottom(() => {
   padding: 32rpx;
   box-sizing: border-box;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  row-gap: 20rpx;
 
   &-item {
     border-radius: 15rpx;

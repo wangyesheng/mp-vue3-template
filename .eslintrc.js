@@ -27,7 +27,7 @@ module.exports = {
     'standard',
     'plugin:prettier/recommended',
     'eslint:recommended',
-    'plugin:vue/essential',
+    'plugin:vue/vue3-recommended',
     'plugin:@typescript-eslint/recommended',
     './.eslintrc-auto-import.json'
   ],
@@ -65,7 +65,16 @@ module.exports = {
       files: ['*.vue'],
       rules: {
         'vue/no-v-model-argument': 'off', // 允许 v-model:xxx 写法
-        '@typescript-eslint/no-explicit-any': 'off' // 允许 any 类型
+        '@typescript-eslint/no-explicit-any': 'off', // 允许 any 类型
+        // 关闭 vue3-recommended 的格式规则，让 Prettier 处理
+        'vue/max-attributes-per-line': 'off',
+        'vue/singleline-html-element-content-newline': 'off',
+        'vue/multiline-html-element-content-newline': 'off',
+        'vue/html-closing-bracket-newline': 'off',
+        'vue/html-indent': 'off',
+        'vue/html-self-closing': 'off',
+        'vue/first-attribute-linebreak': 'off',
+        'vue/no-v-html': 'off'
       }
     }
   ]

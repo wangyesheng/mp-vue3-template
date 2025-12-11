@@ -1,45 +1,3 @@
-<style lang="scss" scoped>
-.complainWrap {
-  ::v-deep {
-    .nut-cell-group__wrap {
-      margin: 0 !important;
-    }
-    .nut-cell {
-      &:nth-child(2),
-      &:nth-child(3) {
-        .nut-cell__value {
-          margin-right: 40rpx;
-        }
-      }
-
-      .nut-input {
-        padding: 0 !important;
-        input {
-          text-align: right !important;
-          color: #333 !important;
-        }
-      }
-
-      .nut-textarea {
-        padding: 0 !important;
-        textarea {
-          text-align: right !important;
-          color: #333 !important;
-        }
-      }
-
-      .nut-uploader {
-        .nut-uploader__preview-img,
-        .nut-uploader__upload {
-          width: 180rpx !important;
-          height: 180rpx !important;
-        }
-      }
-    }
-  }
-}
-</style>
-
 <template>
   <AppContainer>
     <div class="complainWrap">
@@ -54,18 +12,18 @@
         <nut-cell title-width="80" title="内容">
           <template #desc>
             <nut-textarea
+              v-model="formState.content"
               :border="false"
-              placeholder="请输入内容"
-              v-model="formState.content" />
+              placeholder="请输入内容" />
           </template>
         </nut-cell>
         <nut-cell title-width="80" title="手机号码">
           <template #desc>
             <nut-input
+              v-model="formState.mobile"
               :border="false"
               type="tel"
-              placeholder="请输入手机号码"
-              v-model="formState.mobile" />
+              placeholder="请输入手机号码" />
           </template>
         </nut-cell>
         <nut-cell>
@@ -205,3 +163,45 @@ onUnload(() => {
   uploaderRef.value?.clearUploadQueue()
 })
 </script>
+
+<style lang="scss" scoped>
+.complainWrap {
+  ::v-deep {
+    .nut-cell-group__wrap {
+      margin: 0 !important;
+    }
+    .nut-cell {
+      &:nth-child(2),
+      &:nth-child(3) {
+        .nut-cell__value {
+          margin-right: 40rpx;
+        }
+      }
+
+      .nut-input {
+        padding: 0 !important;
+        input {
+          text-align: right !important;
+          color: #333 !important;
+        }
+      }
+
+      .nut-textarea {
+        padding: 0 !important;
+        textarea {
+          text-align: right !important;
+          color: #333 !important;
+        }
+      }
+
+      .nut-uploader {
+        .nut-uploader__preview-img,
+        .nut-uploader__upload {
+          width: 180rpx !important;
+          height: 180rpx !important;
+        }
+      }
+    }
+  }
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
   <div v-if="data.length > 0">
-    <div class="wallet-wrap" v-if="type == 1">
+    <div v-if="type == 1" class="wallet-wrap">
       <Item
         v-for="item in data"
         :key="item.id"
@@ -8,7 +8,7 @@
         @refresh="emit('refresh')" />
     </div>
 
-    <div class="wallet-wrap" v-else>
+    <div v-else class="wallet-wrap">
       <Verification
         v-for="item in data"
         :key="item.id"
@@ -19,7 +19,7 @@
 
   <Empty
     v-else
-    :customClass="[type == 2 ? `mt-[20vh]` : '']"
+    :custom-class="[type == 2 ? `mt-[20vh]` : '']"
     :description="type == 1 ? '暂无数据' : '暂无待核销数据'" />
 </template>
 

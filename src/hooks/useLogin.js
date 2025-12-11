@@ -80,9 +80,8 @@ export function useLogin(cb) {
     const {
       userinfo: { token }
     } = await checkLoginRes(reqData)
-    uni.setStorageSync('APP_TOKEN', token)
     appStore.setAppToken(token)
-    appStore.refreshAppUser()
+    await appStore.refreshAppUser()
     bindMobileVisible.value = false
     cb?.()
   }

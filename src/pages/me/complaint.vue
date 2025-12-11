@@ -5,9 +5,9 @@
       :style="{ height: type == 2 ? '90vh' : '95vh' }">
       <div v-if="result.length > 0">
         <div
-          class="box-border p-[30rpx] bg-[#fff] rounded-[10rpx] mb-[20rpx]"
           v-for="item in result"
           :key="item.id"
+          class="box-border p-[30rpx] bg-[#fff] rounded-[10rpx] mb-[20rpx]"
           @click="
             navTo(`/pages/me/complaint-details?type=${type}&key=${item.id}`)
           ">

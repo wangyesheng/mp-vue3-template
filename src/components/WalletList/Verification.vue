@@ -7,15 +7,24 @@
           <div class="title">
             {{ data.title }}
           </div>
-          <div class="row">
+          <!-- 实物礼品 -->
+          <div v-if="data.mall_id" class="text-[#666] text-[26rpx]">
+            {{ data.content }}
+          </div>
+          <!-- 门票 -->
+          <div v-else class="row">
             <span class="label">
               剩余 / {{ data.type == 3 ? '天' : '次' }}：
             </span>
             <span class="value">{{ data.residue_quantity }}</span>
           </div>
           <div class="row">
-            <span class="label">失效日期：</span>
-            <span class="value">{{ data.end_time }}</span>
+            <span class="label">
+              {{ data.mall_id ? '兑换日期：' : '失效日期：' }}
+            </span>
+            <span class="value">
+              {{ data.mall_id ? data.createtime : data.end_time }}
+            </span>
           </div>
         </div>
         <div class="info-right">
@@ -29,7 +38,7 @@
 </template>
 
 <script setup>
-import { verifyRes } from '../../api'
+import { verifyGiftRes, verifyRes } from '../../api'
 
 const props = defineProps({
   data: {
@@ -46,7 +55,9 @@ function onVerify() {
     confirmText: '确认无误',
     success: async ({ confirm }) => {
       if (confirm) {
-        await verifyRes(props.data.id)
+        await (props.data.mall_id
+          ? verifyGiftRes(props.data.id)
+          : verifyRes(props.data.id))
         emit('refresh')
       }
     }
@@ -96,15 +107,7 @@ function onVerify() {
           display: flex;
           align-items: center;
           font-size: 26rpx;
-
-          .label {
-            color: #666;
-          }
-
-          .value {
-            color: #333;
-            font-weight: 550;
-          }
+          color: #666;
         }
       }
 
@@ -121,9 +124,8 @@ function onVerify() {
   .footer {
     width: 100%;
     padding: 8rpx 0;
-    background: #8153fe;
+    background: var(--hw-primary-color);
     text-align: center;
-
     font-weight: 400;
     font-size: 32rpx;
     color: #fff;

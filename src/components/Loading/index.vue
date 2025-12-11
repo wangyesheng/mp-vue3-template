@@ -1,7 +1,11 @@
 <template>
   <!--  -->
   <view
-    :style="{ position: position, 'z-index': zIndex, '--opacity': maskOpacity }"
+    :style="{
+      position: position,
+      'z-index': zIndex,
+      '--opacity': maskOpacity
+    }"
     class="container"
     :class="[
       mask ? 'mask' : '',
@@ -101,7 +105,7 @@ export default {
     },
     color: {
       type: String,
-      default: '#344AD9'
+      default: '#8153fe'
     },
     showText: {
       type: Boolean,

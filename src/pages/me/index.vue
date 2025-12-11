@@ -1,8 +1,8 @@
 <template>
-  <AppContainer>
+  <AppContainer :need-min-height="false">
     <div class="__me">
       <div class="userInfo">
-        <div class="inner" v-if="appUser.id">
+        <div v-if="appUser.id" class="inner">
           <div class="header">
             <image class="avatar" :src="appUser.avatar" mode="aspectFill" />
             <div>
@@ -10,7 +10,8 @@
                 <span>{{ appUser.nickname }}</span>
                 <image
                   src="../../static/images/me/edit.png"
-                  mode="aspectFill" />
+                  mode="aspectFill"
+                  @click="navTo('/pages/me/personal')" />
               </div>
               <div class="vip">儿童会员</div>
             </div>
@@ -45,7 +46,7 @@
           <div class="inner">
             <div>
               <img src="../../static/images/home/map.png" alt="" />
-              <span>HAOWEN LAND北京密云店</span>
+              <span>{{ appName }}</span>
             </div>
           </div>
         </div>
@@ -53,33 +54,90 @@
 
       <div class="funcs">
         <div
-          class="item"
           v-for="item in funcs"
           :key="item.label"
+          class="item"
           @click="item.handler ? item.handler() : navTo(item.page)">
           <image :src="item.icon" mode="aspectFill" />
           <span>{{ item.label }}</span>
         </div>
       </div>
 
-      <Recharge
-        v-model:visible="rechargePopupVisible"
-        :levels="rechargeLevels" />
+      <div v-if="appUser.id" class="baby">
+        <div class="header" data-content="我的宝贝"></div>
+        <div v-if="babyList.length > 0" class="content">
+          <div v-for="item in babyList" :key="item.id" class="item">
+            <div class="left">
+              <image :src="item.avatar" mode="aspectFill" />
+              <div class="right">
+                <div class="top">
+                  <span class="name">{{ item.name }}</span>
+                  <image
+                    :src="item.gender == 1 ? boyIcon : grilIcon"
+                    mode="aspectFill" />
+                </div>
+                <nut-tag custom-color="#f5f5f5" text-color="#999">
+                  {{ getAge(item.birthday) }}
+                </nut-tag>
+              </div>
+            </div>
+            <div class="right">
+              <nut-icon
+                name="edit"
+                custom-color="#8153fe"
+                @click="navTo(`/pages/baby/form?id=${item.id}`)" />
+              <nut-icon
+                name="del2"
+                custom-color="#ff0000"
+                @click="onDeleteBaby(item.id)" />
+            </div>
+          </div>
+          <div class="flex justify-center">
+            <nut-button
+              plain
+              type="primary"
+              size="small"
+              @click="navTo('/pages/baby/form')">
+              <template #icon>
+                <nut-icon name="plus" />
+              </template>
+              去添加
+            </nut-button>
+          </div>
+        </div>
+        <div v-else class="content">
+          <div class="flex flex-col items-center gap-y-[20rpx]">
+            <span class="text-[28rpx] text-[#999] font-[500]">
+              暂无宝贝信息
+            </span>
+            <nut-button
+              plain
+              type="primary"
+              size="small"
+              @click="navTo('/pages/baby/form')">
+              <template #icon>
+                <nut-icon name="plus" />
+              </template>
+              去添加
+            </nut-button>
+          </div>
+        </div>
+      </div>
+
       <BindMobile
         v-model:visible="bindMobileVisible"
-        :getPhoneNumber="getPhoneNumber" />
+        :get-phone-number="getPhoneNumber" />
     </div>
   </AppContainer>
 </template>
 
 <script setup>
-import Recharge from '@/components/Recharge/index'
 import { useAppStore } from '../../stores/app'
 import { storeToRefs } from 'pinia'
-import { getUserTabletRes } from '../../api'
-import { ref } from 'vue'
+import { deleteBabyRes, getBabyListRes, getUserTabletRes } from '../../api'
 import { useLogin } from '../../hooks/useLogin'
 import { navTo, toast } from '../../utils/uni'
+import dayjs from 'dayjs'
 import orderIcon from '../../static/images/me/order.png'
 import appointmentIcon from '../../static/images/me/appointment.png'
 import babyIcon from '../../static/images/me/baby.png'
@@ -88,13 +146,14 @@ import couponIcon from '../../static/images/me/coupon.png'
 import giftIcon from '../../static/images/me/gift.png'
 import settingIcon from '../../static/images/me/setting.png'
 import walletIcon from '../../static/images/me/wallet.png'
-import { onShow } from '@dcloudio/uni-app'
+import boyIcon from '@/static/images/me/boy.png'
+import grilIcon from '@/static/images/me/gril.png'
 
 const funcs = [
   {
     label: '我的订单',
-    icon: orderIcon
-    // page: '/pages/order/index'
+    icon: orderIcon,
+    page: '/pages/order/index'
   },
   {
     label: '入园预约',
@@ -121,7 +180,7 @@ const funcs = [
   {
     label: '宝贝管理',
     icon: babyIcon,
-    page: '/pages/me/baby'
+    page: '/pages/baby/form'
   },
   {
     label: '兑换中心',
@@ -136,8 +195,10 @@ const funcs = [
 ]
 
 const appStore = useAppStore()
-const { appUser } = storeToRefs(appStore)
-const { bindMobileVisible, login, getPhoneNumber } = useLogin(getUserTablet)
+const { appUser, appName } = storeToRefs(appStore)
+const { bindMobileVisible, login, getPhoneNumber } = useLogin(async () => {
+  await getBabyList()
+})
 
 const userTabletInfo = ref({})
 async function getUserTablet() {
@@ -146,78 +207,39 @@ async function getUserTablet() {
     userTabletInfo.value = data
   }
 }
-onShow(getUserTablet)
 
-// const baseUrl = import.meta.env.VITE_BASE_API
-// const uploadUrl = `${baseUrl}/api/common/upload`
-// async function onChooseAvatar(e) {
-//   const {
-//     detail: { avatarUrl }
-//   } = e
+const babyList = ref([])
+async function getBabyList() {
+  if (appUser.value.id) {
+    const data = await getBabyListRes()
+    babyList.value = data
+  }
+}
+function getAge(birthday) {
+  return dayjs().diff(dayjs(birthday), 'year') + '岁'
+}
 
-//   uni.uploadFile({
-//     url: uploadUrl,
-//     filePath: avatarUrl,
-//     name: 'file',
-//     header: {
-//       token: appUser.value.token,
-//       'content-type': 'multipart/form-data'
-//     },
-//     success: async (result) => {
-//       const {
-//         code,
-//         data: { fullurl },
-//         msg
-//       } = JSON.parse(result.data)
-//       if (code !== 1) {
-//         toast(msg)
-//       } else {
-//         await updateUserRes({ avatar: fullurl })
-//         const newUserInfo = {
-//           ...appUser.value,
-//           avatar: fullurl
-//         }
-//         appStore.setAppUser(newUserInfo)
-//         uni.setStorageSync('APP_USER', newUserInfo)
-//       }
-//     },
-//     fail: (uploadFileErr) => {
-//       console.log('upload::error', uploadFileErr)
-//       toast('上传失败！')
-//     }
-//   })
-// }
+function onDeleteBaby(id) {
+  uni.showModal({
+    title: '提示',
+    content: '确认要删除该宝贝吗？',
+    async success({ confirm }) {
+      if (confirm) {
+        await deleteBabyRes(id)
+        getBabyList()
+      }
+    }
+  })
+}
 
-// async function onNicknameChange(e) {
-//   const value = e.detail.value
-//   if (value) {
-//     await updateUserRes({ nickname: value, username: value })
-//     appStore.setAppUser({
-//       ...appUser.value,
-//       nickname: value,
-//       username: value
-//     })
-//     uni.setStorageSync('APP_USER', appUser.value)
-//   }
-// }
+onShow(() => {
+  getUserTablet()
+  getBabyList()
+})
 </script>
 
 <style lang="scss" scoped>
 .__me {
-  position: relative;
-  min-height: 100vh;
-  .wallet {
-    ::v-deep() {
-      .nut-button {
-        background: #e3c377 !important;
-        width: 144rpx !important;
-        height: 48rpx !important;
-        color: #333 !important;
-        font-size: 24rpx !important;
-      }
-    }
-  }
-
   .noLoginUser {
     display: flex;
     flex-direction: column;
@@ -249,7 +271,7 @@ onShow(getUserTablet)
   .userInfo {
     width: 100%;
     height: 560rpx;
-    background: #8153fe;
+    background: var(--hw-primary-color);
     position: relative;
 
     & > .inner {
@@ -258,12 +280,13 @@ onShow(getUserTablet)
 
       .header {
         display: flex;
+        align-items: center;
+        column-gap: 20rpx;
 
         .avatar {
-          width: 120rpx;
-          height: 120rpx;
+          width: 150rpx;
+          height: 150rpx;
           border-radius: 50%;
-          margin-right: 16rpx;
         }
 
         .name {
@@ -273,7 +296,7 @@ onShow(getUserTablet)
           label {
             font-size: 40rpx;
             font-weight: 550;
-            color: #000;
+            color: #fff;
             margin-right: 48rpx;
           }
           image {
@@ -450,6 +473,97 @@ onShow(getUserTablet)
         font-weight: 400;
         font-size: 28rpx;
         color: #000;
+      }
+    }
+  }
+
+  .baby {
+    padding: 20rpx 32rpx 100rpx;
+    box-sizing: border-box;
+    position: relative;
+
+    .header {
+      width: 100%;
+      height: 136rpx;
+      background: url(https://hwly.tuomuit.com/wechat/img/baby-header-bg.png);
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+
+      &::before {
+        content: attr(data-content);
+        position: absolute;
+        top: 40rpx;
+        left: 60rpx;
+        font-weight: 550;
+        font-size: 32rpx;
+        color: #fff;
+      }
+    }
+
+    .content {
+      width: 100%;
+      background: #fff;
+      border-bottom-left-radius: 24rpx;
+      border-bottom-right-radius: 24rpx;
+      display: flex;
+      flex-direction: column;
+      padding: 0 30rpx 40rpx;
+      box-sizing: border-box;
+      row-gap: 20rpx;
+
+      .item {
+        padding-bottom: 20rpx;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2rpx solid #f5f5f5;
+
+        .left {
+          display: flex;
+          align-items: center;
+          column-gap: 20rpx;
+
+          image {
+            width: 100rpx;
+            height: 100rpx;
+            border-radius: 10rpx;
+          }
+
+          .right {
+            display: flex;
+            flex-direction: column;
+            row-gap: 10rpx;
+
+            .top {
+              display: flex;
+              align-items: center;
+              column-gap: 20rpx;
+
+              .name {
+                font-size: 34rpx;
+                color: #333;
+                font-weight: 550;
+              }
+
+              image {
+                width: 24rpx;
+                height: 24rpx;
+              }
+            }
+
+            ::v-deep() {
+              .nut-tag {
+                width: fit-content;
+              }
+            }
+          }
+        }
+
+        & > .right {
+          display: flex;
+          align-items: center;
+          column-gap: 20rpx;
+        }
       }
     }
   }

@@ -1,27 +1,23 @@
 export const ORDER_STATUS = {
   0: {
-    label: '待报价',
+    label: '待付款',
     color: '#999'
   },
   1: {
-    label: '待付款',
+    label: '待核销',
     color: '#888'
   },
   2: {
-    label: '待发车',
+    label: '已核销',
     color: '#777'
   },
   3: {
-    label: '待收车',
+    label: '已取消',
     color: '#666'
   },
   4: {
-    label: '已完成',
+    label: '已过期',
     color: '#6BBA5B'
-  },
-  5: {
-    label: '已取消',
-    color: '#555'
   }
 }
 

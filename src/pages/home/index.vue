@@ -13,7 +13,7 @@
         <div class="inner">
           <div>
             <img src="../../static/images/home/map.png" alt="" />
-            <span>HAOWEN LAND北京密云店</span>
+            <span>{{ appName }}</span>
           </div>
         </div>
       </div>
@@ -52,7 +52,13 @@
           </div>
         </div>
         <div class="extra common">
-          <div @click="onScan">
+          <div v-if="appUser.id" @click="onScan">
+            <image
+              src="../../static/images/home/writeOff.png"
+              mode="aspectFill" />
+            <span>券码核销</span>
+          </div>
+          <div v-else open-type="getUserInfo" @click="login">
             <image
               src="../../static/images/home/writeOff.png"
               mode="aspectFill" />
@@ -64,7 +70,7 @@
               mode="aspectFill" />
             <span>客服中心</span>
           </div>
-          <div>
+          <div @click="navTo('/pages/home/activity-list', false)">
             <image
               src="../../static/images/home/activity.png"
               mode="aspectFill" />
@@ -72,7 +78,7 @@
           </div>
         </div>
         <div class="activity common">
-          <div class="title">HAOWEN LAND活动2</div>
+          <div class="title">HAOWEN LAND活动</div>
           <scroll-view
             class="scroll-container"
             scroll-x
@@ -90,35 +96,37 @@
         </div>
       </div>
     </div>
+    <BindMobile
+      v-model:visible="bindMobileVisible"
+      :get-phone-number="getPhoneNumber" />
   </AppContainer>
 </template>
 
 <script setup>
-import { useLogin } from '../../hooks/useLogin'
-import { useAppStore } from '../../stores/app'
-import { onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 import { getBannersRes } from '@/api'
 import { navTo } from '../../utils/uni'
+import { useAppStore } from '@/stores/app'
+import { useLogin } from '@/hooks/useLogin'
 
+const { login, getPhoneNumber, bindMobileVisible } = useLogin(onScan)
 const appStore = useAppStore()
-const { appUser, merchantTel } = storeToRefs(appStore)
-
-const { bindMobileVisible, login, getPhoneNumber } = useLogin()
-
+const { appName, appUser } = storeToRefs(appStore)
 const banners = ref([])
-
 onLoad(async () => {
+  appStore.getAppName()
   const data = await getBannersRes()
   banners.value = data
 })
 
 function onScan() {
-  uni.scanCode({
-    onlyFromCamera: true,
-    success({ result }) {
-      navTo(`/pages/scan/verification?code=${result}`)
-    }
-  })
+  appUser.value.group_id == 1
+    ? uni.scanCode({
+        onlyFromCamera: true,
+        success({ result }) {
+          navTo(`/pages/scan/verification?code=${result}`)
+        }
+      })
+    : uni.switchTab({ url: '/pages/scan/index' })
 }
 
 onShareAppMessage(() => {
@@ -185,7 +193,7 @@ onShareTimeline(() => {
 }
 
 .funcs {
-  padding: 30rpx 34rpx 80rpx;
+  padding: 30rpx 34rpx 100rpx;
   box-sizing: border-box;
 
   .common {

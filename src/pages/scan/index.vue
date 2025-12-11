@@ -3,14 +3,14 @@
     <div class="__scan">
       <div class="qrcode-wrap">
         <div class="userinfo">
-          <div class="inner" v-if="appUser.id">
+          <div v-if="appUser.id" class="inner">
             <image :src="appUser.avatar" mode="aspectFill" />
             <div>
               <span>{{ appUser.nickname }}</span>
               <span>儿童会员</span>
             </div>
           </div>
-          <div class="noLogin" v-else>Hi，Haowen Baby</div>
+          <div v-else class="noLogin">Hi，Haowen Baby</div>
         </div>
         <div class="qrcode">
           <image :src="qrcode" mode="aspectFill" />
@@ -114,17 +114,19 @@ function restoreScreenBrightness() {
 
       .inner {
         display: flex;
+        align-items: center;
 
         image {
           width: 120rpx;
           height: 120rpx;
           margin-right: 28rpx;
+          border-radius: 20rpx;
         }
 
         view {
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
+          justify-content: space-around;
 
           label:first-child {
             font-weight: 550;

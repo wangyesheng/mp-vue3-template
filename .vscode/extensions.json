@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "vue.volar",
+    "sdras.vue-vscode-snippets",
+    "cipchk.cssrem",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "bradlc.vscode-tailwindcss"
+  ]
+}

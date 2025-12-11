@@ -48,11 +48,11 @@
         </div>
         <div>
           <div class="text-[#A3A3A3] text-[26rpx] mb-[10rpx]">反馈图片：</div>
-          <div class="flex flex-wrap" v-if="complaintDetails.images">
+          <div v-if="complaintDetails.images" class="flex flex-wrap">
             <div
-              class="w-[100rpx] h-[100rpx] mr-[20rpx]"
               v-for="(url, index) in complaintDetails.images_arr"
               :key="index"
+              class="w-[100rpx] h-[100rpx] mr-[20rpx]"
               @click="previewImage(complaintDetails.images_arr)">
               <image
                 class="max-w-full max-h-full object-contain rounded-[10rpx]"
@@ -63,22 +63,22 @@
           </div>
         </div>
         <div
-          class="flex flex-col text-[26rpx] mt-[20rpx]"
-          v-if="type == 1 && complaintDetails.status == 1">
+          v-if="type == 1 && complaintDetails.status == 1"
+          class="flex flex-col text-[26rpx] mt-[20rpx]">
           <div class="text-[#A3A3A3] w-[140rpx]">处理意见：</div>
           <div class="text-[#333] mt-[10rpx]">
             {{ complaintDetails.note }}
           </div>
         </div>
         <div
-          class="flex flex-col text-[26rpx] mt-[20rpx]"
-          v-if="type == 2 && complaintDetails.status == 1">
+          v-if="type == 2 && complaintDetails.status == 1"
+          class="flex flex-col text-[26rpx] mt-[20rpx]">
           <div class="text-[#A3A3A3] w-[140rpx]">回复：</div>
           <div class="box-border p-[10rpx] pt-0">
             <div
-              class="mt-[10rpx]"
               v-for="item in complaintDetails.reply_list"
-              :key="item.id">
+              :key="item.id"
+              class="mt-[10rpx]">
               <div
                 class="flex justify-between mb-[10rpx] text-[#333] text-[26rpx]">
                 <span>{{ item.contact }}</span>

@@ -3,45 +3,110 @@
     <nut-cell-group>
       <nut-cell title="头像">
         <template #desc>
-          <image
-            class="w-[100rpx] h-[100rpx] rounded-[20rpx]"
-            :src="appUser.avatar"
-            mode="aspectFit" />
+          <button
+            class="avatar"
+            open-type="chooseAvatar"
+            @chooseavatar="onChooseAvatar">
+            <image :src="appUser.avatar" mode="aspectFill" />
+          </button>
         </template>
       </nut-cell>
       <nut-cell title="用户名">
         <template #desc>
-          <span class="font-[550] text-[#333]">
-            {{ appUser.username }}
-          </span>
+          <nut-input
+            v-model="appUser.nickname"
+            placeholder="输入用户名"
+            type="nickname"
+            :border="false"
+            input-align="right" />
         </template>
       </nut-cell>
       <nut-cell title="手机号">
         <template #desc>
-          <span class="font-[550] text-[#333]">
-            {{ appUser.mobile }}
-          </span>
+          <nut-input
+            v-model="appUser.mobile"
+            placeholder="输入手机号"
+            type="tel"
+            :border="false"
+            input-align="right" />
         </template>
       </nut-cell>
     </nut-cell-group>
     <div class="btn-wrap">
-      <nut-button block type="default" @click="logout">退出登录</nut-button>
+      <nut-button
+        block
+        plain
+        type="primary"
+        size="large"
+        :disabled="!canSave"
+        :loading="loading"
+        @click="onSave">
+        {{ loading ? '保存中...' : '确认保存' }}
+      </nut-button>
     </div>
   </AppContainer>
 </template>
 
 <script setup>
-import AppContainer from '@/components/AppContainer/index'
+import { toast } from '@/utils/uni'
 import { useAppStore } from '../../stores/app'
 import { storeToRefs } from 'pinia'
+import { updateUserRes } from '@/api'
+
+const baseUrl = import.meta.env.VITE_BASE_API
+const uploadUrl = `${baseUrl}/api/common/upload`
 
 const appStore = useAppStore()
-const { appUser } = storeToRefs(appStore)
+const { appUser, appToken } = storeToRefs(appStore)
+const canSave = computed(() => {
+    const { nickname, mobile, avatar } = appUser.value
+    return nickname && mobile && avatar
+  }),
+  loading = ref(false)
 
-function logout() {
-  uni.setStorageSync('APP_USER', {})
-  appStore.setAppUser({})
-  uni.navigateBack()
+async function onChooseAvatar(e) {
+  const {
+    detail: { avatarUrl }
+  } = e
+
+  uni.uploadFile({
+    url: uploadUrl,
+    filePath: avatarUrl,
+    name: 'file',
+    header: {
+      token: appToken.value,
+      'content-type': 'multipart/form-data'
+    },
+    success: async (result) => {
+      const {
+        code,
+        data: { fullurl },
+        msg
+      } = JSON.parse(result.data)
+      if (code !== 1) {
+        toast(msg)
+      } else {
+        appUser.value.avatar = fullurl
+      }
+    },
+    fail: (uploadFileErr) => {
+      console.log('upload::error', uploadFileErr)
+      toast('上传失败！')
+    }
+  })
+}
+
+async function onSave() {
+  try {
+    loading.value = true
+    const { nickname, mobile, avatar, id } = appUser.value
+    await updateUserRes({ nickname, mobile, avatar, id })
+    toast('更新成功！')
+    appStore.refreshAppUser()
+    uni.navigateBack()
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 
@@ -52,14 +117,48 @@ function logout() {
 }
 
 ::v-deep() {
-  .nut-cell:first-child {
-    .nut-cell__title {
-      justify-content: center;
+  .nut-cell {
+    align-items: center;
+
+    &:first-child {
+      .nut-cell__title {
+        justify-content: center;
+      }
     }
   }
 
   .nut-cell-group__wrap {
     margin: 0 !important;
+
+    .nut-input {
+      padding: 0 !important;
+
+      .nut-input__input {
+        font-size: 28rpx;
+        color: #000 !important;
+        font-weight: 550;
+      }
+    }
+
+    .avatar {
+      margin: 0;
+      padding: 0;
+      background: transparent !important;
+      border: none !important;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+      &::after {
+        border: none;
+      }
+
+      image {
+        width: 120rpx;
+        height: 120rpx;
+        border-radius: 50%;
+      }
+    }
   }
 }
 </style>

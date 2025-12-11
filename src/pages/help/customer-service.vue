@@ -6,8 +6,12 @@
           <span>扫码添加</span>
           <span>好稳乐园客服</span>
         </div>
-        <div class="qrcode"></div>
-        <div class="phone">联系电话 ：12345678901</div>
+        <div class="qrcode">
+          <image :src="code" mode="aspectFill" show-menu-by-longpress />
+        </div>
+        <div class="phone" @click="callPhone(phone)">
+          联系电话 ：{{ phone }}
+        </div>
         <div class="logo">
           <image src="../../static/images/logo.png" mode="aspectFill" />
           <span>HAOWEN LAND</span>
@@ -18,7 +22,15 @@
 </template>
 
 <script setup>
-import AppContainer from '@/components/AppContainer/index'
+import { getServicePhoneRes, getServiceQrCodeRes } from '@/api'
+import { callPhone } from '@/utils/uni'
+
+const code = ref(''),
+  phone = ref()
+onLoad(async () => {
+  code.value = await getServiceQrCodeRes()
+  phone.value = await getServicePhoneRes()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -48,15 +60,21 @@ import AppContainer from '@/components/AppContainer/index'
     .qrcode {
       width: 542rpx;
       height: 542rpx;
-      background: #d9d9d9;
       margin-top: 50rpx;
+      border-radius: 20rpx;
+      overflow: hidden;
+
+      image {
+        width: 100%;
+        height: 100%;
+      }
     }
 
     .phone {
       font-weight: 550;
       font-size: 32rpx;
       color: #000000;
-      margin-top: 26rpx;
+      margin-top: 40rpx;
     }
     .logo {
       margin-top: 68rpx;

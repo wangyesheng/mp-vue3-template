@@ -4,8 +4,10 @@
       <div class="banner">
         <div class="score">
           <div class="left">
-            <image :src="appUser.avatar" mode="aspectFill" />
-            <span>{{ appUser.nickname }}</span>
+            <image
+              class="rounded-[10rpx]"
+              :src="appUser.avatar"
+              mode="aspectFill" />
           </div>
           <div class="right">
             <span>{{ appUser.score }}</span>
@@ -14,8 +16,8 @@
         </div>
       </div>
 
-      <div class="content" v-if="goods.length > 0">
-        <div class="item" v-for="good in goods" :key="good.id">
+      <div v-if="goods.length > 0" class="content">
+        <div v-for="good in goods" :key="good.id" class="item">
           <image :src="good.image" mode="aspectFill" />
           <div class="inner">
             <span class="title">{{ good.title }}</span>
@@ -24,34 +26,69 @@
                 <span>{{ good.price }}</span>
                 <span>积分</span>
               </div>
-              <nut-button type="primary" size="small">兑换</nut-button>
+              <nut-button type="primary" size="small" @click="onExchange(good)">
+                兑换
+              </nut-button>
             </div>
           </div>
         </div>
       </div>
-      <Empty description="暂无兑换商品" customClass="mt-[10vh]" v-else />
+      <Empty v-else description="暂无兑换商品" custom-class="mt-[10vh]" />
+    </div>
+    <div
+      class="absolute left-[20rpx]"
+      :style="{ top: iconTop + 'px' }"
+      @click="onBack">
+      <nut-icon name="rect-left" custom-color="#fff" size="20" />
     </div>
   </AppContainer>
 </template>
 
 <script setup>
-import { storeToRefs } from 'pinia'
 import { useAppStore } from '../../stores/app'
-import { onLoad } from '@dcloudio/uni-app'
-import { getMallGoodsRes } from '@/api'
+import { exchangeRes, getMallGoodsRes } from '@/api'
+import { toast } from '@/utils/uni'
 
-const { appUser } = storeToRefs(useAppStore()),
+const appStore = useAppStore(),
+  { appUser } = storeToRefs(appStore),
+  iconTop = computed(() => {
+    const data = uni.getMenuButtonBoundingClientRect()
+    // data.top 胶囊距离顶部得距离
+    // data.height / 2 胶囊自身高度的一半
+    // 10 图标自身高度的一半
+    return data.top + data.height / 2 - 10
+  }),
   goods = ref([])
-
 async function getGoods() {
   const { data } = await getMallGoodsRes({
     page: 1,
-    limit: 50
+    limit: 500
   })
   goods.value = data
 }
 
-onLoad(getGoods)
+function onExchange(good) {
+  uni.showModal({
+    title: '提示',
+    content: '确定要兑换该商品吗？',
+    async success({ confirm }) {
+      if (confirm) {
+        await exchangeRes(good.id)
+        toast('兑换成功！')
+        appStore.refreshAppUser()
+      }
+    }
+  })
+}
+
+function onBack() {
+  uni.navigateBack()
+}
+
+onLoad(() => {
+  getGoods()
+  appStore.refreshAppUser()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -142,17 +179,11 @@ onLoad(getGoods)
       .left {
         display: flex;
         align-items: center;
-        column-gap: 12rpx;
 
         image {
-          width: 80rpx;
-          height: 80rpx;
-        }
-
-        label {
-          color: #333;
-          font-size: 28rpx;
-          font-weight: 550;
+          width: 120rpx;
+          height: 120rpx;
+          border-radius: 50%;
         }
       }
 

@@ -70,7 +70,7 @@ export function createOrderRes(data) {
 
 export function getOrdersRes(data) {
   return request({
-    url: `/api/order/get_order_list`,
+    url: `/api/order/my`,
     method: 'get',
     data
   })
@@ -91,12 +91,20 @@ export function callPayRes(data) {
   })
 }
 
-export function cancelOrderRes(order_number) {
+export function callPayInOrderRes(data) {
   return request({
-    url: `/api/order/cancel_order`,
+    url: `/api/order/order_pay`,
+    method: 'post',
+    data
+  })
+}
+
+export function cancelOrderRes(order_sn) {
+  return request({
+    url: `/api/order/cancel`,
     method: 'post',
     data: {
-      order_number
+      order_sn
     }
   })
 }
@@ -178,20 +186,6 @@ export function getMoneyLogsRes(data) {
     url: `/api/user/user_money_log`,
     method: 'get',
     data
-  })
-}
-
-export function getFlowProcessRes() {
-  return request({
-    url: `/api/index/get_flow`,
-    method: 'get'
-  })
-}
-
-export function getAboutUsRes() {
-  return request({
-    url: `/api/index/get_about`,
-    method: 'get'
   })
 }
 
@@ -303,5 +297,113 @@ export function getUserTabletRes() {
   return request({
     url: `/api/user/tablet`,
     method: 'get'
+  })
+}
+
+export function getBabyListRes() {
+  return request({
+    url: `/api/user/baby_list`,
+    method: 'get'
+  })
+}
+
+export function saveBabyInfoRes(data) {
+  return request({
+    url: `/api/user/add_baby`,
+    method: 'post',
+    data
+  })
+}
+
+export function getBabyInfoRes(id) {
+  return request({
+    url: `/api/user/baby_detail`,
+    method: 'get',
+    data: { id }
+  })
+}
+
+export function deleteBabyRes(id) {
+  return request({
+    url: `/api/user/del_baby`,
+    method: 'post',
+    data: { id }
+  })
+}
+
+export function getActivitiesRes() {
+  return request({
+    url: `/api/activity/list`,
+    method: 'get'
+  })
+}
+
+export function getActivityInfoRes(id) {
+  return request({
+    url: `/api/activity/detail`,
+    method: 'get',
+    data: { id }
+  })
+}
+
+export function getAppNameRes() {
+  return request({
+    url: `/api/index/store_name`,
+    method: 'get'
+  })
+}
+
+export function getUserAgreementRes() {
+  return request({
+    url: `/api/index/user_agreement`,
+    method: 'get'
+  })
+}
+
+export function getAboutUsRes() {
+  return request({
+    url: `/api/index/about_us`,
+    method: 'get'
+  })
+}
+
+export function getServiceQrCodeRes() {
+  return request({
+    url: `/api/index/service_qrcode`,
+    method: 'get'
+  })
+}
+export function getServicePhoneRes() {
+  return request({
+    url: `/api/index/service_phone`,
+    method: 'get'
+  })
+}
+
+export function exchangeRes(id) {
+  return request({
+    url: `/api/mall/exchange`,
+    method: 'post',
+    data: {
+      id
+    }
+  })
+}
+
+export function getMyGiftsRes(data) {
+  return request({
+    url: `/api/user/my_gift`,
+    method: 'get',
+    data
+  })
+}
+
+export function verifyGiftRes(id) {
+  return request({
+    url: `/api/user/gift_verify`,
+    method: 'post',
+    data: {
+      id
+    }
   })
 }

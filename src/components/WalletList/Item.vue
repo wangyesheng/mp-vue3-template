@@ -13,15 +13,26 @@
           <div class="title">
             {{ data.title }}
           </div>
-          <div class="tag">
+          <!-- 实物礼品 -->
+          <div v-if="data.mall_id" class="text-[#999] text-[26rpx]">
+            {{ data.content }}
+          </div>
+          <!-- 门票 -->
+          <div v-else class="tag">
             <nut-tag plain custom-color="#999">
               {{ data.use_time_text }}
             </nut-tag>
             <nut-tag plain custom-color="#999">免预约</nut-tag>
           </div>
-          <div class="expireTime">失效日期：{{ data.end_time }}</div>
+          <div class="date">
+            {{
+              data.mall_id
+                ? `兑换日期：${data.createtime}`
+                : `失效日期：${data.end_time}`
+            }}
+          </div>
         </div>
-        <div class="info-right" v-if="data.status == 1">
+        <div v-if="data.status == 1" class="info-right">
           <span>{{ data.residue_quantity }}</span>
           <span>剩余/{{ data.type == 3 ? '天' : '次' }}</span>
         </div>
@@ -127,14 +138,14 @@ defineProps({
           }
         }
 
-        .expireTime {
+        .date {
           font-size: 24rpx;
           color: #999;
         }
       }
 
       &-right {
-        width: 30%;
+        width: 26%;
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
@@ -143,7 +154,7 @@ defineProps({
         color: #000;
 
         label:first-child {
-          font-size: 60rpx;
+          font-size: 55rpx;
         }
 
         label:last-child {

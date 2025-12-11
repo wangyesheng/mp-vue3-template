@@ -16,14 +16,7 @@ export default defineConfig({
       resolvers: [NutResolver()],
       dirs: ['src/components'],
       deep: true,
-      dts: './components.d.ts',
-      globs: [
-        'src/components/**/index.vue',
-        'src/components/**/*.vue',
-        // 排除 WalletList 下的非 index 文件
-        '!src/components/WalletList/Item.vue',
-        '!src/components/WalletList/Verification.vue'
-      ]
+      dts: './components.d.ts'
     }),
     uni(),
     vueJsx(),

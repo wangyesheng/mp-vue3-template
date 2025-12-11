@@ -9,11 +9,11 @@
         </div>
 
         <nut-tabs
+          v-model="selectedPaneKey"
           type="smile"
           align="left"
           :ellipsis="false"
           title-gutter="50"
-          v-model="selectedPaneKey"
           auto-height>
           <nut-tab-pane title="门票详情" pane-key="1">
             <div class="note">
@@ -37,132 +37,144 @@
             <nut-divider>图文详情</nut-divider>
             <div
               class="richtext"
-              v-html="addHtmlClassName(ticketInfo.specifics)"></div>
+              v-html="addHtmlClassName(ticketInfo.specifics)" />
           </nut-tab-pane>
           <nut-tab-pane title="购买须知" pane-key="2">
             <div
               class="richtext"
-              v-html="addHtmlClassName(ticketInfo.notices)"></div>
+              v-html="addHtmlClassName(ticketInfo.notices)" />
           </nut-tab-pane>
         </nut-tabs>
       </div>
       <div class="footer">
         <div class="inner">
           <nut-button
+            v-if="Boolean(appToken)"
             block
             size="large"
             type="primary"
             @click="debounce(callPayPopup)">
             立即购买
           </nut-button>
+          <nut-button
+            v-else
+            block
+            size="large"
+            type="primary"
+            open-type="getUserInfo"
+            @click="login">
+            立即购买
+          </nut-button>
         </div>
       </div>
 
       <nut-popup
+        v-model:visible="payPopupVisible"
         round
         position="bottom"
-        safe-area-inset-bottom
-        :custom-style="{
-          boxSizing: 'border-box',
-          padding: '40rpx 40rpx 60rpx',
-          background: '#f5f5f5'
-        }"
-        v-model:visible="payPopupVisible">
-        <div class="payPopupWrap">
-          <div class="__title">价格明细</div>
-
-          <nut-cell title="门票总额：">
-            <template #desc>
-              <span class="text-[32rpx] font-blod text-[#CC3535] mr-[40rpx]">
-                ￥{{ ticketInfo.price }}元
-              </span>
-            </template>
-          </nut-cell>
-          <nut-cell
-            title="可用优惠券："
-            is-link
-            @click="showCouponPopupVisible(true)">
-            <template #desc>
-              <span
-                v-if="finalPriceDetails.id"
-                class="text-[32rpx] font-blod text-[#CC3535]">
-                - ￥{{ finalPriceDetails.coupon_money }}元
-              </span>
-              <span v-else class="text-[34rpx] font-blod text-[#CC3535]">
-                {{ availableCoupons.length }}张
-              </span>
-            </template>
-          </nut-cell>
-          <nut-cell title="实付金额：">
-            <template #desc>
-              <span class="text-[32rpx] font-blod text-[#CC3535] mr-[40rpx]">
-                ￥{{ finalPriceDetails.real_price || ticketInfo.price }}元
-              </span>
-            </template>
-          </nut-cell>
-          <nut-cell title="支付方式：">
-            <template #desc>
-              <div class="flex justify-end items-center mr-[40rpx]">
-                <img
-                  class="w-[33.75rpx] mr-[10rpx]"
-                  :style="{
-                    height: '32rpx'
-                  }"
-                  :src="wechatIcon"
-                  alt="" />
-                <span class="text-[#666]">微信支付</span>
-              </div>
-            </template>
-          </nut-cell>
-          <nut-button
-            block
-            type="primary"
-            size="large"
-            :loading="payLoading"
-            @click="debounce(onPaySubmit)">
-            {{ payLoading ? '支付中...' : '确认支付' }}
-          </nut-button>
+        safe-area-inset-bottom>
+        <div class="popupWrap">
+          <div class="__title px-[40rpx]">价格明细</div>
+          <div class="popup-inner">
+            <nut-cell title="门票总额：">
+              <template #desc>
+                <span class="text-[32rpx] font-blod text-[#CC3535] mr-[40rpx]">
+                  ￥{{ ticketInfo.price }}元
+                </span>
+              </template>
+            </nut-cell>
+            <nut-cell
+              title="可用优惠券："
+              is-link
+              @click="showCouponPopupVisible(true)">
+              <template #desc>
+                <span
+                  v-if="finalPriceDetails.id"
+                  class="text-[32rpx] font-blod text-[#CC3535]">
+                  - ￥{{ finalPriceDetails.coupon_money }}元
+                </span>
+                <span v-else class="text-[32rpx] font-blod text-[#CC3535]">
+                  {{ availableCoupons.length }}张
+                </span>
+              </template>
+            </nut-cell>
+            <nut-cell title="实付金额：">
+              <template #desc>
+                <span class="text-[32rpx] font-blod text-[#CC3535] mr-[40rpx]">
+                  ￥{{ finalPriceDetails.real_price || ticketInfo.price }}元
+                </span>
+              </template>
+            </nut-cell>
+            <nut-cell title="支付方式：">
+              <template #desc>
+                <div class="flex justify-end items-center mr-[40rpx]">
+                  <img
+                    class="w-[33.75rpx] mr-[10rpx]"
+                    :style="{
+                      height: '32rpx'
+                    }"
+                    :src="wechatIcon"
+                    alt="" />
+                  <span class="text-[#666]">微信支付</span>
+                </div>
+              </template>
+            </nut-cell>
+            <nut-button
+              block
+              type="primary"
+              size="large"
+              :loading="payLoading"
+              @click="debounce(onPaySubmit)">
+              {{ payLoading ? '支付中...' : '确认支付' }}
+            </nut-button>
+          </div>
         </div>
       </nut-popup>
 
       <nut-popup
+        v-model:visible="couponPopupVisible"
         round
         position="bottom"
         safe-area-inset-bottom
-        :custom-style="{
-          boxSizing: 'border-box',
-          padding: '40rpx',
-          background: '#f5f5f5',
-          height: '50vh',
-          'overflow-y': 'scroll'
-        }"
-        v-model:visible="couponPopupVisible">
-        <div class="__title">选择优惠券</div>
-        <div class="couponPopupWrap" v-if="availableCoupons.length > 0">
-          <CouponInfo
-            v-for="item in availableCoupons"
-            :key="item.name"
-            :data="item"
-            :selected="currentSelectedCoupon.coupon_id == item.coupon_id"
-            @click="onSelectCoupon(item)" />
-        </div>
-        <div class="flex justify-center items-center h-[80%]" v-else>
-          <nut-empty
-            image="empty"
-            image-size="128rpx"
-            description="暂无可用优惠券">
-            <template #image>
-              <img src="../../static/images/coupon/no-coupon.png" alt="" />
-            </template>
-          </nut-empty>
+        :custom-style="{}">
+        <div class="popupWrap">
+          <div class="__title flex justify-between items-center px-[40rpx]">
+            <span>选择优惠券</span>
+            <span
+              class="text-[28rpx] font-[550] text-[var(--hw-primary-color)]"
+              @click="navTo('/pages/coupon/index')">
+              去领券
+            </span>
+          </div>
+          <div v-if="availableCoupons.length > 0" class="popup-inner coupon">
+            <CouponInfo
+              v-for="item in availableCoupons"
+              :key="item.coupon_id"
+              :data="item"
+              :selected="currentSelectedCoupon.coupon_id == item.coupon_id"
+              @click="onSelectCoupon(item)" />
+          </div>
+          <div v-else class="flex justify-center items-center h-[50vh]">
+            <nut-empty
+              image="empty"
+              image-size="128rpx"
+              description="暂无可用优惠券">
+              <template #image>
+                <img src="../../static/images/coupon/no-coupon.png" alt="" />
+              </template>
+            </nut-empty>
+          </div>
         </div>
       </nut-popup>
+
+      <BindMobile
+        v-model:visible="bindMobileVisible"
+        :get-phone-number="getPhoneNumber" />
     </div>
   </AppContainer>
 </template>
 
 <script setup>
-import { onLoad } from '@dcloudio/uni-app'
 import {
   callPayRes,
   getAvailableCouponsRes,
@@ -173,38 +185,50 @@ import { addHtmlClassName, navTo } from '../../utils/uni'
 import debounce from '../../utils/debounce'
 import wechatIcon from '../../static/images/wechat.png'
 import CouponInfo from '@/components/CouponInfo/index'
+import { useAppStore } from '@/stores/app'
+import { useLogin } from '@/hooks/useLogin'
+
+const { appToken } = storeToRefs(useAppStore())
+const { bindMobileVisible, login, getPhoneNumber } = useLogin(async () => {
+  await initData()
+  payPopupVisible.value = true
+})
 
 const ticketInfo = ref({})
 const selectedPaneKey = ref('1')
-onLoad(async ({ id }) => {
-  ticketInfo.value = await getTicketDetailsRes(id)
-})
-
-const payPopupVisible = ref(false)
 const availableCoupons = ref([])
+const payPopupVisible = ref(false)
 const couponPopupVisible = ref(false)
 const currentSelectedCoupon = ref({})
 const finalPriceDetails = ref({})
 const payLoading = ref(false)
 
-async function callPayPopup() {
-  try {
-    payPopupVisible.value = true
-    uni.showLoading({
-      title: '价格明细计算中...',
-      mask: true
-    })
+let ticketId
+onLoad(({ id = 3 }) => {
+  ticketId = id
+})
+onShow(initData)
+
+async function initData() {
+  if (!ticketInfo.value.id) {
+    // 初始化请求一次，后续如果从领券中心返回就不再请求了
+    const ticket = await getTicketDetailsRes(ticketId)
+    ticketInfo.value = ticket
+  }
+  if (appToken.value) {
     const { data } = await getAvailableCouponsRes({
       page: 1,
       limit: 100,
-      ticket_id: ticketInfo.value.id
+      ticket_id: ticketId
     })
     availableCoupons.value = data
-    currentSelectedCoupon.value = {}
-    finalPriceDetails.value = {}
-  } finally {
-    uni.hideLoading()
   }
+}
+
+function callPayPopup() {
+  currentSelectedCoupon.value = {}
+  finalPriceDetails.value = {}
+  payPopupVisible.value = true
 }
 
 function showCouponPopupVisible(value) {
@@ -264,6 +288,20 @@ async function onPaySubmit() {
     payLoading.value = false
   }
 }
+
+onShareAppMessage(() => {
+  return {
+    title: 'HAOWEN LAND',
+    path: '/pages/ticket/details'
+  }
+})
+
+onShareTimeline(() => {
+  return {
+    title: 'HAOWEN LAND',
+    path: '/pages/ticket/details'
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -277,20 +315,23 @@ async function onPaySubmit() {
       background: transparent !important;
     }
 
-    .nut-divider {
-      color: #ddd !important;
-    }
+    .popupWrap {
+      padding-top: 40rpx;
 
-    .payPopupWrap {
-      button {
-        margin-top: 30rpx;
+      .popup-inner {
+        padding: 20rpx 40rpx;
+        box-sizing: border-box;
+        border-bottom: 2rpx solid #f5f5f5;
+
+        &.coupon {
+          margin-top: 20rpx;
+          display: flex;
+          flex-direction: column;
+          row-gap: 20rpx;
+          height: 50vh;
+          overflow-y: scroll;
+        }
       }
-    }
-
-    .couponPopupWrap {
-      display: flex;
-      flex-direction: column;
-      row-gap: 20rpx;
     }
   }
 
@@ -306,7 +347,7 @@ async function onPaySubmit() {
     width: 100%;
     border-top-left-radius: 40rpx;
     border-top-right-radius: 40rpx;
-    padding: 30rpx 30rpx 12vh;
+    padding: 30rpx 30rpx calc(10vh + env(safe-area-inset-bottom));
     box-sizing: border-box;
 
     .price {
@@ -350,19 +391,17 @@ async function onPaySubmit() {
 
   .footer {
     width: 100%;
-    height: 10vh;
     position: fixed;
-    bottom: 0;
     left: 0;
+    bottom: 0;
     background: #fff;
-    box-shadow: 0rpx -10rpx 20rpx #eeeeee;
+    box-shadow: 0rpx -2rpx 2rpx #f5f5f5;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 10rpx);
+    padding-top: 30rpx;
 
     .inner {
       width: 100%;
       height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       padding: 0 50rpx;
       box-sizing: border-box;
     }
