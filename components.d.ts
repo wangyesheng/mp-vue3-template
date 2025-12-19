@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppContainer: typeof import('./src/components/AppContainer/index.vue')['default']
+    BabyInfo: typeof import('./src/components/BabyInfo/index.vue')['default']
     BindMobile: typeof import('./src/components/BindMobile/index.vue')['default']
     CouponInfo: typeof import('./src/components/CouponInfo/index.vue')['default']
     Empty: typeof import('./src/components/Empty/index.vue')['default']
@@ -34,10 +35,10 @@ declare module 'vue' {
     LPainterText: typeof import('./src/components/PostPainter/l-painter-text/l-painter-text.vue')['default']
     LPainterView: typeof import('./src/components/PostPainter/l-painter-view/l-painter-view.vue')['default']
     NutAnimate: typeof import('nutui-uniapp/components/animate/animate.vue')['default']
-    NutButtom: typeof import('nutui-uniapp/components/buttom/buttom.vue')['default']
     NutButton: typeof import('nutui-uniapp/components/button/button.vue')['default']
     NutCell: typeof import('nutui-uniapp/components/cell/cell.vue')['default']
     NutCellGroup: typeof import('nutui-uniapp/components/cellgroup/cellgroup.vue')['default']
+    NutCheckbox: typeof import('nutui-uniapp/components/checkbox/checkbox.vue')['default']
     NutConfigProvider: typeof import('nutui-uniapp/components/configprovider/configprovider.vue')['default']
     NutDatePicker: typeof import('nutui-uniapp/components/datepicker/datepicker.vue')['default']
     NutDivider: typeof import('nutui-uniapp/components/divider/divider.vue')['default']
@@ -61,6 +62,7 @@ declare module 'vue' {
     NutUploader: typeof import('nutui-uniapp/components/uploader/uploader.vue')['default']
     OrderInfo: typeof import('./src/components/OrderInfo/index.vue')['default']
     PageList: typeof import('./src/components/PageList/index.vue')['default']
+    Popup: typeof import('./src/components/BabyInfo/Popup.vue')['default']
     Recharge: typeof import('./src/components/Recharge/index.vue')['default']
     Verification: typeof import('./src/components/WalletList/Verification.vue')['default']
     WalletList: typeof import('./src/components/WalletList/index.vue')['default']

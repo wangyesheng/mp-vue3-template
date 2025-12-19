@@ -26,7 +26,10 @@
             }"
             :active="selectedWalletType == 2 && Boolean(userCode)">
             <template #item="{ data }">
-              <WalletVerification :data="data" @refresh="onRefresh" />
+              <WalletVerification
+                :data="data"
+                @refresh="onRefresh"
+                @show-baby-popup-visible="showBabyPopupVisible(data)" />
             </template>
           </PageList>
         </nut-tab-pane>
@@ -40,7 +43,10 @@
             }"
             :active="selectedWalletType == 3 && Boolean(userCode)">
             <template #item="{ data }">
-              <WalletVerification :data="data" @refresh="onRefresh" />
+              <WalletVerification
+                :data="data"
+                @refresh="onRefresh"
+                @show-baby-popup-visible="showBabyPopupVisible(data)" />
             </template>
           </PageList>
         </nut-tab-pane>
@@ -59,6 +65,7 @@
           </PageList>
         </nut-tab-pane>
       </nut-tabs>
+      <BabyPopupInfo ref="babyPopupRef" />
     </div>
   </AppContainer>
 </template>
@@ -71,7 +78,12 @@ const selectedWalletType = ref('1'),
   pageListRef1 = ref(),
   pageListRef2 = ref(),
   pageListRef3 = ref(),
-  pageListRef4 = ref()
+  pageListRef4 = ref(),
+  babyPopupRef = ref()
+
+function showBabyPopupVisible(data) {
+  babyPopupRef.value.show(data)
+}
 
 onLoad((options) => {
   userCode.value = options.code ?? 'f43a8391e15d4e1b'

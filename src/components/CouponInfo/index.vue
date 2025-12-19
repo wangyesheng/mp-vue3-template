@@ -3,7 +3,7 @@
     <div :class="['inner', selected ? 'selected' : '']">
       <div class="left">
         <span class="price">{{ data.amount_text }}</span>
-        <span class="tips" v-if="data.type == 2">
+        <span v-if="data.type == 2" class="tips">
           最高可减{{ data.max_discount }}元
         </span>
       </div>
@@ -45,8 +45,8 @@ function onClick() {
     background: #fff;
     display: flex;
     padding: 20rpx 0;
-    box-sizing: border-box;
     border: 2rpx solid var(--hw-primary-color);
+    box-sizing: border-box;
     border-radius: 10rpx;
 
     &.selected::before {
@@ -58,7 +58,7 @@ function onClick() {
       height: 48rpx;
       background-image: url(https://hwly.tuomuit.com/wechat/img/selected.png);
       background-size: 100% 100%;
-      background-repeat: no-repeat3;
+      background-repeat: no-repeat;
     }
   }
 

@@ -44,11 +44,8 @@ const request = ({ url, method, data = {} }) => {
         // request:fail timeout => 请求超时
         if (errerData.code === 401) {
           toast('请授权登录')
-          uni.setStorageSync('APP_TOKEN', '')
-          uni.setStorageSync('APP_USER', {})
           const appStore = useAppStore()
-          appStore?.setAppToken('')
-          appStore?.setAppUser({})
+          appStore?.logout()
         } else {
           uni.showModal({
             title: '提示',

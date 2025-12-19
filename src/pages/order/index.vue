@@ -20,7 +20,8 @@
               <OrderInfo
                 :data="data"
                 @refresh="onRefresh"
-                @call-pay-popup="onCallPayPopup" />
+                @call-pay-popup="onCallPayPopup"
+                @show-baby-popup-visible="showBabyPopupVisible(data)" />
             </template>
           </PageList>
         </nut-tab-pane>
@@ -33,7 +34,7 @@
       safe-area-inset-bottom>
       <div class="popupWrap">
         <div class="__title px-[40rpx]">价格明细</div>
-        <div class="popup-inner">
+        <div class="popup-inner pay">
           <nut-cell title="门票总额：">
             <template #desc>
               <span class="text-[32rpx] font-blod text-[#CC3535] mr-[40rpx]">
@@ -41,15 +42,30 @@
               </span>
             </template>
           </nut-cell>
+          <nut-cell v-if="currentOrder.baby_info?.length" title="宝贝信息：">
+            <template #desc>
+              <div class="baby-wrap mr-[40rpx]">
+                <image
+                  v-for="(baby, index) in currentOrder.baby_info"
+                  :key="baby.id"
+                  :src="baby.avatar"
+                  mode="aspectFill"
+                  :style="{
+                    marginLeft: index > 0 ? '-5%' : '0',
+                    zIndex: currentOrder.baby_info.length - index
+                  }" />
+              </div>
+            </template>
+          </nut-cell>
           <nut-cell
-            title="可用优惠券："
+            title="选择优惠券："
             is-link
             @click="showCouponPopupVisible(true)">
             <template #desc>
               <span
                 v-if="finalPriceDetails.id"
                 class="text-[32rpx] font-blod text-[#CC3535]">
-                - ￥{{ finalPriceDetails.coupon_money }}元
+                - ￥{{ finalPriceDetails.discount }}
               </span>
               <span v-else class="text-[32rpx] font-blod text-[#CC3535]">
                 {{ availableCoupons.length }}张
@@ -61,7 +77,6 @@
               <span class="text-[32rpx] font-blod text-[#CC3535] mr-[40rpx]">
                 ￥
                 {{ finalPriceDetails.real_price || currentOrder.price }}
-                元
               </span>
             </template>
           </nut-cell>
@@ -90,6 +105,7 @@
         </div>
       </div>
     </nut-popup>
+
     <nut-popup
       v-model:visible="couponPopupVisible"
       round
@@ -98,11 +114,6 @@
       <div class="popupWrap">
         <div class="__title flex justify-between items-center px-[40rpx]">
           <span>选择优惠券</span>
-          <span
-            class="text-[28rpx] font-[550] text-[var(--hw-primary-color)]"
-            @click="navTo('/pages/coupon/index')">
-            去领券
-          </span>
         </div>
         <div v-if="availableCoupons.length > 0" class="popup-inner coupon">
           <CouponInfo
@@ -124,6 +135,8 @@
         </div>
       </div>
     </nut-popup>
+
+    <BabyPopupInfo ref="babyPopupRef"></BabyPopupInfo>
   </AppContainer>
 </template>
 
@@ -145,7 +158,12 @@ const orderTabPanes = ref(
       instance: null
     }))
   ),
-  selectedOrderType = ref('0')
+  selectedOrderType = ref('0'),
+  babyPopupRef = ref()
+
+function showBabyPopupVisible(data) {
+  babyPopupRef.value.show(data)
+}
 
 function onRefresh() {
   const current = orderTabPanes.value.find(
@@ -170,24 +188,26 @@ async function onCallPayPopup(order) {
       title: '价格明细计算中...',
       mask: true
     })
-    const { data } = await getAvailableCouponsRes({
+    const result = await getAvailableCouponsRes({
       page: 1,
       limit: 100,
       ticket_id: currentOrder.value.ticket_id
     })
+
+    availableCoupons.value = result?.data ?? []
+
     if (order.coupon_id) {
-      currentSelectedCoupon.value = data.find(
-        (c) => c.coupon_id == order.coupon_id
-      )
-      finalPriceDetails.value = await getTicketPriceRes({
-        ticket_id: currentOrder.value.ticket_id,
-        coupon_id: order.coupon_id
-      })
+      currentSelectedCoupon.value =
+        availableCoupons.value.find((c) => c.coupon_id == order.coupon_id) ?? {}
+      finalPriceDetails.value =
+        (await getTicketPriceRes({
+          order_id: currentOrder.value.id,
+          coupon_id: order.coupon_id
+        })) ?? {}
     } else {
       currentSelectedCoupon.value = {}
       finalPriceDetails.value = {}
     }
-    availableCoupons.value = data
   } finally {
     uni.hideLoading()
   }
@@ -258,7 +278,15 @@ async function onPaySubmit() {
     box-shadow: none !important;
     padding: 20rpx 10rpx !important;
     background: transparent !important;
+    align-items: center;
+    height: 100rpx;
+    margin: 0 !important;
   }
+
+  .nut-popup {
+    background: #f7f9fc !important;
+  }
+
   .popupWrap {
     padding-top: 40rpx;
 
@@ -275,12 +303,29 @@ async function onPaySubmit() {
         height: 50vh;
         overflow-y: scroll;
       }
+
+      &.pay {
+        .baby-wrap {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+
+          image {
+            width: 80rpx;
+            height: 80rpx;
+            border-radius: 50%;
+            border: 4rpx solid #fff;
+            box-sizing: border-box;
+            position: relative;
+          }
+        }
+      }
     }
   }
 }
 
 .__order {
-  background: #f7f9fc;
+  background: var(--hw-primary-bg-color);
   min-height: 100vh;
 
   ::v-deep() {
@@ -298,7 +343,7 @@ async function onPaySubmit() {
     .nut-tab-pane {
       box-sizing: border-box;
       padding: 30rpx !important;
-      background: #f7f9fc;
+      background: var(--hw-primary-bg-color);
     }
 
     .nut-empty__box {

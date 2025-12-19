@@ -3,15 +3,17 @@
     <div class="form-wrap">
       <nut-form label-position="top">
         <nut-form-item>
-          <button
-            class="avatar"
-            open-type="chooseAvatar"
-            @chooseavatar="onChooseAvatar">
-            <image :src="babyFormData.avatar" mode="aspectFill" />
-          </button>
+          <div class="flex flex-col items-center gap-y-[20rpx]">
+            <button class="avatar" @click="onClickImage">
+              <image :src="babyFormData.avatar" mode="aspectFill" />
+            </button>
+            <span class="text-[#999]">
+              请上传宝贝真实照片，将用于核验入园！
+            </span>
+          </div>
         </nut-form-item>
 
-        <nut-form-item label="宝贝昵称">
+        <nut-form-item label="宝贝真实姓名">
           <nut-input v-model="babyFormData.name" placeholder="请输入" />
         </nut-form-item>
 
@@ -71,15 +73,8 @@
 
 <script setup>
 import { saveBabyInfoRes, getBabyInfoRes } from '@/api'
-import { useAppStore } from '@/stores/app'
 import debounce from '@/utils/debounce'
-import { toast } from '@/utils/uni'
-
-const baseUrl = import.meta.env.VITE_BASE_API
-const uploadUrl = `${baseUrl}/api/common/upload`
-
-const appStore = useAppStore()
-const { appToken } = storeToRefs(appStore)
+import { pathToBase64 } from '@/utils/uni'
 
 const genders = [
   { key: 1, label: '男' },
@@ -110,36 +105,40 @@ const babyFormData = ref({
   }),
   loading = ref(false)
 
-async function onChooseAvatar(e) {
-  const {
-    detail: { avatarUrl }
-  } = e
-
-  uni.uploadFile({
-    url: uploadUrl,
-    filePath: avatarUrl,
-    name: 'file',
-    header: {
-      token: appToken.value,
-      'content-type': 'multipart/form-data'
+async function onChooseImage() {
+  uni.chooseImage({
+    count: 1, // 最多拍摄数量
+    sourceType: ['camera'], // 只使用相机
+    sizeType: ['compressed'], // 压缩图片
+    async success(res) {
+      const tempFilePath = res.tempFilePaths[0]
+      const path = await pathToBase64(tempFilePath)
+      babyFormData.value.avatar = path
     },
-    success: async (result) => {
-      const {
-        code,
-        data: { fullurl },
-        msg
-      } = JSON.parse(result.data)
-      if (code !== 1) {
-        toast(msg)
-      } else {
-        babyFormData.value.avatar = fullurl
-      }
-    },
-    fail: (uploadFileErr) => {
-      console.log('upload::error', uploadFileErr)
-      toast('上传失败！')
+    fail(err) {
+      console.log('拍照失败:', err)
     }
   })
+}
+
+function onClickImage() {
+  if (babyFormData.value.avatar) {
+    uni.showActionSheet({
+      itemList: ['预览照片', '重新拍照'],
+      success(res) {
+        if (res.tapIndex === 0) {
+          uni.previewImage({
+            current: babyFormData.value.avatar,
+            urls: [babyFormData.value.avatar]
+          })
+        } else {
+          onChooseImage()
+        }
+      }
+    })
+  } else {
+    onChooseImage()
+  }
 }
 
 function onSelectGender({ key }) {
@@ -272,23 +271,25 @@ onLoad(async ({ id }) => {
   .avatar {
     margin: 0;
     padding: 0;
-    background: url(https://hwly.tuomuit.com/wechat/img/baby-photo-bg.png?ts=2);
+    background: url(https://hwly.tuomuit.com/wechat/img/baby-photo-bg.png?ts=3);
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    width: 220rpx;
-    height: 220rpx;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 250rpx;
+    height: 250rpx;
+    position: relative;
 
     &::after {
       border: none;
     }
 
     image {
-      width: 140rpx;
-      height: 140rpx;
+      width: 150rpx;
+      height: 150rpx;
       border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-45%, -45%);
     }
   }
 }

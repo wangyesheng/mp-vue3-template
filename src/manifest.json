@@ -49,10 +49,10 @@
     "usingComponents": true,
     "permission": {
       "scope.userFuzzyLocation": {
-        "desc": "将获取您的具体位置信息，便于您更准确的选择代驾地点"
+        "desc": "将获取您的具体位置信息，便于您更准确的选择乐园地点"
       },
       "scope.userLocation": {
-        "desc": "将获取您的具体位置信息，便于您更准确的选择代驾地点"
+        "desc": "将获取您的具体位置信息，便于您更准确的选择乐园地点"
       }
     },
     "requiredPrivateInfos": ["chooseLocation", "getLocation"],

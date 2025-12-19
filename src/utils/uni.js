@@ -57,6 +57,29 @@ export function setNavigationBarTitle(title) {
   uni.setNavigationBarTitle({ title })
 }
 
+export function pathToBase64(filePath) {
+  return new Promise((resolve, reject) => {
+    uni.getFileSystemManager().readFile({
+      filePath,
+      encoding: 'base64',
+      success: (res) => {
+        // 根据文件后缀判断 mime 类型
+        const ext = filePath.split('.').pop().toLowerCase()
+        const mimeTypes = {
+          jpg: 'image/jpeg',
+          jpeg: 'image/jpeg',
+          png: 'image/png',
+          gif: 'image/gif',
+          webp: 'image/webp'
+        }
+        const mime = mimeTypes[ext] || 'image/png'
+        resolve(`data:${mime};base64,${res.data}`)
+      },
+      fail: reject
+    })
+  })
+}
+
 export function addHtmlClassName(htmlString) {
   if (!htmlString || typeof htmlString !== 'string') {
     return htmlString

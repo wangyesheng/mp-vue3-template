@@ -10,32 +10,32 @@ export const useAppStore = defineStore('app', () => {
   const appUser = ref(uni.getStorageSync('APP_USER') || {})
   function setAppUser(value) {
     appUser.value = value
+    uni.setStorageSync('APP_USER', value)
   }
   async function refreshAppUser() {
     const user = await getUserInfoRes()
-    const newUserInfo = {
-      ...user,
-      token: appUser.value.token
-    }
-    setAppUser(newUserInfo)
-    uni.setStorageSync('APP_USER', newUserInfo)
+    setAppUser(user)
   }
 
   function logout() {
-    setAppToken('')
+    setAppToken(null)
     setAppUser({})
-    uni.setStorageSync('APP_NAME', '')
-    uni.setStorageSync('APP_TOKEN', '')
-    uni.setStorageSync('APP_USER', {})
     uni.switchTab({
       url: '/pages/home/index'
     })
   }
 
-  const appName = ref(uni.getStorageSync('APP_NAME') ?? 'HAOWEN LAND北京密云店')
+  const appName = ref(
+    uni.getStorageSync('APP_NAME') ?? 'HAOWEN LAND 北京密云店'
+  )
   async function getAppName() {
-    appName.value = await getAppNameRes()
-    uni.setStorageSync('APP_NAME', appName.value)
+    const data = await getAppNameRes()
+    setAppName(data)
+  }
+
+  function setAppName(value) {
+    appName.value = value
+    uni.setStorageSync('APP_NAME', value)
   }
 
   return {

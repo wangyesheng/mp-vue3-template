@@ -1,6 +1,11 @@
 <template>
   <nut-config-provider :theme-vars="themeVars">
-    <div :class="['app-contanier', needMinHeight ? 'min-h-screen' : '']">
+    <div
+      :class="[
+        'app-contanier',
+        customClass,
+        needMinHeight ? 'min-h-screen' : ''
+      ]">
       <nut-toast />
       <slot />
     </div>
@@ -62,6 +67,10 @@ defineProps({
   needMinHeight: {
     type: Boolean,
     default: true
+  },
+  customClass: {
+    type: String,
+    default: ''
   }
 })
 
@@ -128,5 +137,6 @@ function onSwitchTab(item, index) {
   position: relative;
   width: 100%;
   overflow-x: hidden;
+  background: var(--hw-primary-bg-color);
 }
 </style>

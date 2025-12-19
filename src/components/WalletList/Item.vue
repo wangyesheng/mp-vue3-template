@@ -6,6 +6,10 @@
       data.status == 2 ? 'verification' : '',
       data.status == 4 ? 'expired' : ''
     ]">
+    <!-- 门票类型 积分兑换的礼品走的是新接口没有order_type，所以这里默认为2 -->
+    <div :class="['orderType', 'type' + (data.order_type ?? 2)]">
+      {{ data.order_type == 1 ? '门票购买' : '积分兑换' }}
+    </div>
     <div class="inner">
       <image :src="data.image" mode="aspectFill" />
       <div class="info">
@@ -24,6 +28,16 @@
             </nut-tag>
             <nut-tag plain custom-color="#999">免预约</nut-tag>
           </div>
+
+          <div
+            v-if="data.baby_info.length"
+            class="flex items-center text-[24rpx] text-[#999]"
+            @click="() => emit('showBabyPopupVisible')">
+            <span>宝贝信息：</span>
+            <span>{{ data.baby_info.length }}个</span>
+            <nut-icon name="rect-right" custom-color="#999" size="12" />
+          </div>
+
           <div class="date">
             {{
               data.mall_id
@@ -51,6 +65,8 @@ defineProps({
     default: () => ({})
   }
 })
+
+const emit = defineEmits(['showBabyPopupVisible'])
 </script>
 
 <style lang="scss" scoped>
@@ -59,6 +75,30 @@ defineProps({
   // 如果不设置该属性，则会导致子元素的圆角效果无法显示（子元素添加背景色溢出导致圆角被遮盖）
   overflow: hidden;
   position: relative;
+
+  .orderType {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 130rpx;
+    height: 45rpx;
+    border-top-right-radius: 15rpx;
+    border-bottom-left-radius: 15rpx;
+    line-height: 45rpx;
+    text-align: center;
+    font-size: 24rpx;
+    font-weight: 550;
+
+    &.type1 {
+      background: rgba(129, 83, 254, 0.1);
+      color: #8153fe;
+    }
+
+    &.type2 {
+      background: rgba(220, 35, 149, 0.1);
+      color: #dc2395;
+    }
+  }
 
   &.forbiden {
     &::before {
@@ -76,7 +116,7 @@ defineProps({
     &::after {
       content: '';
       position: absolute;
-      top: 30rpx;
+      top: 40rpx;
       right: 10rpx;
       width: 128rpx;
       height: 128rpx;
@@ -118,7 +158,7 @@ defineProps({
         flex: 1;
         display: flex;
         flex-direction: column;
-        row-gap: 20rpx;
+        row-gap: 15rpx;
 
         .title {
           font-weight: 550;
@@ -148,7 +188,7 @@ defineProps({
         width: 26%;
         display: flex;
         flex-direction: column;
-        justify-content: space-evenly;
+        justify-content: flex-end;
         align-items: center;
         font-weight: 550;
         color: #000;

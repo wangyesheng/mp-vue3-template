@@ -31,9 +31,50 @@
           {{ data.order_type == 2 ? data.real_price : `￥${data.real_price}` }}
         </span>
       </div>
-      <div class="layer">
-        <span>创建时间</span>
-        <span>{{ data.createtime }}</span>
+
+      <div
+        v-if="data.status == 0 && data.baby_info.length"
+        class="layer"
+        @click="() => emit('showBabyPopupVisible')">
+        <span>宝贝信息</span>
+        <div class="flex">
+          <p class="text-[#666]">{{ data.baby_info.length }}个</p>
+          <nut-icon name="rect-right" custom-color="#666" size="12" />
+        </div>
+      </div>
+
+      <div
+        v-if="data.status > 0"
+        class="flex items-center justify-center text-[24rpx] text-[var(--hw-primary-color)] gap-x-[10rpx]"
+        @click="onExpand">
+        <span class="h-[40rpx]">{{ isExpand ? '收起' : '展开更多' }}</span>
+        <nut-icon :name="isExpand ? 'rect-up' : 'rect-down'" size="12" />
+      </div>
+
+      <div v-if="isExpand" class="flex flex-col gap-y-[20rpx]">
+        <div
+          v-if="data.baby_info.length"
+          class="layer"
+          @click="() => emit('showBabyPopupVisible')">
+          <span>宝贝信息</span>
+          <div class="flex">
+            <p class="text-[#666]">{{ data.baby_info.length }}个</p>
+            <nut-icon name="rect-right" custom-color="#666" size="12" />
+          </div>
+        </div>
+        <!-- 多次卡显示剩余次数 -->
+        <div v-if="data.status > 0 && data.type == 2" class="layer">
+          <span>剩余次数</span>
+          <span>{{ data.residue_quantity }} / {{ data.quantity }}</span>
+        </div>
+        <div v-if="data.status > 0" class="layer">
+          <span>支付时间</span>
+          <span>{{ data.pay_time || '-' }}</span>
+        </div>
+        <div v-if="data.status > 0" class="layer">
+          <span>过期时间</span>
+          <span>{{ data.end_time || '-' }}</span>
+        </div>
       </div>
     </div>
     <div
@@ -98,7 +139,12 @@ const props = defineProps({
     default: () => ({})
   }
 })
-const emit = defineEmits(['refresh', 'callPayPopup'])
+const emit = defineEmits(['refresh', 'callPayPopup', 'showBabyPopupVisible'])
+
+const isExpand = ref(false)
+function onExpand() {
+  isExpand.value = !isExpand.value
+}
 
 async function onCancelOrder() {
   const type = props.data.status == 0 ? '取消订单' : '申请退款'
@@ -156,7 +202,9 @@ function onCallPayPopup() {
     .layer {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       font-size: 28rpx;
+
       label:first-child {
         color: #999;
       }

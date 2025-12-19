@@ -1,5 +1,8 @@
 <template>
   <div :class="['wallet-item']">
+    <div :class="['orderType', 'type' + (data.order_type ?? 2)]">
+      {{ data.order_type == 1 ? '门票购买' : '积分兑换' }}
+    </div>
     <div class="inner">
       <image :src="data.image" mode="aspectFill" />
       <div class="info">
@@ -8,16 +11,33 @@
             {{ data.title }}
           </div>
           <!-- 实物礼品 -->
-          <div v-if="data.mall_id" class="text-[#666] text-[26rpx]">
+          <div v-if="data.mall_id" class="text-[#555] text-[24rpx]">
             {{ data.content }}
           </div>
           <!-- 门票 -->
-          <div v-else class="row">
+          <div v-if="!data.mall_id" class="row">
             <span class="label">
               剩余 / {{ data.type == 3 ? '天' : '次' }}：
             </span>
             <span class="value">{{ data.residue_quantity }}</span>
           </div>
+
+          <div
+            v-if="data.baby_info.length"
+            class="flex items-center text-[24rpx] text-[#555] font-[500]"
+            @click="() => emit('showBabyPopupVisible')">
+            <span>宝贝信息：</span>
+            <span>{{ data.baby_info.length }}个</span>
+            <nut-icon name="rect-right" custom-color="#555" size="12" />
+          </div>
+
+          <div v-if="!data.mall_id" class="row">
+            <span class="label">适用日期：</span>
+            <span class="value">
+              {{ data.use_time_text }}
+            </span>
+          </div>
+
           <div class="row">
             <span class="label">
               {{ data.mall_id ? '兑换日期：' : '失效日期：' }}
@@ -46,7 +66,7 @@ const props = defineProps({
     default: () => ({})
   }
 })
-const emit = defineEmits(['refresh'])
+const emit = defineEmits(['refresh', 'showBabyPopupVisible'])
 
 function onVerify() {
   uni.showModal({
@@ -72,6 +92,30 @@ function onVerify() {
   overflow: hidden;
   position: relative;
 
+  .orderType {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 130rpx;
+    height: 45rpx;
+    border-top-right-radius: 15rpx;
+    border-bottom-left-radius: 15rpx;
+    line-height: 45rpx;
+    text-align: center;
+    font-size: 24rpx;
+    font-weight: 550;
+
+    &.type1 {
+      background: rgba(129, 83, 254, 0.1);
+      color: #8153fe;
+    }
+
+    &.type2 {
+      background: rgba(220, 35, 149, 0.1);
+      color: #dc2395;
+    }
+  }
+
   .inner {
     width: 100%;
     background: #fff;
@@ -79,7 +123,7 @@ function onVerify() {
     align-items: center;
 
     image {
-      width: 200rpx;
+      width: 220rpx;
       height: auto;
       align-self: stretch; // 拉伸填充父元素高度
     }
@@ -87,7 +131,7 @@ function onVerify() {
     .info {
       flex: 1;
       color: #000;
-      padding: 20rpx 10rpx;
+      padding: 20rpx 10rpx 20rpx 20rpx;
       box-sizing: border-box;
       display: flex;
       justify-content: space-between;
@@ -96,7 +140,7 @@ function onVerify() {
         flex: 1;
         display: flex;
         flex-direction: column;
-        row-gap: 20rpx;
+        row-gap: 8rpx;
 
         .title {
           font-weight: 550;
@@ -106,17 +150,18 @@ function onVerify() {
         .row {
           display: flex;
           align-items: center;
-          font-size: 26rpx;
-          color: #666;
+          font-size: 24rpx;
+          color: #555;
+          font-weight: 500;
         }
       }
 
       &-right {
-        width: 25%;
+        width: 24%;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-end;
+        justify-content: flex-end;
+        align-items: center;
+        padding-top: 10%;
       }
     }
   }

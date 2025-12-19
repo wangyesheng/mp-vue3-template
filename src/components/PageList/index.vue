@@ -10,7 +10,7 @@
     </view>
     <view
       v-if="pageInfo.end && isOverScreen"
-      class="h-[6vh] relative flex justify-center items-end text-[#999] text-[28rpx]">
+      class="h-[6vh] relative flex justify-center items-center text-[#999] text-[28rpx]">
       没有更多了
     </view>
     <view v-if="pageInfo.loading && !isRefresh" class="h-[5vh] relative">
@@ -130,6 +130,18 @@ onReachBottom(() => {
   if (!pageInfo.value.end && props.active) {
     pageInfo.value.page++
     getData()
+  }
+})
+
+onPullDownRefresh(async () => {
+  try {
+    isRefresh.value = true
+    if (props.active) {
+      await getData(1)
+    }
+  } finally {
+    uni.stopPullDownRefresh()
+    isRefresh.value = false
   }
 })
 

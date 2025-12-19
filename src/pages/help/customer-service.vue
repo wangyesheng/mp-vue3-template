@@ -25,8 +25,8 @@
 import { getServicePhoneRes, getServiceQrCodeRes } from '@/api'
 import { callPhone } from '@/utils/uni'
 
-const code = ref(''),
-  phone = ref()
+const code = ref('')
+const phone = ref()
 onLoad(async () => {
   code.value = await getServiceQrCodeRes()
   phone.value = await getServicePhoneRes()

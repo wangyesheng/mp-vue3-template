@@ -33,7 +33,7 @@
               ref="uploaderRef"
               :url="uploadUrl"
               :headers="{
-                token: appUser.token,
+                token: appToken,
                 'content-type': 'multipart/form-data'
               }"
               @success="onUploadSuccess"
@@ -79,7 +79,7 @@ const baseUrl = import.meta.env.VITE_BASE_API
 const uploadUrl = `${baseUrl}/api/common/upload`
 
 const appStore = useAppStore()
-const { appUser } = storeToRefs(appStore)
+const { appUser, appToken } = storeToRefs(appStore)
 
 const types = ref([])
 const typePopupVisible = ref(false)

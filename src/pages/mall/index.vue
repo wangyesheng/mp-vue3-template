@@ -4,10 +4,7 @@
       <div class="banner">
         <div class="score">
           <div class="left">
-            <image
-              class="rounded-[10rpx]"
-              :src="appUser.avatar"
-              mode="aspectFill" />
+            <image :src="appUser.avatar" mode="aspectFill" />
           </div>
           <div class="right">
             <span>{{ appUser.score }}</span>
@@ -181,8 +178,8 @@ onLoad(() => {
         align-items: center;
 
         image {
-          width: 120rpx;
-          height: 120rpx;
+          width: 100rpx;
+          height: 100rpx;
           border-radius: 50%;
         }
       }

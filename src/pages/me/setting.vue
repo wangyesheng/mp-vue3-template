@@ -12,7 +12,7 @@
     </nut-cell-group>
 
     <div class="action">
-      <nut-button block type="default" @click="appStore.logout">
+      <nut-button block type="default" size="large" @click="appStore.logout">
         退出登录
       </nut-button>
     </div>

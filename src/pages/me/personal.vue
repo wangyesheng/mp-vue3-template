@@ -7,7 +7,7 @@
             class="avatar"
             open-type="chooseAvatar"
             @chooseavatar="onChooseAvatar">
-            <image :src="appUser.avatar" mode="aspectFill" />
+            <image :src="tempAvatar" mode="aspectFill" />
           </button>
         </template>
       </nut-cell>
@@ -62,12 +62,15 @@ const canSave = computed(() => {
     const { nickname, mobile, avatar } = appUser.value
     return nickname && mobile && avatar
   }),
+  tempAvatar = ref(appUser.value.avatar),
   loading = ref(false)
 
 async function onChooseAvatar(e) {
   const {
     detail: { avatarUrl }
   } = e
+
+  tempAvatar.value = avatarUrl
 
   uni.uploadFile({
     url: uploadUrl,
@@ -78,15 +81,11 @@ async function onChooseAvatar(e) {
       'content-type': 'multipart/form-data'
     },
     success: async (result) => {
-      const {
-        code,
-        data: { fullurl },
-        msg
-      } = JSON.parse(result.data)
+      const { code, data, msg } = JSON.parse(result.data)
       if (code !== 1) {
         toast(msg)
       } else {
-        appUser.value.avatar = fullurl
+        appUser.value.avatar = data.url
       }
     },
     fail: (uploadFileErr) => {

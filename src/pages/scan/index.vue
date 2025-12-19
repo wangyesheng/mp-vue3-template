@@ -120,7 +120,7 @@ function restoreScreenBrightness() {
           width: 120rpx;
           height: 120rpx;
           margin-right: 28rpx;
-          border-radius: 20rpx;
+          border-radius: 50%;
         }
 
         view {

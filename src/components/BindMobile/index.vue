@@ -6,15 +6,16 @@
     @close="() => emits('update:visible', !props.visible)">
     <div>
       <div class="title">提示：</div>
-      <div class="tips">为更好的向您提供服务，申请获取您的手机号！</div>
+      <div class="tips">
+        为更好的向您提供服务，申请获取您的手机号用于快捷登录！
+      </div>
 
       <nut-button
         block
         type="primary"
         open-type="getPhoneNumber"
         @getphonenumber="props.getPhoneNumber">
-        <img src="../../static/images/home/icon-wechat.png" alt="" />
-        <span>获取手机号</span>
+        <span>手机号快捷登录</span>
       </nut-button>
     </div>
   </nut-popup>

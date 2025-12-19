@@ -407,3 +407,17 @@ export function verifyGiftRes(id) {
     }
   })
 }
+
+export function getWXActivityListRes() {
+  return request({
+    url: `/api/activity/wx_list`,
+    method: 'get'
+  })
+}
+
+export function getUserNotesRes() {
+  return request({
+    url: `/api/index/user_notes`,
+    method: 'get'
+  })
+}

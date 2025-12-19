@@ -40,7 +40,9 @@
             :active="selectedWalletType == 2"
             :params="{ type: 2 }">
             <template #item="{ data }">
-              <WalletItem :data="data" />
+              <WalletItem
+                :data="data"
+                @show-baby-popup-visible="showBabyPopupVisible(data)" />
             </template>
           </PageList>
         </nut-tab-pane>
@@ -50,7 +52,9 @@
             :active="selectedWalletType == 3"
             :params="{ type: 3 }">
             <template #item="{ data }">
-              <WalletItem :data="data" />
+              <WalletItem
+                :data="data"
+                @show-baby-popup-visible="showBabyPopupVisible(data)" />
             </template>
           </PageList>
         </nut-tab-pane>
@@ -62,6 +66,7 @@
           </PageList>
         </nut-tab-pane>
       </nut-tabs>
+      <BabyPopupInfo ref="babyPopupRef" />
     </div>
   </AppContainer>
 </template>
@@ -73,7 +78,12 @@ import { useAppStore } from '../../stores/app'
 import { navTo } from '@/utils/uni'
 
 const { appUser, appName } = storeToRefs(useAppStore())
-const selectedWalletType = ref('1')
+const selectedWalletType = ref('1'),
+  babyPopupRef = ref()
+
+function showBabyPopupVisible(data) {
+  babyPopupRef.value.show(data)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -100,7 +110,7 @@ const selectedWalletType = ref('1')
     .user {
       width: 100%;
       height: 426rpx;
-      background-image: url(https://hwly.tuomuit.com/wechat/img/wallet-bg.png);
+      background-image: url(https://hwly.tuomuit.com/wechat/img/wallet-bg.png?ts=2);
       background-size: 100% 100%;
       background-repeat: no-repeat;
       padding: 50rpx 60rpx 60rpx;

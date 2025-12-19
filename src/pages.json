@@ -5,6 +5,7 @@
       "^nut-(.*)?-(.*)": "nutui-uniapp/components/$1$2/$1$2.vue",
       "^nut-(.*)": "nutui-uniapp/components/$1/$1.vue",
       "^Wallet(Item|Verification)$": "@/components/WalletList/$1.vue",
+      "^Baby(Popup)Info$": "@/components/BabyInfo/$1.vue",
       "^(?!nut-|Wallet)([A-Z][a-zA-Z]*)$": "@/components/$1/index.vue"
     }
   },
@@ -20,15 +21,34 @@
       }
     },
     {
+      "path": "pages/ticket/details",
+      "style": {
+        "navigationBarTitleText": "门票详情"
+      }
+    },
+    {
       "path": "pages/order/index",
       "style": {
-        "navigationBarTitleText": "我的订单"
+        "navigationBarTitleText": "我的订单",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/me/personal",
+      "style": {
+        "navigationBarTitleText": "编辑个人信息"
       }
     },
     {
       "path": "pages/me/wallet",
       "style": {
         "navigationBarTitleText": "我的卡包"
+      }
+    },
+    {
+      "path": "pages/web-view/index",
+      "style": {
+        "navigationBarTitleText": ""
       }
     },
     {
@@ -50,21 +70,21 @@
       }
     },
     {
-      "path": "pages/me/personal",
-      "style": {
-        "navigationBarTitleText": "编辑个人信息"
-      }
-    },
-    {
       "path": "pages/me/index",
       "style": {
         "navigationBarTitleText": "HAOWEN LAND"
       }
     },
     {
-      "path": "pages/baby/form",
+      "path": "pages/baby/index",
       "style": {
         "navigationBarTitleText": "宝贝管理"
+      }
+    },
+    {
+      "path": "pages/baby/form",
+      "style": {
+        "navigationBarTitleText": "添加宝贝信息"
       }
     },
     {
@@ -82,19 +102,14 @@
     {
       "path": "pages/scan/verification",
       "style": {
-        "navigationBarTitleText": "核销"
+        "navigationBarTitleText": "核销",
+        "enablePullDownRefresh": true
       }
     },
     {
       "path": "pages/ticket/index",
       "style": {
         "navigationBarTitleText": "门票列表"
-      }
-    },
-    {
-      "path": "pages/ticket/details",
-      "style": {
-        "navigationBarTitleText": "门票详情"
       }
     },
     {

@@ -66,33 +66,10 @@
       <div v-if="appUser.id" class="baby">
         <div class="header" data-content="我的宝贝"></div>
         <div v-if="babyList.length > 0" class="content">
-          <div v-for="item in babyList" :key="item.id" class="item">
-            <div class="left">
-              <image :src="item.avatar" mode="aspectFill" />
-              <div class="right">
-                <div class="top">
-                  <span class="name">{{ item.name }}</span>
-                  <image
-                    :src="item.gender == 1 ? boyIcon : grilIcon"
-                    mode="aspectFill" />
-                </div>
-                <nut-tag custom-color="#f5f5f5" text-color="#999">
-                  {{ getAge(item.birthday) }}
-                </nut-tag>
-              </div>
-            </div>
-            <div class="right">
-              <nut-icon
-                name="edit"
-                custom-color="#8153fe"
-                @click="navTo(`/pages/baby/form?id=${item.id}`)" />
-              <nut-icon
-                name="del2"
-                custom-color="#ff0000"
-                @click="onDeleteBaby(item.id)" />
-            </div>
+          <div v-for="item in babyList" :key="item.id">
+            <BabyInfo :data="item" @refresh="getBabyList" />
           </div>
-          <div class="flex justify-center">
+          <div v-if="babyList.length < 2" class="flex justify-center">
             <nut-button
               plain
               type="primary"
@@ -106,7 +83,7 @@
           </div>
         </div>
         <div v-else class="content">
-          <div class="flex flex-col items-center gap-y-[20rpx]">
+          <div class="flex flex-col items-center gap-y-[30rpx]">
             <span class="text-[28rpx] text-[#999] font-[500]">
               暂无宝贝信息
             </span>
@@ -134,10 +111,9 @@
 <script setup>
 import { useAppStore } from '../../stores/app'
 import { storeToRefs } from 'pinia'
-import { deleteBabyRes, getBabyListRes, getUserTabletRes } from '../../api'
+import { getBabyListRes, getUserTabletRes } from '../../api'
 import { useLogin } from '../../hooks/useLogin'
 import { navTo, toast } from '../../utils/uni'
-import dayjs from 'dayjs'
 import orderIcon from '../../static/images/me/order.png'
 import appointmentIcon from '../../static/images/me/appointment.png'
 import babyIcon from '../../static/images/me/baby.png'
@@ -146,8 +122,6 @@ import couponIcon from '../../static/images/me/coupon.png'
 import giftIcon from '../../static/images/me/gift.png'
 import settingIcon from '../../static/images/me/setting.png'
 import walletIcon from '../../static/images/me/wallet.png'
-import boyIcon from '@/static/images/me/boy.png'
-import grilIcon from '@/static/images/me/gril.png'
 
 const funcs = [
   {
@@ -180,7 +154,7 @@ const funcs = [
   {
     label: '宝贝管理',
     icon: babyIcon,
-    page: '/pages/baby/form'
+    page: '/pages/baby/index'
   },
   {
     label: '兑换中心',
@@ -214,22 +188,6 @@ async function getBabyList() {
     const data = await getBabyListRes()
     babyList.value = data
   }
-}
-function getAge(birthday) {
-  return dayjs().diff(dayjs(birthday), 'year') + '岁'
-}
-
-function onDeleteBaby(id) {
-  uni.showModal({
-    title: '提示',
-    content: '确认要删除该宝贝吗？',
-    async success({ confirm }) {
-      if (confirm) {
-        await deleteBabyRes(id)
-        getBabyList()
-      }
-    }
-  })
 }
 
 onShow(() => {
@@ -511,58 +469,10 @@ onShow(() => {
       box-sizing: border-box;
       row-gap: 20rpx;
 
-      .item {
-        padding-bottom: 20rpx;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 2rpx solid #f5f5f5;
-
-        .left {
-          display: flex;
-          align-items: center;
-          column-gap: 20rpx;
-
-          image {
-            width: 100rpx;
-            height: 100rpx;
-            border-radius: 10rpx;
-          }
-
-          .right {
-            display: flex;
-            flex-direction: column;
-            row-gap: 10rpx;
-
-            .top {
-              display: flex;
-              align-items: center;
-              column-gap: 20rpx;
-
-              .name {
-                font-size: 34rpx;
-                color: #333;
-                font-weight: 550;
-              }
-
-              image {
-                width: 24rpx;
-                height: 24rpx;
-              }
-            }
-
-            ::v-deep() {
-              .nut-tag {
-                width: fit-content;
-              }
-            }
-          }
-        }
-
-        & > .right {
-          display: flex;
-          align-items: center;
-          column-gap: 20rpx;
+      ::v-deep() {
+        .baby-item {
+          border-bottom: 2rpx solid #f5f5f5;
+          padding-bottom: 20rpx;
         }
       }
     }
