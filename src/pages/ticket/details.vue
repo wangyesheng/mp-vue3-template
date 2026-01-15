@@ -323,30 +323,37 @@ const babyList = ref([]),
   selectedBabyList = ref([])
 
 let ticketId
-onLoad(({ id = 3 }) => {
+onLoad(({ id }) => {
   ticketId = id
 })
 onShow(initData)
 
 async function initData() {
-  if (!ticketInfo.value.id) {
-    // 初始化请求一次，后续如果从领券中心返回就不再请求了
-    const ticket = await getTicketDetailsRes(ticketId)
-    ticketInfo.value = ticket
-  }
-  if (appToken.value) {
-    const result = await getAvailableCouponsRes({
-      page: 1,
-      limit: 100,
-      ticket_id: ticketId
+  try {
+    uni.showLoading({
+      title: '数据加载中'
     })
-    availableCoupons.value = result?.data ?? []
-
-    if (ticketInfo.value.bind_number > 0) {
-      // 如果门票需要绑定宝贝信息需获取宝贝列表
-      const data = await getBabyListRes()
-      babyList.value = data ?? []
+    if (!ticketInfo.value.id) {
+      // 初始化请求一次，后续如果从领券中心返回就不再请求了
+      const ticket = await getTicketDetailsRes(ticketId)
+      ticketInfo.value = ticket
     }
+    if (appToken.value) {
+      const result = await getAvailableCouponsRes({
+        page: 1,
+        limit: 100,
+        ticket_id: ticketId
+      })
+      availableCoupons.value = result?.data ?? []
+
+      if (ticketInfo.value.bind_number > 0) {
+        // 如果门票需要绑定宝贝信息需获取宝贝列表
+        const data = await getBabyListRes()
+        babyList.value = data ?? []
+      }
+    }
+  } finally {
+    uni.hideLoading()
   }
 }
 

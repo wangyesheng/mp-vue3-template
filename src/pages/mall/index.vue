@@ -5,6 +5,7 @@
         <div class="score">
           <div class="left">
             <image :src="appUser.avatar" mode="aspectFill" />
+            <span>{{ appUser.nickname }}</span>
           </div>
           <div class="right">
             <span>{{ appUser.score }}</span>
@@ -166,7 +167,7 @@ onLoad(() => {
       left: 50%;
       bottom: 20rpx;
       transform: translateX(-50%);
-      padding: 15rpx 30rpx;
+      padding: 20rpx 30rpx;
       box-sizing: border-box;
 
       display: flex;
@@ -175,16 +176,26 @@ onLoad(() => {
 
       .left {
         display: flex;
+        flex-direction: column;
         align-items: center;
 
         image {
-          width: 100rpx;
-          height: 100rpx;
+          width: 80rpx;
+          height: 80rpx;
           border-radius: 50%;
+          border: 2rpx solid #fff;
+          margin-bottom: 5rpx;
+        }
+
+        label {
+          font-weight: 550;
+          color: #333;
+          font-size: 28rpx;
         }
       }
 
       .right {
+        align-self: flex-end;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -193,7 +204,7 @@ onLoad(() => {
         color: #333;
 
         label:first-child {
-          font-size: 50rpx;
+          font-size: 60rpx;
         }
 
         label:last-child {

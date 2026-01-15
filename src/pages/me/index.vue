@@ -4,7 +4,11 @@
       <div class="userInfo">
         <div v-if="appUser.id" class="inner">
           <div class="header">
-            <image class="avatar" :src="appUser.avatar" mode="aspectFill" />
+            <image
+              class="avatar"
+              :src="appUser.avatar"
+              mode="aspectFill"
+              @click="onRefreshAppUser" />
             <div>
               <div class="name">
                 <span>{{ appUser.nickname }}</span>
@@ -69,7 +73,9 @@
           <div v-for="item in babyList" :key="item.id">
             <BabyInfo :data="item" @refresh="getBabyList" />
           </div>
-          <div v-if="babyList.length < 2" class="flex justify-center">
+          <div
+            v-if="babyList.length < (appUser.baby_number ?? 2)"
+            class="flex justify-center">
             <nut-button
               plain
               type="primary"
@@ -188,6 +194,11 @@ async function getBabyList() {
     const data = await getBabyListRes()
     babyList.value = data
   }
+}
+
+async function onRefreshAppUser() {
+  await appStore.refreshAppUser()
+  toast('用户信息刷新成功！')
 }
 
 onShow(() => {
@@ -469,10 +480,12 @@ onShow(() => {
       box-sizing: border-box;
       row-gap: 20rpx;
 
-      ::v-deep() {
-        .baby-item {
-          border-bottom: 2rpx solid #f5f5f5;
-          padding-bottom: 20rpx;
+      view:not(:last-child) {
+        ::v-deep() {
+          .baby-item {
+            border-bottom: 2rpx solid #f5f5f5;
+            padding-bottom: 20rpx;
+          }
         }
       }
     }

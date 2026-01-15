@@ -30,7 +30,7 @@
           </div>
 
           <div
-            v-if="data.baby_info.length"
+            v-if="data.baby_info?.length"
             class="flex items-center text-[24rpx] text-[#999]"
             @click="() => emit('showBabyPopupVisible')">
             <span>宝贝信息：</span>
