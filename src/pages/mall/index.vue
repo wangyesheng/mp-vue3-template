@@ -93,6 +93,7 @@ onLoad(() => {
 .__mall {
   .content {
     padding: 30rpx;
+    padding-bottom: calc(30rpx + env(safe-area-inset-bottom));
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;

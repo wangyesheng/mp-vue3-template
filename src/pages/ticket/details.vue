@@ -670,7 +670,7 @@ onShareTimeline(() => {
 
   .content {
     position: absolute;
-    top: 410rpx;
+    top: 440rpx;
     left: 0;
     background: #f5f5f5;
     width: 100%;

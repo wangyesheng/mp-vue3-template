@@ -85,7 +85,8 @@ const babyFormData = ref({
     avatar: null,
     name: null,
     gender: 1,
-    birthday: null
+    birthday: null,
+    code: null
   }),
   datePopupVisible = ref(false),
   minDate = new Date(1990, 0, 1),
@@ -168,7 +169,11 @@ async function onSave() {
   }
 }
 
-onLoad(async ({ id }) => {
+onLoad(async ({ id, code }) => {
+  if (code) {
+    // 员工为客户添加宝贝
+    babyFormData.value.code = code
+  }
   if (id) {
     babyFormData.value = await getBabyInfoRes(id)
   }
