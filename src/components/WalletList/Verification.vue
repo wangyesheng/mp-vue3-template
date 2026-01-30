@@ -1,7 +1,17 @@
 <template>
   <div :class="['wallet-item']">
-    <div :class="['orderType', 'type' + (data.order_type ?? 2)]">
-      {{ data.order_type == 1 ? '门票购买' : '积分兑换' }}
+    <div
+      :class="[
+        'orderType',
+        'type' + (data.is_give == 1 ? 3 : data.order_type ?? 2)
+      ]">
+      {{
+        data.is_give == 1
+          ? '赠送票'
+          : data.order_type == 1
+            ? '购买票'
+            : '积分票'
+      }}
     </div>
     <div class="inner">
       <image :src="data.image" mode="aspectFill" />
@@ -91,30 +101,6 @@ function onVerify() {
   // 如果不设置该属性，则会导致子元素的圆角效果无法显示（子元素添加背景色溢出导致圆角被遮盖）
   overflow: hidden;
   position: relative;
-
-  .orderType {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 130rpx;
-    height: 45rpx;
-    border-top-right-radius: 15rpx;
-    border-bottom-left-radius: 15rpx;
-    line-height: 45rpx;
-    text-align: center;
-    font-size: 24rpx;
-    font-weight: 550;
-
-    &.type1 {
-      background: rgba(129, 83, 254, 0.1);
-      color: #8153fe;
-    }
-
-    &.type2 {
-      background: rgba(220, 35, 149, 0.1);
-      color: #dc2395;
-    }
-  }
 
   .inner {
     width: 100%;

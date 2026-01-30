@@ -6,6 +6,7 @@
       "^nut-(.*)": "nutui-uniapp/components/$1/$1.vue",
       "^Wallet(Item|Verification)$": "@/components/WalletList/$1.vue",
       "^Baby(Popup)Info$": "@/components/BabyInfo/$1.vue",
+      "^Baby(Stacking)Info$": "@/components/BabyInfo/$1.vue",
       "^(?!nut-|Wallet)([A-Z][a-zA-Z]*)$": "@/components/$1/index.vue"
     }
   },
@@ -21,9 +22,10 @@
       }
     },
     {
-      "path": "pages/ticket/details",
+      "path": "pages/me/wallet",
       "style": {
-        "navigationBarTitleText": "门票详情"
+        "navigationBarTitleText": "我的卡包",
+        "enablePullDownRefresh": true
       }
     },
     {
@@ -34,15 +36,33 @@
       }
     },
     {
-      "path": "pages/me/personal",
+      "path": "pages/baby/form",
       "style": {
-        "navigationBarTitleText": "编辑个人信息"
+        "navigationBarTitleText": "添加宝贝信息"
       }
     },
     {
-      "path": "pages/me/wallet",
+      "path": "pages/baby/search",
       "style": {
-        "navigationBarTitleText": "我的卡包"
+        "navigationBarTitleText": "为客户添加宝贝"
+      }
+    },
+    {
+      "path": "pages/ticket/details-share",
+      "style": {
+        "navigationBarTitleText": "门票详情"
+      }
+    },
+    {
+      "path": "pages/ticket/details_old",
+      "style": {
+        "navigationBarTitleText": "门票详情"
+      }
+    },
+    {
+      "path": "pages/me/personal",
+      "style": {
+        "navigationBarTitleText": "编辑个人信息"
       }
     },
     {
@@ -79,12 +99,6 @@
       "path": "pages/baby/index",
       "style": {
         "navigationBarTitleText": "宝贝管理"
-      }
-    },
-    {
-      "path": "pages/baby/form",
-      "style": {
-        "navigationBarTitleText": "添加宝贝信息"
       }
     },
     {

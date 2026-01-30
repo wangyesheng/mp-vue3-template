@@ -121,6 +121,10 @@ export function isExternal(path) {
   return /^(https?:|mailto:|tel:)/.test(path)
 }
 
+export function isValidPhone(phone) {
+  return /^1[3-9]\d{9}$/.test(phone)
+}
+
 export const isServer = typeof window === 'undefined'
 
 export const isClient = !isServer

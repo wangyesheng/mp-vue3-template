@@ -4,15 +4,17 @@
       'wallet-item',
       data.status > 1 ? 'forbiden' : '',
       data.status == 2 ? 'verification' : '',
-      data.status == 4 ? 'expired' : ''
+      data.status == 4 ? 'expired' : '',
+      data.status == 5 ? 'received' : ''
     ]">
-    <!-- 门票类型 积分兑换的礼品走的是新接口没有order_type，所以这里默认为2 -->
-    <div :class="['orderType', 'type' + (data.order_type ?? 2)]">
-      {{ data.order_type == 1 ? '门票购买' : '积分兑换' }}
+    <!-- 门票类型 积分兑换的实物礼品走的是新接口没有order_type，所以这里默认为2 -->
+    <div :class="['orderType', 'type' + (data.is_give == 1 ? 3 : orderType)]">
+      {{ data.is_give == 1 ? '赠送票' : orderType == 1 ? '购买票' : '积分票' }}
     </div>
+
     <div class="inner">
       <image :src="data.image" mode="aspectFill" />
-      <div class="info">
+      <div class="info flex justify-between">
         <div class="info-left">
           <div class="title">
             {{ data.title }}
@@ -31,11 +33,10 @@
 
           <div
             v-if="data.baby_info?.length"
-            class="flex items-center text-[24rpx] text-[#999]"
+            class="text-[24rpx] text-[#999] flex items-center"
             @click="() => emit('showBabyPopupVisible')">
             <span>宝贝信息：</span>
-            <span>{{ data.baby_info.length }}个</span>
-            <nut-icon name="rect-right" custom-color="#999" size="12" />
+            <BabyStackingInfo :baby-list="data.baby_info" />
           </div>
 
           <div class="date">
@@ -52,21 +53,84 @@
         </div>
       </div>
     </div>
-    <div class="footer" @click="switchTab('/pages/scan/index')">去使用</div>
+
+    <div
+      v-if="
+        !onlyShowBindBabyAction &&
+        // 实物礼品没有 order_type 字段，也不用绑定宝贝，所以直接去使用就行
+        !props.data.order_type
+      "
+      class="footer"
+      @click="switchTab('/pages/scan/index')">
+      去使用
+    </div>
+
+    <div
+      v-else
+      class="flex justify-end items-center gap-x-[15rpx] p-[15rpx] mt-[10rpx] border-t-[2rpx] border-solid border-[#f5f5f5]">
+      <nut-button
+        v-if="data?.baby_info.length === 0 && data.bind_number > 0"
+        plain
+        type="primary"
+        size="mini"
+        @click="emit('showSelectBabyPopupVisible')">
+        绑定宝贝
+      </nut-button>
+
+      <nut-button
+        v-if="
+          // 只有自己买的票可以赠送，积分兑换或者别人赠送的票不可以
+          !onlyShowBindBabyAction &&
+          orderType == 1 &&
+          data.is_give != 1 &&
+          (data?.baby_info.length === 0 || data.bind_number == 0)
+        "
+        plain
+        type="primary"
+        size="mini"
+        open-type="share"
+        @click="emit('share')">
+        赠送
+      </nut-button>
+
+      <nut-button
+        v-if="
+          !onlyShowBindBabyAction &&
+          // 已绑定了宝贝
+          (data?.baby_info.length ||
+            // 无需绑定宝贝
+            data.bind_number == 0)
+        "
+        type="primary"
+        size="mini"
+        @click="switchTab('/pages/scan/index')">
+        去使用
+      </nut-button>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { switchTab } from '../../utils/uni'
 
-defineProps({
+const props = defineProps({
   data: {
     type: Object,
     default: () => ({})
+  },
+  onlyShowBindBabyAction: {
+    type: Boolean,
+    default: false
   }
 })
 
-const emit = defineEmits(['showBabyPopupVisible'])
+const orderType = computed(() => props.data.order_type ?? 2)
+
+const emit = defineEmits([
+  'showBabyPopupVisible',
+  'showSelectBabyPopupVisible',
+  'share'
+])
 </script>
 
 <style lang="scss" scoped>
@@ -75,30 +139,7 @@ const emit = defineEmits(['showBabyPopupVisible'])
   // 如果不设置该属性，则会导致子元素的圆角效果无法显示（子元素添加背景色溢出导致圆角被遮盖）
   overflow: hidden;
   position: relative;
-
-  .orderType {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 130rpx;
-    height: 45rpx;
-    border-top-right-radius: 15rpx;
-    border-bottom-left-radius: 15rpx;
-    line-height: 45rpx;
-    text-align: center;
-    font-size: 24rpx;
-    font-weight: 550;
-
-    &.type1 {
-      background: rgba(129, 83, 254, 0.1);
-      color: #8153fe;
-    }
-
-    &.type2 {
-      background: rgba(220, 35, 149, 0.1);
-      color: #dc2395;
-    }
-  }
+  background: #fff;
 
   &.forbiden {
     &::before {
@@ -116,10 +157,10 @@ const emit = defineEmits(['showBabyPopupVisible'])
     &::after {
       content: '';
       position: absolute;
-      top: 40rpx;
+      top: 60rpx;
       right: 10rpx;
-      width: 128rpx;
-      height: 128rpx;
+      width: 106.66rpx;
+      height: 106.66rpx;
       background-size: 100% 100%;
       background-repeat: no-repeat;
       z-index: 1001;
@@ -134,9 +175,12 @@ const emit = defineEmits(['showBabyPopupVisible'])
     background-image: url(https://hwly.tuomuit.com/wechat/img/expired.png);
   }
 
+  &.forbiden.received::after {
+    background-image: url(https://hwly.tuomuit.com/wechat/img/received.png?ts=123);
+  }
+
   .inner {
     width: 100%;
-    background: #fff;
     display: flex;
     align-items: center;
 
@@ -144,21 +188,20 @@ const emit = defineEmits(['showBabyPopupVisible'])
       width: 200rpx;
       height: auto;
       align-self: stretch; // 拉伸填充父元素高度
+      border-bottom-right-radius: 15rpx;
     }
 
     .info {
       flex: 1;
       color: #000;
-      padding: 20rpx 10rpx;
+      padding: 20rpx 10rpx 10rpx;
       box-sizing: border-box;
-      display: flex;
-      justify-content: space-between;
 
       &-left {
         flex: 1;
         display: flex;
         flex-direction: column;
-        row-gap: 15rpx;
+        row-gap: 12rpx;
 
         .title {
           font-weight: 550;
@@ -206,12 +249,11 @@ const emit = defineEmits(['showBabyPopupVisible'])
 
   .footer {
     width: 100%;
-    padding: 8rpx 0;
+    padding: 10rpx 0;
     background: #8153fe;
     text-align: center;
-
-    font-weight: 400;
-    font-size: 32rpx;
+    font-weight: 550;
+    font-size: 28rpx;
     color: #fff;
   }
 }

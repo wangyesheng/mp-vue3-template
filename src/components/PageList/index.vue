@@ -146,13 +146,16 @@ onPullDownRefresh(async () => {
 })
 
 defineExpose({
-  refresh: async () => {
+  async refresh() {
     try {
       isRefresh.value = true
       await getData(1)
     } finally {
       isRefresh.value = false
     }
+  },
+  getData() {
+    return pageInfo.value.data
   }
 })
 </script>

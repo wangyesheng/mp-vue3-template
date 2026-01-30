@@ -84,6 +84,23 @@
               </template>
             </nut-cell>
             <nut-cell
+              v-if="ticketInfo.bind_number > 0"
+              title="选择宝贝："
+              is-link
+              @click="() => (babyPopupVisible = true)">
+              <template #desc>
+                <div v-if="selectedBabyList.length">
+                  <BabyStackingInfo
+                    :baby-list="selectedBabyList"
+                    custom-class="!w-[80rpx] !h-[80rpx] !border-[#fff]"
+                    position="right" />
+                </div>
+                <div v-else class="text-[32rpx] font-blod text-[#CC3535]">
+                  最多可选{{ ticketInfo.bind_number }}个
+                </div>
+              </template>
+            </nut-cell>
+            <nut-cell
               title="选择优惠券："
               is-link
               @click="() => (couponPopupVisible = true)">
@@ -140,6 +157,54 @@
                 {{ payLoading ? '支付中...' : '确认支付' }}
               </nut-button>
             </div>
+          </div>
+        </div>
+      </nut-popup>
+
+      <nut-popup
+        v-model:visible="babyPopupVisible"
+        round
+        position="bottom"
+        safe-area-inset-bottom>
+        <div class="popupWrap">
+          <div class="__title flex justify-between items-center px-[40rpx]">
+            <span>选择宝贝</span>
+            <span
+              v-if="babyList.length < 2"
+              class="text-[28rpx] font-[550] text-[var(--hw-primary-color)]"
+              @click="navTo('/pages/baby/form')">
+              添加宝贝
+            </span>
+          </div>
+          <div v-if="babyList.length" class="popup-inner baby">
+            <div class="baby-content">
+              <div
+                v-for="item in babyList"
+                :key="item.id"
+                :style="{ width: '49%' }"
+                @click="onSelectBaby(item)">
+                <BabyInfo :data="item" :selected="checkBabySelected(item)" />
+              </div>
+            </div>
+            <div class="action">
+              <nut-button
+                size="large"
+                type="primary"
+                @click="onSelectBabyConfirm(true)">
+                确认选择
+              </nut-button>
+            </div>
+          </div>
+          <div
+            v-else
+            class="flex flex-col justify-center items-center gap-y-[30rpx] py-[60rpx]">
+            <image
+              class="w-[120rpx] h-[170rpx]"
+              src="https://hwly.tuomuit.com/wechat/img/empty.png"
+              mode="aspectFill" />
+            <span class="text-[#666] text-[28rpx] font-[500]">
+              暂未添加宝贝信息
+            </span>
           </div>
         </div>
       </nut-popup>
@@ -214,11 +279,12 @@
 import {
   callPayRes,
   getAvailableCouponsRes,
+  getBabyListRes,
   getTicketDetailsRes,
   getTicketPriceRes,
   getUserNotesRes
 } from '../../api'
-import { addHtmlClassName, navTo } from '../../utils/uni'
+import { addHtmlClassName, navTo, toast } from '../../utils/uni'
 import debounce from '../../utils/debounce'
 import wechatIcon from '../../static/images/wechat.png'
 import CouponInfo from '@/components/CouponInfo/index'
@@ -239,6 +305,10 @@ const couponPopupVisible = ref(false)
 const currentSelectedCoupon = ref({})
 const finalPriceDetails = ref({})
 const payLoading = ref(false)
+
+const babyList = ref([]),
+  babyPopupVisible = ref(false),
+  selectedBabyList = ref([])
 
 let ticketId
 onLoad(({ id }) => {
@@ -263,6 +333,12 @@ async function initData() {
         ticket_id: ticketId
       })
       availableCoupons.value = result?.data ?? []
+
+      if (ticketInfo.value.bind_number > 0) {
+        // 如果门票需要绑定宝贝信息需获取宝贝列表
+        const data = await getBabyListRes()
+        babyList.value = data ?? []
+      }
     }
   } finally {
     uni.hideLoading()
@@ -288,8 +364,40 @@ function onUserKnown() {
 function callPayPopup() {
   checkedUserNotes.value = false
   currentSelectedCoupon.value = {}
+  selectedBabyList.value = []
   finalPriceDetails.value = {}
   payPopupVisible.value = true
+}
+
+function onSelectBaby(item) {
+  if (selectedBabyList.value.find((x) => x.id == item.id)) {
+    // 反选
+    selectedBabyList.value = selectedBabyList.value.filter(
+      (x) => x.id != item.id
+    )
+  } else {
+    if (ticketInfo.value.bind_number == 1) {
+      selectedBabyList.value = []
+      selectedBabyList.value.push(item)
+    } else {
+      if (selectedBabyList.value.length < ticketInfo.value.bind_number) {
+        selectedBabyList.value.push(item)
+      } else {
+        toast(`最多可选${ticketInfo.value.bind_number}个宝贝`)
+      }
+    }
+  }
+}
+
+function checkBabySelected(item) {
+  return selectedBabyList.value.findIndex((x) => x.id == item.id) != -1
+}
+
+function onSelectBabyConfirm(result) {
+  if (!result) {
+    selectedBabyList.value = []
+  }
+  babyPopupVisible.value = false
 }
 
 async function onSelectCoupon(scope) {
@@ -346,7 +454,10 @@ async function onPaySubmit() {
     showUserNotesPopup()
     return
   }
-
+  if (ticketInfo.value.bind_number > 0 && selectedBabyList.value.length == 0) {
+    toast('请先选择宝贝！')
+    return
+  }
   const reqData = {
     ticket_id: ticketInfo.value.id
   }
@@ -355,7 +466,20 @@ async function onPaySubmit() {
     reqData.coupon_id = currentSelectedCoupon.value.coupon_id
   }
 
-  await pay(reqData)
+  if (ticketInfo.value.bind_number > 0) {
+    reqData.baby_ids = selectedBabyList.value.map((x) => x.id).join()
+    uni.showModal({
+      title: '提示',
+      content: '确定为该门票绑定选中的宝贝信息吗？一旦支付不可更改！',
+      async success({ confirm }) {
+        if (confirm) {
+          await pay(reqData)
+        }
+      }
+    })
+  } else {
+    await pay(reqData)
+  }
 }
 
 onShareAppMessage(() => {
@@ -393,123 +517,6 @@ onShareTimeline(() => {
 
     .nut-popup__close-icon {
       top: 20rpx !important;
-    }
-
-    .popupWrap {
-      padding-top: 40rpx;
-
-      &.userNotes {
-        padding-top: 80rpx;
-
-        .popup-inner {
-          padding: 0;
-          border-bottom: none;
-
-          .richtext {
-            padding: 0 40rpx;
-            box-sizing: border-box;
-            height: 70vh;
-            padding-bottom: 10vh;
-            overflow-y: scroll;
-          }
-
-          & > .footer-action {
-            width: 100%;
-            height: 10vh;
-            position: fixed;
-            left: 0;
-            bottom: calc(env(safe-area-inset-bottom) + 20rpx);
-            background: transparent;
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-
-            button {
-              width: 50%;
-            }
-          }
-        }
-      }
-
-      .popup-inner {
-        padding: 20rpx 40rpx;
-        box-sizing: border-box;
-        border-bottom: 2rpx solid #f5f5f5;
-
-        &.coupon {
-          margin-top: 20rpx;
-          display: flex;
-          flex-direction: column;
-          row-gap: 20rpx;
-          height: 50vh;
-          overflow-y: scroll;
-        }
-
-        &.baby {
-          max-height: 50vh;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          padding: 20rpx 0;
-
-          .baby-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            row-gap: 15rpx;
-            max-height: 40vh;
-            overflow-y: scroll;
-            padding: 50rpx 20rpx;
-
-            .baby-item {
-              .inner {
-                background: #fff;
-                height: 12vh;
-                padding: 0 20rpx;
-                border: 2rpx solid var(--hw-primary-color);
-                box-sizing: border-box;
-                border-radius: 10rpx;
-
-                .top {
-                  column-gap: 10rpx;
-
-                  .name {
-                    font-size: 30rpx;
-                  }
-                }
-              }
-            }
-          }
-
-          .action {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            border-top: 2rpx solid #f5f5f5;
-            padding-top: 20rpx;
-
-            button {
-              width: 40% !important;
-            }
-          }
-        }
-
-        &.pay {
-          .pay-action {
-            display: flex;
-            flex-direction: column;
-            row-gap: 20rpx;
-            border-top: 2rpx solid #f5f5f5;
-            padding-top: 20rpx;
-            color: #666;
-
-            .nut-checkbox__label {
-              margin-left: 10rpx;
-            }
-          }
-        }
-      }
     }
   }
 

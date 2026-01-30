@@ -26,35 +26,52 @@
       <nut-tabs v-model="selectedWalletType" type="smile" auto-height>
         <nut-tab-pane title="单次卡" pane-key="1">
           <PageList
+            ref="pageListRef1"
             :api="getWalletInfoRes"
             :active="selectedWalletType == 1"
             :params="{ type: 1 }">
             <template #item="{ data }">
-              <WalletItem :data="data" />
+              <WalletItem
+                :data="data"
+                @show-baby-popup-visible="showBabyPopupVisible(data)"
+                @show-select-baby-popup-visible="
+                  showSelectBabyPopupVisible(data)
+                "
+                @share="onSetShareOrderInfo(data)" />
             </template>
           </PageList>
         </nut-tab-pane>
         <nut-tab-pane title="多次卡" pane-key="2">
           <PageList
+            ref="pageListRef2"
             :api="getWalletInfoRes"
             :active="selectedWalletType == 2"
             :params="{ type: 2 }">
             <template #item="{ data }">
               <WalletItem
                 :data="data"
-                @show-baby-popup-visible="showBabyPopupVisible(data)" />
+                @show-baby-popup-visible="showBabyPopupVisible(data)"
+                @show-select-baby-popup-visible="
+                  showSelectBabyPopupVisible(data)
+                "
+                @share="onSetShareOrderInfo(data)" />
             </template>
           </PageList>
         </nut-tab-pane>
         <nut-tab-pane title="年卡" pane-key="3">
           <PageList
+            ref="pageListRef3"
             :api="getWalletInfoRes"
             :active="selectedWalletType == 3"
             :params="{ type: 3 }">
             <template #item="{ data }">
               <WalletItem
                 :data="data"
-                @show-baby-popup-visible="showBabyPopupVisible(data)" />
+                @show-baby-popup-visible="showBabyPopupVisible(data)"
+                @show-select-baby-popup-visible="
+                  showSelectBabyPopupVisible(data)
+                "
+                @share="onSetShareOrderInfo(data)" />
             </template>
           </PageList>
         </nut-tab-pane>
@@ -67,23 +84,67 @@
         </nut-tab-pane>
       </nut-tabs>
       <BabyPopupInfo ref="babyPopupRef" />
+      <SelectBabyPopup
+        ref="selectBabyPopupRef"
+        :baby-list="babyList"
+        @refresh="refreshOrderInfo" />
     </div>
   </AppContainer>
 </template>
 
 <script setup>
-import { getMyGiftsRes, getWalletInfoRes } from '../../api'
+import { getBabyListRes, getMyGiftsRes, getWalletInfoRes } from '../../api'
 import { storeToRefs } from 'pinia'
 import { useAppStore } from '../../stores/app'
 import { navTo } from '@/utils/uni'
 
+const env = import.meta.env
+
 const { appUser, appName } = storeToRefs(useAppStore())
 const selectedWalletType = ref('1'),
-  babyPopupRef = ref()
+  babyPopupRef = ref(),
+  selectBabyPopupRef = ref(),
+  babyList = ref([]),
+  pageListRef3 = ref(),
+  pageListRef2 = ref(),
+  pageListRef1 = ref()
+
+const sharedOrderInfo = ref(null)
 
 function showBabyPopupVisible(data) {
   babyPopupRef.value.show(data)
 }
+
+function showSelectBabyPopupVisible(data) {
+  selectBabyPopupRef.value.show(data)
+}
+
+function onSetShareOrderInfo(data) {
+  sharedOrderInfo.value = data
+}
+
+function refreshOrderInfo() {
+  if (selectedWalletType.value == 1) {
+    pageListRef1.value.refresh()
+  } else if (selectedWalletType.value == 2) {
+    pageListRef2.value.refresh()
+  } else if (selectedWalletType.value == 3) {
+    pageListRef3.value.refresh()
+  }
+}
+
+onShareAppMessage(() => {
+  const orderSn = sharedOrderInfo.value?.order_sn
+  return {
+    title: `我在好稳乐园给你买了一张票，快来领取吧！`,
+    path: `/pages/ticket/details-share?order_sn=${orderSn}`,
+    imageUrl: `${env.VITE_BASE_API}/wechat/img/share.jpg`
+  }
+})
+
+onShow(async () => {
+  babyList.value = await getBabyListRes()
+})
 </script>
 
 <style lang="scss" scoped>

@@ -34,15 +34,11 @@
 
       <div
         v-if="data.status == 0 && data.baby_info.length"
-        class="layer"
+        class="layer text-[24rpx] text-[#999]"
         @click="() => emit('showBabyPopupVisible')">
         <span>宝贝信息</span>
-        <div class="flex">
-          <p class="text-[#666]">{{ data.baby_info.length }}个</p>
-          <nut-icon name="rect-right" custom-color="#666" size="12" />
-        </div>
+        <BabyStackingInfo :baby-list="data.baby_info" />
       </div>
-
       <div
         v-if="data.status > 0"
         class="flex items-center justify-center text-[24rpx] text-[var(--hw-primary-color)] gap-x-[10rpx]"
@@ -54,13 +50,10 @@
       <div v-if="isExpand" class="flex flex-col gap-y-[20rpx]">
         <div
           v-if="data.baby_info.length"
-          class="layer"
+          class="layer text-[24rpx] text-[#999]"
           @click="() => emit('showBabyPopupVisible')">
           <span>宝贝信息</span>
-          <div class="flex">
-            <p class="text-[#666]">{{ data.baby_info.length }}个</p>
-            <nut-icon name="rect-right" custom-color="#666" size="12" />
-          </div>
+          <BabyStackingInfo :baby-list="data.baby_info" />
         </div>
         <!-- 多次卡显示剩余次数 -->
         <div v-if="data.status > 0 && data.type == 2" class="layer">

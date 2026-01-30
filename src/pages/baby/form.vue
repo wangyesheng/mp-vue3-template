@@ -3,10 +3,18 @@
     <div class="form-wrap">
       <nut-form label-position="top">
         <nut-form-item>
-          <div class="flex flex-col items-center gap-y-[20rpx]">
+          <div class="flex flex-col items-center gap-y-[20rpx] relative">
             <button class="avatar" @click="onClickImage">
-              <image :src="babyFormData.avatar" mode="aspectFill" />
+              <image
+                v-if="babyFormData.avatar"
+                :src="babyFormData.avatar"
+                mode="aspectFill" />
             </button>
+            <span
+              v-if="!babyFormData.avatar"
+              class="text-[#9675f3] text-[30rpx] font-[550] absolute top-[70%] right-0">
+              未上传照片
+            </span>
             <span class="text-[#999]">
               请上传宝贝真实照片，将用于核验入园！
             </span>
@@ -47,7 +55,6 @@
               block
               type="primary"
               size="large"
-              :disabled="!canSave"
               :loading="loading"
               @click="debounce(onSave)">
               {{ loading ? '保存中...' : '确认保存' }}
@@ -74,7 +81,7 @@
 <script setup>
 import { saveBabyInfoRes, getBabyInfoRes } from '@/api'
 import debounce from '@/utils/debounce'
-import { pathToBase64 } from '@/utils/uni'
+import { pathToBase64, toast } from '@/utils/uni'
 
 const genders = [
   { key: 1, label: '男' },
@@ -99,10 +106,6 @@ const babyFormData = ref({
     } else {
       return null
     }
-  }),
-  canSave = computed(() => {
-    const { avatar, name, birthday } = babyFormData.value
-    return avatar && name && birthday
   }),
   loading = ref(false)
 
@@ -161,6 +164,16 @@ function onDateConfirm({ selectedValue }) {
 
 async function onSave() {
   try {
+    const { avatar, name, birthday } = babyFormData.value
+    if (!avatar) {
+      return toast('请上传宝贝照片')
+    }
+    if (!name) {
+      return toast('请填写宝贝姓名')
+    }
+    if (!birthday) {
+      return toast('请选择宝贝生日')
+    }
     loading.value = true
     await saveBabyInfoRes(babyFormData.value)
     uni.navigateBack()
@@ -169,15 +182,21 @@ async function onSave() {
   }
 }
 
-onLoad(async ({ id, code }) => {
-  if (code) {
-    // 员工为客户添加宝贝
-    babyFormData.value.code = code
+onLoad(
+  async ({
+    // 编辑回显查询信息用
+    id,
+    // 员工为客户添加宝贝用，code 可以是解析客户二维码得到的 code 信息，也可以是客户手机号
+    code
+  }) => {
+    if (code) {
+      babyFormData.value.code = code
+    }
+    if (id) {
+      babyFormData.value = await getBabyInfoRes(id)
+    }
   }
-  if (id) {
-    babyFormData.value = await getBabyInfoRes(id)
-  }
-})
+)
 </script>
 
 <style lang="scss" scoped>
@@ -276,11 +295,11 @@ onLoad(async ({ id, code }) => {
   .avatar {
     margin: 0;
     padding: 0;
-    background: url(https://hwly.tuomuit.com/wechat/img/baby-photo-bg.png?ts=3);
+    background: url(https://hwly.tuomuit.com/wechat/img/baby-photo-bg.png?ts=123);
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    width: 250rpx;
-    height: 250rpx;
+    width: 300rpx;
+    height: 300rpx;
     position: relative;
 
     &::after {

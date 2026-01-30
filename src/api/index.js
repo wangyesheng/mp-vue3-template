@@ -76,10 +76,20 @@ export function getOrdersRes(data) {
   })
 }
 
-export function getOrderDetailsRes(order_number) {
+export function getOrderDetailsRes(order_sn) {
   return request({
-    url: `/api/order/get_order_detail?order_number=${order_number}`,
+    url: `/api/order/receive_detail?order_sn=${order_sn}`,
     method: 'get'
+  })
+}
+
+export function receiveTicketRes(order_sn) {
+  return request({
+    url: `/api/order/receive`,
+    method: 'post',
+    data: {
+      order_sn
+    }
   })
 }
 
@@ -418,6 +428,29 @@ export function getWXActivityListRes() {
 export function getUserNotesRes() {
   return request({
     url: `/api/index/user_notes`,
+    method: 'get'
+  })
+}
+
+export function bindBabyInOrderRes(data) {
+  return request({
+    url: `/api/order/bind_baby`,
+    method: 'post',
+    data
+  })
+}
+
+export function getOrderByPhoneRes(data) {
+  return request({
+    url: `/api/order/get_order_by_phone`,
+    method: 'get',
+    data
+  })
+}
+
+export function getUserBabyListRes(user_id) {
+  return request({
+    url: `/api/user/baby_list?user_id=${user_id}`,
     method: 'get'
   })
 }

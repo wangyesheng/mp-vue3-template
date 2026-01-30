@@ -32,11 +32,14 @@
             <nut-uploader
               ref="uploaderRef"
               :url="uploadUrl"
+              :size-type="['compressed']"
+              :maximize="maxUploadSize"
               :headers="{
                 token: appToken,
                 'content-type': 'multipart/form-data'
               }"
               @success="onUploadSuccess"
+              @oversize="onOverSize"
               @delete="onDeleteFile" />
           </template>
         </nut-cell>
@@ -90,6 +93,7 @@ const formState = reactive({
   images: []
 })
 const uploaderRef = ref(null)
+const maxUploadSize = 2 * 1024 * 1024
 
 function showTypePopup() {
   typePopupVisible.value = !typePopupVisible.value
@@ -121,6 +125,10 @@ function onDeleteFile({ fileList }) {
   formState.images = formState.images.filter((file) =>
     fileIds.includes(file.id)
   )
+}
+
+function onOverSize() {
+  toast('图片大小不能超过2MB')
 }
 
 async function onSubmit() {

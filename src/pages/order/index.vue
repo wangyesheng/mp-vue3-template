@@ -44,16 +44,10 @@
           </nut-cell>
           <nut-cell v-if="currentOrder.baby_info?.length" title="宝贝信息：">
             <template #desc>
-              <div class="baby-wrap mr-[40rpx]">
-                <image
-                  v-for="(baby, index) in currentOrder.baby_info"
-                  :key="baby.id"
-                  :src="baby.avatar"
-                  mode="aspectFill"
-                  :style="{
-                    marginLeft: index > 0 ? '-5%' : '0',
-                    zIndex: currentOrder.baby_info.length - index
-                  }" />
+              <div class="mr-[40rpx]">
+                <BabyStackingInfo
+                  :baby-list="currentOrder.baby_info"
+                  :custom-class="['w-[80rpx]', 'h-[80rpx]']" />
               </div>
             </template>
           </nut-cell>
@@ -302,23 +296,6 @@ async function onPaySubmit() {
         row-gap: 20rpx;
         height: 50vh;
         overflow-y: scroll;
-      }
-
-      &.pay {
-        .baby-wrap {
-          display: flex;
-          align-items: center;
-          justify-content: flex-end;
-
-          image {
-            width: 80rpx;
-            height: 80rpx;
-            border-radius: 50%;
-            border: 4rpx solid #fff;
-            box-sizing: border-box;
-            position: relative;
-          }
-        }
       }
     }
   }

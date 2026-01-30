@@ -12,7 +12,10 @@
             }"
             :active="selectedWalletType == 1 && Boolean(userCode)">
             <template #item="{ data }">
-              <WalletVerification :data="data" @refresh="onRefresh" />
+              <WalletVerification
+                :data="data"
+                @refresh="onRefresh"
+                @show-baby-popup-visible="showBabyPopupVisible(data)" />
             </template>
           </PageList>
         </nut-tab-pane>
@@ -66,23 +69,11 @@
         </nut-tab-pane>
       </nut-tabs>
       <BabyPopupInfo ref="babyPopupRef" />
-      <div class="footer">
-        <div class="inner">
-          <nut-button
-            block
-            size="large"
-            type="primary"
-            @click="navTo(`/pages/baby/form?code=${userCode}`)">
-            为该客户添加宝贝
-          </nut-button>
-        </div>
-      </div>
     </div>
   </AppContainer>
 </template>
 
 <script setup>
-import { navTo } from '@/utils/uni'
 import { getUserWalletsByScanRes } from '../../api'
 
 const selectedWalletType = ref('1'),
@@ -117,8 +108,6 @@ function onRefresh() {
 
 <style lang="scss" scoped>
 .__wallet {
-  padding-bottom: 10vh;
-
   ::v-deep() {
     .nut-tabs {
       .nut-tabs__titles {
@@ -129,24 +118,6 @@ function onRefresh() {
         padding: 0 20rpx 50rpx !important;
         background: transparent !important;
       }
-    }
-  }
-
-  .footer {
-    width: 100%;
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    background: #fff;
-    box-shadow: 0rpx -2rpx 2rpx #f5f5f5;
-    padding-bottom: calc(env(safe-area-inset-bottom) + 10rpx);
-    padding-top: 30rpx;
-
-    .inner {
-      width: 100%;
-      height: 100%;
-      padding: 0 50rpx;
-      box-sizing: border-box;
     }
   }
 }
