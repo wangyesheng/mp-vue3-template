@@ -22,6 +22,24 @@
       }
     },
     {
+      "path": "pages/baby/form",
+      "style": {
+        "navigationBarTitleText": "添加宝贝信息"
+      }
+    },
+    {
+      "path": "pages/ticket/details",
+      "style": {
+        "navigationBarTitleText": "门票详情"
+      }
+    },
+    {
+      "path": "pages/ticket/details-share",
+      "style": {
+        "navigationBarTitleText": "门票详情"
+      }
+    },
+    {
       "path": "pages/me/wallet",
       "style": {
         "navigationBarTitleText": "我的卡包",
@@ -36,27 +54,9 @@
       }
     },
     {
-      "path": "pages/baby/form",
-      "style": {
-        "navigationBarTitleText": "添加宝贝信息"
-      }
-    },
-    {
       "path": "pages/baby/search",
       "style": {
         "navigationBarTitleText": "为客户添加宝贝"
-      }
-    },
-    {
-      "path": "pages/ticket/details-share",
-      "style": {
-        "navigationBarTitleText": "门票详情"
-      }
-    },
-    {
-      "path": "pages/ticket/details_old",
-      "style": {
-        "navigationBarTitleText": "门票详情"
       }
     },
     {

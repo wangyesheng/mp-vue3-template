@@ -72,7 +72,7 @@ function onExchange(good) {
     async success({ confirm }) {
       if (confirm) {
         await exchangeRes(good.id)
-        toast('兑换成功！')
+        toast('兑换成功，快去卡包查看吧！')
         appStore.refreshAppUser()
       }
     }

@@ -1,8 +1,18 @@
 <template>
   <div
     class="__orderInfo relative w-full bg-[#fff] box-border px-[20rpx] py-[20rpx] rounded-[20rpx]">
-    <div :class="['orderType', 'type' + data.order_type]">
-      {{ data.order_type == 1 ? '门票购买' : '积分兑换' }}
+    <div
+      :class="[
+        'orderType',
+        'type' + (data.is_give == 1 ? 3 : data.order_type)
+      ]">
+      {{
+        data.is_give == 1
+          ? '赠送票'
+          : data.order_type == 1
+            ? '购买票'
+            : '积分票'
+      }}
     </div>
     <div
       class="flex justify-between items-center border-b-[2rpx] border-solid border-[#f5f5f5] pb-[20rpx]">

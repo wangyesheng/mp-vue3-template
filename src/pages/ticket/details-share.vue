@@ -3,7 +3,6 @@
     <div class="ticket-detail">
       <image :src="ticketInfo.image" class="banner" mode="aspectFill" />
       <div class="content">
-        {{ ordersn }}
         <div class="price">¥ {{ ticketInfo.price }}</div>
         <div class="title">
           {{ ticketInfo.title }}
@@ -176,9 +175,10 @@ function onUserKnown() {
 
     .price {
       font-weight: 550;
-      font-size: 50rpx;
+      font-size: 60rpx;
       color: var(--hw-primary-color);
       margin-bottom: 20rpx;
+      text-decoration: line-through;
     }
 
     .title {
@@ -194,7 +194,7 @@ function onUserKnown() {
       flex-direction: column;
       row-gap: 10rpx;
       box-sizing: border-box;
-      border-radius: 10rpx;
+      padding: 0 20rpx;
 
       &-item {
         font-size: 28rpx;

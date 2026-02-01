@@ -13,7 +13,7 @@
       class="h-[6vh] relative flex justify-center items-center text-[#999] text-[28rpx]">
       没有更多了
     </view>
-    <view v-if="pageInfo.loading && !isRefresh" class="h-[5vh] relative">
+    <view v-if="pageInfo.loading && !isRefresh" class="h-[6vh] relative">
       <Loading position="absoluted" />
     </view>
   </view>
@@ -96,7 +96,7 @@ async function getData(page) {
     pageInfo.value.data =
       pageInfo.value.page == 1 ? data : pageInfo.value.data.concat(data)
 
-    if (total === pageInfo.value.data.length) {
+    if (total <= pageInfo.value.data.length) {
       pageInfo.value.end = true
     }
     if (!isOverScreen.value) {
@@ -126,23 +126,33 @@ function checkOverScreen() {
   })
 }
 
-onReachBottom(() => {
-  if (!pageInfo.value.end && props.active) {
+onReachBottom(async () => {
+  if (
+    props.active &&
+    !pageInfo.value.end &&
+    !pageInfo.value.loading &&
+    !isRefresh.value
+  ) {
     pageInfo.value.page++
-    getData()
+    await getData()
   }
 })
 
 onPullDownRefresh(async () => {
-  try {
-    isRefresh.value = true
-    if (props.active) {
+  if (props.active && !pageInfo.value.loading) {
+    try {
+      isRefresh.value = true
+      uni.showLoading({
+        title: '下拉刷新中...',
+        mask: true
+      })
       await getData(1)
+    } finally {
+      uni.hideLoading()
+      isRefresh.value = false
     }
-  } finally {
-    uni.stopPullDownRefresh()
-    isRefresh.value = false
   }
+  uni.stopPullDownRefresh()
 })
 
 defineExpose({

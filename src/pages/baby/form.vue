@@ -307,13 +307,13 @@ onLoad(
     }
 
     image {
-      width: 150rpx;
-      height: 150rpx;
+      width: 160rpx;
+      height: 160rpx;
       border-radius: 50%;
       position: absolute;
-      top: 50%;
+      top: 45%;
       left: 50%;
-      transform: translate(-45%, -45%);
+      transform: translate(-50%, -45%);
     }
   }
 }

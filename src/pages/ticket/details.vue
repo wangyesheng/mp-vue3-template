@@ -249,7 +249,7 @@ onShow(initData)
 async function initData() {
   try {
     uni.showLoading({
-      title: '数据加载中'
+      title: '数据加载中...'
     })
     if (!ticketInfo.value.id) {
       // 初始化请求一次，后续如果从领券中心返回就不再请求了
@@ -530,7 +530,7 @@ onShareTimeline(() => {
 
     .price {
       font-weight: 550;
-      font-size: 50rpx;
+      font-size: 60rpx;
       color: var(--hw-primary-color);
       margin-bottom: 20rpx;
     }
@@ -546,10 +546,8 @@ onShareTimeline(() => {
       display: flex;
       flex-direction: column;
       row-gap: 10rpx;
-      border: 2rpx dashed #e8e8e8;
-      padding: 20rpx;
+      padding: 0 20rpx;
       box-sizing: border-box;
-      border-radius: 10rpx;
 
       &-item {
         font-size: 28rpx;

@@ -45,11 +45,10 @@
 </template>
 
 <script setup>
-import { useAppStore } from '@/stores/app'
 import { toast, navTo } from '../../utils/uni'
 import { bindBabyInOrderRes } from '@/api'
 
-defineProps({
+const props = defineProps({
   babyList: {
     type: Array,
     default: () => []
@@ -57,12 +56,12 @@ defineProps({
   code: {
     type: String,
     default: ''
+  },
+  refresh: {
+    type: Function,
+    default: () => {}
   }
 })
-
-const emit = defineEmits(['refresh'])
-
-const { appUser } = storeToRefs(useAppStore())
 
 const babyPopupVisible = ref(false),
   selectedBabyList = ref([]),
@@ -99,13 +98,20 @@ function onSelectBabyConfirm() {
     content: '确定为该门票绑定选中的宝贝信息吗？一旦绑定不可更改、不可赠予！',
     async success({ confirm }) {
       if (confirm) {
-        await bindBabyInOrderRes({
-          order_sn: orderInfo.value.order_sn,
-          user_baby_ids: selectedBabyList.value.map((x) => x.id).join()
-        })
-        emit('refresh')
-        toast('绑定成功')
-        babyPopupVisible.value = false
+        try {
+          uni.showLoading({
+            title: '宝贝绑定中',
+            mask: true
+          })
+          await bindBabyInOrderRes({
+            order_sn: orderInfo.value.order_sn,
+            user_baby_ids: selectedBabyList.value.map((x) => x.id).join()
+          })
+          await props.refresh?.('refresh')
+        } finally {
+          uni.hideLoading()
+          babyPopupVisible.value = false
+        }
       }
     }
   })

@@ -87,7 +87,7 @@
       <SelectBabyPopup
         ref="selectBabyPopupRef"
         :baby-list="babyList"
-        @refresh="refreshOrderInfo" />
+        :refresh="refreshOrderInfo" />
     </div>
   </AppContainer>
 </template>
@@ -109,8 +109,6 @@ const selectedWalletType = ref('1'),
   pageListRef2 = ref(),
   pageListRef1 = ref()
 
-const sharedOrderInfo = ref(null)
-
 function showBabyPopupVisible(data) {
   babyPopupRef.value.show(data)
 }
@@ -119,26 +117,28 @@ function showSelectBabyPopupVisible(data) {
   selectBabyPopupRef.value.show(data)
 }
 
+const sharedOrderInfo = ref(null)
 function onSetShareOrderInfo(data) {
   sharedOrderInfo.value = data
 }
 
-function refreshOrderInfo() {
-  if (selectedWalletType.value == 1) {
-    pageListRef1.value.refresh()
-  } else if (selectedWalletType.value == 2) {
-    pageListRef2.value.refresh()
-  } else if (selectedWalletType.value == 3) {
-    pageListRef3.value.refresh()
-  }
+async function refreshOrderInfo() {
+  const instance =
+    selectedWalletType.value == 1
+      ? pageListRef1
+      : selectedWalletType.value == 2
+        ? pageListRef2
+        : pageListRef3
+  await instance.value.refresh()
 }
 
 onShareAppMessage(() => {
   const orderSn = sharedOrderInfo.value?.order_sn
+  const imageUrl = `${env.VITE_BASE_API}/wechat/img/share.jpg`
   return {
     title: `我在好稳乐园给你买了一张票，快来领取吧！`,
     path: `/pages/ticket/details-share?order_sn=${orderSn}`,
-    imageUrl: `${env.VITE_BASE_API}/wechat/img/share.jpg`
+    imageUrl
   }
 })
 
@@ -156,7 +156,7 @@ onShow(async () => {
       }
 
       .nut-tab-pane {
-        padding: 10rpx 34rpx 50rpx !important;
+        padding: 10rpx 30rpx 20rpx !important;
         background: transparent !important;
       }
     }

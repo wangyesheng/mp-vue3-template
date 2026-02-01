@@ -37,8 +37,7 @@
             class="flex items-center text-[24rpx] text-[#555] font-[500]"
             @click="() => emit('showBabyPopupVisible')">
             <span>宝贝信息：</span>
-            <span>{{ data.baby_info.length }}个</span>
-            <nut-icon name="rect-right" custom-color="#555" size="12" />
+            <BabyStackingInfo :baby-list="data.baby_info" />
           </div>
 
           <div v-if="!data.mall_id" class="row">

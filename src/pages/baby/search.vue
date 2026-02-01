@@ -1,8 +1,11 @@
 <template>
   <AppContainer>
-    <nut-searchbar v-model="mobile" placeholder="输入客户手机号查询">
+    <nut-searchbar
+      v-model="mobile"
+      placeholder="输入客户手机号查询"
+      @search="debounce(onSearch)">
       <template #rightout>
-        <nut-button type="primary" @click="debounce(onSearch)">搜索</nut-button>
+        <nut-button type="primary" @click="debounce(onSearch)">查询</nut-button>
       </template>
     </nut-searchbar>
 
@@ -25,7 +28,7 @@
         ref="selectBabyPopupRef"
         :baby-list="babyList"
         :code="mobile"
-        @refresh="() => pageListRef.refresh()" />
+        :refresh="() => pageListRef.refresh()" />
     </div>
   </AppContainer>
 </template>
@@ -36,7 +39,7 @@ import debounce from '@/utils/debounce'
 import { isValidPhone } from '@/utils/is'
 import { toast } from '@/utils/uni'
 
-const mobile = ref('15895347201'),
+const mobile = ref(''),
   pageListRef = ref(),
   selectBabyPopupRef = ref(),
   babyList = ref([])

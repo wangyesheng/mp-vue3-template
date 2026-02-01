@@ -5,7 +5,7 @@
         <template #item="{ data }">
           <div
             class="ticket-item"
-            @click="navTo(`/pages/ticket/details_old?id=${data.id}`, false)">
+            @click="navTo(`/pages/ticket/details?id=${data.id}`, false)">
             <div class="inner">
               <image :src="data.image" mode="aspectFill" />
               <div class="info">

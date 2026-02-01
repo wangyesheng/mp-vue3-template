@@ -67,7 +67,7 @@
 
     <div
       v-else
-      class="flex justify-end items-center gap-x-[15rpx] p-[15rpx] mt-[10rpx] border-t-[2rpx] border-solid border-[#f5f5f5]">
+      class="flex justify-end items-center gap-x-[15rpx] p-[15rpx] border-t-[2rpx] border-solid border-[#f5f5f5] rounded-x">
       <nut-button
         v-if="data?.baby_info.length === 0 && data.bind_number > 0"
         plain
@@ -157,18 +157,19 @@ const emit = defineEmits([
     &::after {
       content: '';
       position: absolute;
-      top: 60rpx;
+      top: 50%;
       right: 10rpx;
-      width: 106.66rpx;
-      height: 106.66rpx;
+      width: 120rpx;
+      height: 120rpx;
       background-size: 100% 100%;
       background-repeat: no-repeat;
       z-index: 1001;
+      transform: translateY(-60%);
     }
   }
 
   &.forbiden.verification::after {
-    background-image: url(https://hwly.tuomuit.com/wechat/img/verification.png);
+    background-image: url(https://hwly.tuomuit.com/wechat/img/verification.png?ts=12);
   }
 
   &.forbiden.expired::after {
@@ -188,7 +189,7 @@ const emit = defineEmits([
       width: 200rpx;
       height: auto;
       align-self: stretch; // 拉伸填充父元素高度
-      border-bottom-right-radius: 15rpx;
+      border-top-right-radius: 15rpx;
     }
 
     .info {
