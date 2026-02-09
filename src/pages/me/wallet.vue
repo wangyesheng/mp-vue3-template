@@ -36,8 +36,7 @@
                 @show-baby-popup-visible="showBabyPopupVisible(data)"
                 @show-select-baby-popup-visible="
                   showSelectBabyPopupVisible(data)
-                "
-                @share="onSetShareOrderInfo(data)" />
+                " />
             </template>
           </PageList>
         </nut-tab-pane>
@@ -53,8 +52,7 @@
                 @show-baby-popup-visible="showBabyPopupVisible(data)"
                 @show-select-baby-popup-visible="
                   showSelectBabyPopupVisible(data)
-                "
-                @share="onSetShareOrderInfo(data)" />
+                " />
             </template>
           </PageList>
         </nut-tab-pane>
@@ -70,15 +68,14 @@
                 @show-baby-popup-visible="showBabyPopupVisible(data)"
                 @show-select-baby-popup-visible="
                   showSelectBabyPopupVisible(data)
-                "
-                @share="onSetShareOrderInfo(data)" />
+                " />
             </template>
           </PageList>
         </nut-tab-pane>
         <nut-tab-pane title="实物礼品" pane-key="4">
           <PageList :api="getMyGiftsRes" :active="selectedWalletType == 4">
             <template #item="{ data }">
-              <WalletItem :data="data" />
+              <WalletItem :data="data" @share="onShareClick" />
             </template>
           </PageList>
         </nut-tab-pane>
@@ -87,7 +84,7 @@
       <SelectBabyPopup
         ref="selectBabyPopupRef"
         :baby-list="babyList"
-        :refresh="refreshOrderInfo" />
+        @refresh="refreshOrderInfo" />
     </div>
   </AppContainer>
 </template>
@@ -109,6 +106,8 @@ const selectedWalletType = ref('1'),
   pageListRef2 = ref(),
   pageListRef1 = ref()
 
+const sharedOrderInfo = ref(null)
+
 function showBabyPopupVisible(data) {
   babyPopupRef.value.show(data)
 }
@@ -117,29 +116,62 @@ function showSelectBabyPopupVisible(data) {
   selectBabyPopupRef.value.show(data)
 }
 
-const sharedOrderInfo = ref(null)
-function onSetShareOrderInfo(data) {
-  sharedOrderInfo.value = data
+function getSharePayload(data) {
+  const orderSn = data?.order_sn
+  return {
+    title: `我在好稳乐园给你买了一张票，快来领取吧！`,
+    path: orderSn
+      ? `/pages/home/index?order_sn=${orderSn}`
+      : '/pages/home/index',
+    imageUrl: `${env.VITE_BASE_API}/wechat/img/share.jpg`
+  }
 }
 
-async function refreshOrderInfo() {
-  const instance =
-    selectedWalletType.value == 1
-      ? pageListRef1
-      : selectedWalletType.value == 2
-        ? pageListRef2
-        : pageListRef3
-  await instance.value.refresh()
+async function beforeShareCheck(data) {
+  // 这里放“分享前拦截”的规则；后续如需接后端校验，可在此处加接口请求
+  if (!data?.order_sn) return { ok: false, message: '缺少订单号，无法赠予' }
+
+  // status: 1 可用；2 核销中/已核销；4 已过期（UI 上也有对应状态）
+  if (data?.status === 2) return { ok: false, message: '该卡已核销，不能赠予' }
+  if (data?.status === 4) return { ok: false, message: '该卡已过期，不能赠予' }
+  if (typeof data?.status === 'number' && data.status > 1)
+    return { ok: false, message: '该卡当前状态不可赠予' }
+
+  return { ok: true }
+}
+
+async function onShareClick(data) {
+  const { ok, message } = await beforeShareCheck(data)
+  if (!ok) {
+    uni.showToast({ title: message || '暂不可赠予', icon: 'none' })
+    return
+  }
+
+  sharedOrderInfo.value = data
+  const payload = getSharePayload(data)
+
+  // 拦截成功后，再主动拉起分享面板
+  // #ifdef MP-WEIXIN
+  wx.shareAppMessage(payload)
+  // #endif
+  // #ifndef MP-WEIXIN
+  uni.showToast({ title: '仅支持小程序内分享', icon: 'none' })
+  // #endif
+}
+
+function refreshOrderInfo() {
+  if (selectedWalletType.value == 1) {
+    pageListRef1.value.refresh()
+  } else if (selectedWalletType.value == 2) {
+    pageListRef2.value.refresh()
+  } else if (selectedWalletType.value == 3) {
+    pageListRef3.value.refresh()
+  }
 }
 
 onShareAppMessage(() => {
-  const orderSn = sharedOrderInfo.value?.order_sn
-  const imageUrl = `${env.VITE_BASE_API}/wechat/img/share.jpg`
-  return {
-    title: `我在好稳乐园给你买了一张票，快来领取吧！`,
-    path: `/pages/ticket/details-share?order_sn=${orderSn}`,
-    imageUrl
-  }
+  // 右上角菜单分享（非按钮触发）仍走这里
+  return getSharePayload(sharedOrderInfo.value)
 })
 
 onShow(async () => {
@@ -156,7 +188,7 @@ onShow(async () => {
       }
 
       .nut-tab-pane {
-        padding: 10rpx 30rpx 20rpx !important;
+        padding: 10rpx 34rpx 50rpx !important;
         background: transparent !important;
       }
     }

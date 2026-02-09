@@ -7,7 +7,7 @@
             <button class="avatar" @click="onClickImage">
               <image
                 v-if="babyFormData.avatar"
-                :src="babyFormData.avatar"
+                :src="avatarFullUrl"
                 mode="aspectFill" />
             </button>
             <span
@@ -80,8 +80,14 @@
 
 <script setup>
 import { saveBabyInfoRes, getBabyInfoRes } from '@/api'
+import { useAppStore } from '@/stores/app'
 import debounce from '@/utils/debounce'
-import { pathToBase64, toast } from '@/utils/uni'
+import { toast } from '@/utils/uni'
+
+const baseUrl = import.meta.env.VITE_BASE_API
+const uploadUrl = `${baseUrl}/api/common/upload`
+
+const { appToken } = storeToRefs(useAppStore())
 
 const genders = [
   { key: 1, label: '男' },
@@ -107,7 +113,10 @@ const babyFormData = ref({
       return null
     }
   }),
-  loading = ref(false)
+  loading = ref(false),
+  avatarFullUrl = computed(() =>
+    babyFormData.value.avatar ? `${baseUrl}/${babyFormData.value.avatar}` : null
+  )
 
 async function onChooseImage() {
   uni.chooseImage({
@@ -115,9 +124,35 @@ async function onChooseImage() {
     sourceType: ['camera'], // 只使用相机
     sizeType: ['compressed'], // 压缩图片
     async success(res) {
-      const tempFilePath = res.tempFilePaths[0]
-      const path = await pathToBase64(tempFilePath)
-      babyFormData.value.avatar = path
+      // const tempFilePath = res.tempFilePaths[0]
+      // const path = await pathToBase64(tempFilePath)
+      // babyFormData.value.avatar = path
+
+      uni.uploadFile({
+        url: uploadUrl,
+        filePath: res.tempFilePaths[0],
+        name: 'file',
+        header: {
+          token: appToken.value,
+          'content-type': 'multipart/form-data'
+        },
+        async success(result) {
+          const {
+            code,
+            data: { url },
+            msg
+          } = JSON.parse(result.data)
+          if (code !== 1) {
+            toast(msg)
+          } else {
+            babyFormData.value.avatar = url
+          }
+        },
+        async fail(uploadFileErr) {
+          console.log('upload::error', uploadFileErr)
+          toast('上传失败！')
+        }
+      })
     },
     fail(err) {
       console.log('拍照失败:', err)
@@ -132,8 +167,8 @@ function onClickImage() {
       success(res) {
         if (res.tapIndex === 0) {
           uni.previewImage({
-            current: babyFormData.value.avatar,
-            urls: [babyFormData.value.avatar]
+            current: avatarFullUrl.value,
+            urls: [avatarFullUrl.value]
           })
         } else {
           onChooseImage()
@@ -311,9 +346,9 @@ onLoad(
       height: 160rpx;
       border-radius: 50%;
       position: absolute;
-      top: 45%;
+      top: 50%;
       left: 50%;
-      transform: translate(-50%, -45%);
+      transform: translate(-50%, -50%);
     }
   }
 }

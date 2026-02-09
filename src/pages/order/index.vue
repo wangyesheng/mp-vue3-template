@@ -130,7 +130,7 @@
       </div>
     </nut-popup>
 
-    <BabyPopupInfo ref="babyPopupRef"></BabyPopupInfo>
+    <BabyPopupInfo ref="babyPopupRef" />
   </AppContainer>
 </template>
 
