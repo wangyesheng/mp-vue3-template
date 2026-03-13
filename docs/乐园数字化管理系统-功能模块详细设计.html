@@ -1,0 +1,3359 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>乐园数字化管理系统-功能模块详细设计.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="%E4%B9%90%E5%9B%AD%E6%95%B0%E5%AD%97%E5%8C%96%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F--%E5%8A%9F%E8%83%BD%E6%A8%A1%E5%9D%97%E8%AF%A6%E7%BB%86%E8%AE%BE%E8%AE%A1%E6%96%87%E6%A1%A3">乐园数字化管理系统 — 功能模块详细设计文档</h1>
+<blockquote>
+<p>版本：v1.0 | 日期：2026-02-12
+关联文档：《乐园数字化管理系统-需求分析文档》</p>
+</blockquote>
+<hr>
+<h2 id="%E7%9B%AE%E5%BD%95">目录</h2>
+<ul>
+<li><a href="#%E6%A8%A1%E5%9D%97%E4%B8%80%E5%AE%9E%E6%97%B6%E7%BB%8F%E8%90%A5%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83">模块一：实时经营数据中心</a></li>
+<li><a href="#%E6%A8%A1%E5%9D%97%E4%BA%8C%E4%BB%BB%E5%8A%A1%E6%B4%BE%E5%8F%91%E4%B8%8E%E8%B7%9F%E8%B8%AA%E4%B8%AD%E5%BF%83">模块二：任务派发与跟踪中心</a></li>
+<li><a href="#%E6%A8%A1%E5%9D%97%E4%B8%89%E6%B4%BB%E5%8A%A8%E7%AE%A1%E7%90%86%E4%B8%8E%E6%95%88%E6%9E%9C%E8%BF%BD%E8%B8%AA%E4%B8%AD%E5%BF%83">模块三：活动管理与效果追踪中心</a></li>
+<li><a href="#%E6%A8%A1%E5%9D%97%E5%9B%9Bai-%E5%86%B3%E7%AD%96%E8%BE%85%E5%8A%A9%E4%B8%AD%E5%BF%83">模块四：AI 决策辅助中心</a></li>
+<li><a href="#%E6%A8%A1%E5%9D%97%E4%BA%94%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E6%94%AF%E6%92%91%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90%E6%B6%88%E6%81%AF">模块五：系统基础支撑（用户·权限·消息）</a></li>
+<li><a href="#%E9%99%84%E5%BD%95%E6%A8%A1%E5%9D%97%E9%97%B4%E4%BA%A4%E4%BA%92%E5%85%B3%E7%B3%BB">附录：模块间交互关系</a></li>
+</ul>
+<hr>
+<h1 id="%E6%A8%A1%E5%9D%97%E4%B8%80%E5%AE%9E%E6%97%B6%E7%BB%8F%E8%90%A5%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83">模块一：实时经营数据中心</h1>
+<blockquote>
+<p>系统的「眼睛」—— 让管理者随时看清乐园全貌</p>
+</blockquote>
+<h2 id="11-%E6%A8%A1%E5%9D%97%E6%A6%82%E8%BF%B0">1.1 模块概述</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>模块定位</strong></td>
+<td>乐园经营数据的统一采集、实时聚合与可视化展示</td>
+</tr>
+<tr>
+<td><strong>核心价值</strong></td>
+<td>替代店长&quot;统筹全局&quot;的能力，总部远程即可掌握全局经营状况</td>
+</tr>
+<tr>
+<td><strong>使用角色</strong></td>
+<td>总部管理员（全量数据）、区域负责人（本区域数据）、协同管理员（只读）</td>
+</tr>
+<tr>
+<td><strong>优先级</strong></td>
+<td>P0 — 系统基础，所有模块依赖此模块的数据</td>
+</tr>
+</tbody>
+</table>
+<h2 id="12-%E9%A1%B5%E9%9D%A2%E6%B8%85%E5%8D%95">1.2 页面清单</h2>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>页面名称</th>
+<th>说明</th>
+<th>终端</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D-01</td>
+<td>经营总览大屏</td>
+<td>全乐园核心指标一屏呈现</td>
+<td>PC / 大屏</td>
+</tr>
+<tr>
+<td>D-02</td>
+<td>区域详情页</td>
+<td>单个区域的完整经营数据</td>
+<td>PC / 移动端</td>
+</tr>
+<tr>
+<td>D-03</td>
+<td>品类下钻页</td>
+<td>区域内各品类/项目明细</td>
+<td>PC / 移动端</td>
+</tr>
+<tr>
+<td>D-04</td>
+<td>对比分析页</td>
+<td>多维度数据对比（时间/区域/活动）</td>
+<td>PC</td>
+</tr>
+<tr>
+<td>D-05</td>
+<td>数据录入页</td>
+<td>手工录入/修正经营数据</td>
+<td>PC / 移动端</td>
+</tr>
+<tr>
+<td>D-06</td>
+<td>报表导出页</td>
+<td>自定义时间范围导出 Excel/PDF</td>
+<td>PC</td>
+</tr>
+</tbody>
+</table>
+<h2 id="13-%E9%A1%B5%E9%9D%A2%E8%AF%A6%E7%BB%86%E8%AE%BE%E8%AE%A1">1.3 页面详细设计</h2>
+<h3 id="d-01%E7%BB%8F%E8%90%A5%E6%80%BB%E8%A7%88%E5%A4%A7%E5%B1%8F">【D-01】经营总览大屏</h3>
+<h4 id="%E9%A1%B5%E9%9D%A2%E5%B8%83%E5%B1%80">页面布局</h4>
+<pre class="hljs"><code><div>┌──────────────────────────────────────────────────────────┐
+│  乐园经营总览                     日期选择: [今日 ▼]  🔄   │
+├──────────┬──────────┬──────────┬──────────────────────────┤
+│  今日营收  │  今日客流  │  客单价   │  较昨日同期                │
+│  ¥10,000 │  320人    │  ¥31.25  │  +5.2% / +3.8% / +1.3%  │
+├──────────┴──────────┴──────────┴──────────────────────────┤
+│                                                          │
+│  ┌─────────── 各区域营收占比 ──────────┐  ┌─── 今日营收趋势 ───┐│
+│  │                                   │  │                    ││
+│  │        [饼图/环形图]                │  │   [分时折线图]       ││
+│  │  淘气堡 60%  电玩区 30%  简餐区 10% │  │   横轴:时段          ││
+│  │                                   │  │   纵轴:累计营收       ││
+│  └───────────────────────────────────┘  └────────────────────┘│
+│                                                          │
+│  ┌──────────────── 各区域经营卡片 ────────────────────────┐│
+│  │ ┌──────────┐  ┌──────────┐  ┌──────────┐             ││
+│  │ │ 🟢 淘气堡  │  │ 🟡 电玩区  │  │ 🟢 简餐区  │             ││
+│  │ │ ¥6,000    │  │ ¥3,000    │  │ ¥1,000    │             ││
+│  │ │ 占比60%   │  │ 占比30%   │  │ 占比10%   │             ││
+│  │ │ 较昨+8%   │  │ 较昨-2%   │  │ 较昨+1%   │             ││
+│  │ │ 客流198人 │  │ 客流86人  │  │ 客流36人  │             ││
+│  │ │ [查看详情] │  │ [查看详情] │  │ [查看详情] │             ││
+│  │ └──────────┘  └──────────┘  └──────────┘             ││
+│  └───────────────────────────────────────────────────────┘│
+│                                                          │
+│  ┌──── 近7日营收走势 ────┐  ┌──── 今日任务完成率 ──────────┐│
+│  │                      │  │                             ││
+│  │   [多区域折线图]       │  │   完成 5/6 (83%)            ││
+│  │   含各区域趋势线       │  │   [进度条]                   ││
+│  │                      │  │   未完成: 电玩区设备巡检       ││
+│  └──────────────────────┘  └─────────────────────────────┘│
+└──────────────────────────────────────────────────────────┘
+</div></code></pre>
+<h4 id="%E6%95%B0%E6%8D%AE%E5%8D%A1%E7%89%87%E5%AD%97%E6%AE%B5%E6%98%8E%E7%BB%86">数据卡片字段明细</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>数据源</th>
+<th>计算规则</th>
+<th>刷新频率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>今日总营收</td>
+<td>revenue_records</td>
+<td>SUM(amount) WHERE record_time = TODAY</td>
+<td>实时（5分钟）</td>
+</tr>
+<tr>
+<td>今日客流</td>
+<td>visitor_records</td>
+<td>COUNT(DISTINCT visitor_id) WHERE date = TODAY</td>
+<td>实时（5分钟）</td>
+</tr>
+<tr>
+<td>客单价</td>
+<td>计算字段</td>
+<td>今日总营收 / 今日客流</td>
+<td>随营收/客流刷新</td>
+</tr>
+<tr>
+<td>较昨日同期</td>
+<td>revenue_records</td>
+<td>(今日截至当前时刻 - 昨日同时刻) / 昨日同时刻 × 100%</td>
+<td>实时</td>
+</tr>
+<tr>
+<td>区域营收</td>
+<td>revenue_records</td>
+<td>SUM(amount) WHERE zone_id = X AND date = TODAY</td>
+<td>实时</td>
+</tr>
+<tr>
+<td>区域占比</td>
+<td>计算字段</td>
+<td>区域营收 / 总营收 × 100%</td>
+<td>实时</td>
+</tr>
+<tr>
+<td>区域客流</td>
+<td>visitor_records</td>
+<td>COUNT WHERE zone_id = X AND date = TODAY</td>
+<td>实时</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E7%8A%B6%E6%80%81%E6%8C%87%E7%A4%BA%E8%A7%84%E5%88%99">状态指示规则</h4>
+<table>
+<thead>
+<tr>
+<th>状态</th>
+<th>条件</th>
+<th>颜色</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🟢 表现优秀</td>
+<td>较昨日同期 ≥ +5%</td>
+<td>绿色</td>
+</tr>
+<tr>
+<td>🟡 需要关注</td>
+<td>较昨日同期在 -5% ~ +5% 之间，或连续2天下降</td>
+<td>黄色</td>
+</tr>
+<tr>
+<td>🔴 异常警告</td>
+<td>较昨日同期 ≤ -5%，或连续3天下降</td>
+<td>红色</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E4%BA%A4%E4%BA%92%E8%A1%8C%E4%B8%BA">交互行为</h4>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>点击区域卡片&quot;查看详情&quot;</td>
+<td>跳转到 D-02 区域详情页</td>
+</tr>
+<tr>
+<td>点击饼图某个扇区</td>
+<td>跳转到 D-02 对应区域详情页</td>
+</tr>
+<tr>
+<td>切换日期选择器</td>
+<td>所有数据按选定日期重新计算展示</td>
+</tr>
+<tr>
+<td>点击 🔄 刷新按钮</td>
+<td>手动强制刷新所有数据</td>
+</tr>
+<tr>
+<td>点击&quot;近7日营收走势&quot;中某天</td>
+<td>弹出该天的日汇总数据弹窗</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="d-02%E5%8C%BA%E5%9F%9F%E8%AF%A6%E6%83%85%E9%A1%B5">【D-02】区域详情页</h3>
+<h4 id="%E9%A1%B5%E9%9D%A2%E5%B8%83%E5%B1%80">页面布局</h4>
+<pre class="hljs"><code><div>┌──────────────────────────────────────────────────────────┐
+│  ← 返回总览    淘气堡 · 区域详情       日期: [今日 ▼]       │
+├──────────┬──────────┬──────────┬──────────────────────────┤
+│  区域营收  │  区域客流  │  区域客单价│  较昨日                    │
+│  ¥6,000  │  198人    │  ¥30.30  │  +8% / +5% / +2.8%      │
+├──────────┴──────────┴──────────┴──────────────────────────┤
+│                                                          │
+│  ┌─────────── 品类营收构成 ──────────┐  ┌─── 分时段营收 ────┐│
+│  │                                  │  │                   ││
+│  │  [横向柱状图 / 树形图]             │  │  [折线图]          ││
+│  │  散客票: ¥2,400 (40%)            │  │  10:00  ¥500      ││
+│  │  套票:   ¥1,800 (30%)            │  │  11:00  ¥1,200    ││
+│  │  会员卡: ¥1,200 (20%)            │  │  12:00  ¥800      ││
+│  │  其他:   ¥600  (10%)             │  │  ...              ││
+│  └──────────────────────────────────┘  └───────────────────┘│
+│                                                          │
+│  ┌────────────────── 品类明细表格 ────────────────────────┐│
+│  │ 品类名称 │ 今日营收 │ 占比   │ 较昨日  │ 近7日均值│ 趋势 ││
+│  │ 散客票   │ ¥2,400  │ 40.0% │ +12%   │ ¥2,100  │  ↑  ││
+│  │ 套票     │ ¥1,800  │ 30.0% │ +5%    │ ¥1,700  │  ↑  ││
+│  │ 会员卡   │ ¥1,200  │ 20.0% │ -3%    │ ¥1,250  │  ↓  ││
+│  │ 其他     │ ¥600    │ 10.0% │ +15%   │ ¥520    │  ↑  ││
+│  └──────────────────────────────────────────────────────┘│
+│                                                          │
+│  ┌──── 近30日营收趋势 ────┐  ┌──── 活动标记 ─────────────┐│
+│  │                       │  │ 🏷️ 亲子嘉年华              ││
+│  │  [面积图]              │  │ 2.15-2.25 | 进行中         ││
+│  │  活动区间高亮标记        │  │ 当前提升率: +22%           ││
+│  │                       │  │ [查看活动详情]              ││
+│  └───────────────────────┘  └─────────────────────────────┘│
+└──────────────────────────────────────────────────────────┘
+</div></code></pre>
+<h4 id="%E5%93%81%E7%B1%BB%E6%98%8E%E7%BB%86%E8%A1%A8%E6%A0%BC%E5%AD%97%E6%AE%B5">品类明细表格字段</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+<th>排序</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>品类名称</td>
+<td>该区域下的所有品类</td>
+<td>默认按营收降序</td>
+</tr>
+<tr>
+<td>今日营收</td>
+<td>该品类今日累计金额</td>
+<td>支持排序</td>
+</tr>
+<tr>
+<td>占比</td>
+<td>该品类占区域总营收百分比</td>
+<td>支持排序</td>
+</tr>
+<tr>
+<td>较昨日</td>
+<td>与昨日同品类对比的增减幅度</td>
+<td>支持排序</td>
+</tr>
+<tr>
+<td>近7日均值</td>
+<td>过去7天该品类日均营收</td>
+<td>支持排序</td>
+</tr>
+<tr>
+<td>趋势</td>
+<td>近3天的走势方向（↑上升 →平稳 ↓下降）</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E4%BA%A4%E4%BA%92%E8%A1%8C%E4%B8%BA">交互行为</h4>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>点击品类行</td>
+<td>跳转到 D-03 品类下钻页（如果有子品类）</td>
+</tr>
+<tr>
+<td>点击&quot;查看活动详情&quot;</td>
+<td>跳转到活动中心对应活动页面</td>
+</tr>
+<tr>
+<td>近30日趋势图中的活动区间</td>
+<td>用半透明色块高亮活动时间范围</td>
+</tr>
+<tr>
+<td>切换日期范围</td>
+<td>表格和图表联动刷新</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="d-03%E5%93%81%E7%B1%BB%E4%B8%8B%E9%92%BB%E9%A1%B5">【D-03】品类下钻页</h3>
+<p>支持多级品类嵌套下钻，以简餐区为例：</p>
+<pre class="hljs"><code><div>简餐区 ¥1,000
+├── 第一级下钻（品类大类）
+│   ├── 套餐类 ¥580 (58%)
+│   │   ├── 第二级下钻（具体产品）
+│   │   │   ├── 亲子套餐A ¥220 (38%)
+│   │   │   ├── 亲子套餐B ¥180 (31%)
+│   │   │   └── 单人套餐  ¥180 (31%)
+│   │   └──
+│   ├── 饮品类 ¥200 (20%)
+│   │   ├── 奶茶   ¥80  (40%)
+│   │   ├── 果汁   ¥60  (30%)
+│   │   └── 瓶装水  ¥60  (30%)
+│   ├── 小食类 ¥120 (12%)
+│   │   ├── 薯条   ¥50  (42%)
+│   │   ├── 鸡块   ¥40  (33%)
+│   │   └── 爆米花  ¥30  (25%)
+│   └── 其他 ¥100 (10%)
+</div></code></pre>
+<h4 id="%E9%9D%A2%E5%8C%85%E5%B1%91%E5%AF%BC%E8%88%AA">面包屑导航</h4>
+<pre class="hljs"><code><div>全部区域 &gt; 简餐区 &gt; 套餐类 &gt; 亲子套餐A
+</div></code></pre>
+<p>每级都可点击返回上一层级，确保导航清晰。</p>
+<hr>
+<h3 id="d-04%E5%AF%B9%E6%AF%94%E5%88%86%E6%9E%90%E9%A1%B5">【D-04】对比分析页</h3>
+<h4 id="%E6%94%AF%E6%8C%81%E7%9A%84%E5%AF%B9%E6%AF%94%E7%BB%B4%E5%BA%A6">支持的对比维度</h4>
+<table>
+<thead>
+<tr>
+<th>对比类型</th>
+<th>操作说明</th>
+<th>典型场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>时间对比</strong></td>
+<td>选择两个时间段对比</td>
+<td>本周 vs 上周、本月 vs 上月</td>
+</tr>
+<tr>
+<td><strong>同比对比</strong></td>
+<td>自动匹配去年同期</td>
+<td>今年2月 vs 去年2月</td>
+</tr>
+<tr>
+<td><strong>区域对比</strong></td>
+<td>选择多个区域横向对比</td>
+<td>淘气堡 vs 电玩区 vs 简餐区</td>
+</tr>
+<tr>
+<td><strong>活动对比</strong></td>
+<td>活动期间 vs 活动前基线</td>
+<td>亲子嘉年华期间 vs 活动前14天</td>
+</tr>
+<tr>
+<td><strong>自定义对比</strong></td>
+<td>任选两组数据对比</td>
+<td>工作日 vs 周末</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E5%AF%B9%E6%AF%94%E7%BB%93%E6%9E%9C%E5%B1%95%E7%A4%BA">对比结果展示</h4>
+<pre class="hljs"><code><div>┌──────────────────────────────────────────────────────────┐
+│  对比分析                                                 │
+│  对比模式: [时间对比 ▼]                                    │
+│  时段A: [2026-02-01] ~ [2026-02-07]  (上周)               │
+│  时段B: [2026-02-08] ~ [2026-02-14]  (本周)               │
+│  区域:  [全部 ▼]                                          │
+├──────────────────────────────────────────────────────────┤
+│                                                          │
+│  ┌─────────────── 对比汇总卡片 ────────────────────────┐  │
+│  │  指标     │  时段A    │  时段B    │  变化   │ 趋势   │  │
+│  │  总营收   │  ¥62,000  │  ¥68,500  │  +10.5% │  ↑    │  │
+│  │  日均营收 │  ¥8,857   │  ¥9,786   │  +10.5% │  ↑    │  │
+│  │  总客流   │  2,100    │  2,350    │  +11.9% │  ↑    │  │
+│  │  客单价   │  ¥29.52   │  ¥29.15   │  -1.3%  │  ↓    │  │
+│  └──────────────────────────────────────────────────────┘  │
+│                                                          │
+│  ┌─── 各区域对比 ───────────────────────────────────────┐  │
+│  │          [分组柱状图]                                  │  │
+│  │          时段A(蓝色) vs 时段B(橙色)                     │  │
+│  │          按区域分组                                    │  │
+│  └──────────────────────────────────────────────────────┘  │
+│                                                          │
+│  ┌─── 每日趋势叠加 ─────────────────────────────────────┐  │
+│  │          [双折线图]                                    │  │
+│  │          时段A(虚线) vs 时段B(实线)                     │  │
+│  └──────────────────────────────────────────────────────┘  │
+│                                                          │
+│                              [导出报告]  [生成AI分析]      │
+└──────────────────────────────────────────────────────────┘
+</div></code></pre>
+<hr>
+<h3 id="d-05%E6%95%B0%E6%8D%AE%E5%BD%95%E5%85%A5%E9%A1%B5">【D-05】数据录入页</h3>
+<h4 id="%E5%BD%95%E5%85%A5%E6%96%B9%E5%BC%8F">录入方式</h4>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>说明</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>POS对接（自动）</strong></td>
+<td>与收银系统API对接，数据自动同步</td>
+<td>首选方案，已有POS系统时</td>
+</tr>
+<tr>
+<td><strong>手工录入</strong></td>
+<td>负责人通过表单逐条录入</td>
+<td>POS未对接、数据修正时</td>
+</tr>
+<tr>
+<td><strong>批量导入</strong></td>
+<td>上传Excel模板批量导入</td>
+<td>历史数据补录</td>
+</tr>
+<tr>
+<td><strong>扫码录入</strong></td>
+<td>移动端扫描小票快速录入</td>
+<td>移动场景快速录入</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E6%89%8B%E5%B7%A5%E5%BD%95%E5%85%A5%E8%A1%A8%E5%8D%95">手工录入表单</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必填</th>
+<th>校验规则</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>区域</td>
+<td>下拉选择</td>
+<td>是</td>
+<td>负责人只能选自己管辖的区域</td>
+<td>自动带出当前负责人区域</td>
+</tr>
+<tr>
+<td>品类</td>
+<td>级联选择</td>
+<td>是</td>
+<td>随区域联动可选品类</td>
+<td>支持多级选择</td>
+</tr>
+<tr>
+<td>金额</td>
+<td>数字输入</td>
+<td>是</td>
+<td>&gt; 0，保留2位小数</td>
+<td>单笔金额</td>
+</tr>
+<tr>
+<td>数量</td>
+<td>数字输入</td>
+<td>否</td>
+<td>≥ 1 的整数</td>
+<td>默认1</td>
+</tr>
+<tr>
+<td>时间</td>
+<td>日期时间</td>
+<td>是</td>
+<td>不能早于昨日、不能晚于当前</td>
+<td>默认当前时间</td>
+</tr>
+<tr>
+<td>备注</td>
+<td>文本</td>
+<td>否</td>
+<td>≤ 200字</td>
+<td>特殊说明</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E6%95%B0%E6%8D%AE%E4%BF%AE%E6%AD%A3%E8%A7%84%E5%88%99">数据修正规则</h4>
+<ul>
+<li>当日数据可直接修改，保留修改记录</li>
+<li>隔日数据需提交修正申请，总部审批后生效</li>
+<li>所有修改留有审计日志：修改人、修改时间、修改前值、修改后值</li>
+</ul>
+<hr>
+<h3 id="d-06%E6%8A%A5%E8%A1%A8%E5%AF%BC%E5%87%BA%E9%A1%B5">【D-06】报表导出页</h3>
+<h4 id="%E6%8A%A5%E8%A1%A8%E6%A8%A1%E6%9D%BF">报表模板</h4>
+<table>
+<thead>
+<tr>
+<th>报表名称</th>
+<th>内容</th>
+<th>格式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>日营收报表</td>
+<td>指定日期各区域、各品类营收明细</td>
+<td>Excel / PDF</td>
+</tr>
+<tr>
+<td>周营收汇总</td>
+<td>指定周各天汇总 + 环比</td>
+<td>Excel / PDF</td>
+</tr>
+<tr>
+<td>月度经营报告</td>
+<td>月汇总 + 同比 + 区域分析 + 图表</td>
+<td>PDF</td>
+</tr>
+<tr>
+<td>自定义报表</td>
+<td>用户选择时间范围、区域、指标</td>
+<td>Excel</td>
+</tr>
+<tr>
+<td>活动效果报表</td>
+<td>指定活动期间数据对比</td>
+<td>PDF</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="14-%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86%E6%96%B9%E6%A1%88">1.4 数据采集方案</h2>
+<h3 id="pos%E7%B3%BB%E7%BB%9F%E5%AF%B9%E6%8E%A5">POS系统对接</h3>
+<pre class="hljs"><code><div>┌──────────┐    API/Webhook     ┌──────────────┐
+│  POS系统  │ ──────────────→  │   数据网关     │
+│ (收银机)  │  每笔交易实时推送   │  数据清洗&amp;校验  │
+└──────────┘                   └──────┬───────┘
+                                      │
+                                      ▼
+                               ┌──────────────┐
+                               │  revenue_records │
+                               │  (营收记录表)     │
+                               └──────┬───────┘
+                                      │ 定时聚合(每5分钟)
+                                      ▼
+                               ┌──────────────┐
+                               │  revenue_daily  │
+                               │  (日汇总表)      │
+                               └──────────────┘
+</div></code></pre>
+<h3 id="%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5%E7%AD%96%E7%95%A5">数据同步策略</h3>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>策略</th>
+<th>延迟</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POS实时推送</td>
+<td>每笔交易Webhook推送，写入明细表</td>
+<td>&lt; 10秒</td>
+</tr>
+<tr>
+<td>看板刷新</td>
+<td>每5分钟从明细表聚合到缓存</td>
+<td>≤ 5分钟</td>
+</tr>
+<tr>
+<td>日汇总</td>
+<td>每日凌晨1:00自动汇总前日数据</td>
+<td>T+1</td>
+</tr>
+<tr>
+<td>手工录入</td>
+<td>录入后即时入库</td>
+<td>即时</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="15-%E5%85%B3%E9%94%AE%E4%B8%9A%E5%8A%A1%E8%A7%84%E5%88%99">1.5 关键业务规则</h2>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>规则</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BR-D01</td>
+<td>营业日定义</td>
+<td>每日营业时间 09:00-22:00，超过22:00的交易计入次日</td>
+</tr>
+<tr>
+<td>BR-D02</td>
+<td>退款处理</td>
+<td>退款金额从当日营收中扣除，退款记录独立标记</td>
+</tr>
+<tr>
+<td>BR-D03</td>
+<td>跨区消费</td>
+<td>如套票涉及多区域，按预设比例分摊到各区域</td>
+</tr>
+<tr>
+<td>BR-D04</td>
+<td>零营收预警</td>
+<td>营业时间内某区域超过2小时无数据，触发异常提醒</td>
+</tr>
+<tr>
+<td>BR-D05</td>
+<td>数据可见范围</td>
+<td>区域负责人只能看到本区域数据，总部可看全部</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<hr>
+<h1 id="%E6%A8%A1%E5%9D%97%E4%BA%8C%E4%BB%BB%E5%8A%A1%E6%B4%BE%E5%8F%91%E4%B8%8E%E8%B7%9F%E8%B8%AA%E4%B8%AD%E5%BF%83">模块二：任务派发与跟踪中心</h1>
+<blockquote>
+<p>系统的「手臂」—— 让决策高效落地，替代店长的执行调度能力</p>
+</blockquote>
+<h2 id="21-%E6%A8%A1%E5%9D%97%E6%A6%82%E8%BF%B0">2.1 模块概述</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>模块定位</strong></td>
+<td>总部→区域负责人的闭环任务管理工具，实现决策快速落地</td>
+</tr>
+<tr>
+<td><strong>核心价值</strong></td>
+<td>替代店长&quot;下达指令+盯执行&quot;的能力，去店长化的核心模块</td>
+</tr>
+<tr>
+<td><strong>使用角色</strong></td>
+<td>总部管理员（创建/派发）、区域负责人（接收/执行/反馈）、系统（自动任务）</td>
+</tr>
+<tr>
+<td><strong>优先级</strong></td>
+<td>P0 — 去店长化的关键支撑</td>
+</tr>
+</tbody>
+</table>
+<h2 id="22-%E9%A1%B5%E9%9D%A2%E6%B8%85%E5%8D%95">2.2 页面清单</h2>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>页面名称</th>
+<th>说明</th>
+<th>终端</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T-01</td>
+<td>任务看板（总部视角）</td>
+<td>全局任务总览，按状态/区域/类型筛选</td>
+<td>PC</td>
+</tr>
+<tr>
+<td>T-02</td>
+<td>任务创建页</td>
+<td>创建并派发新任务</td>
+<td>PC / 移动端</td>
+</tr>
+<tr>
+<td>T-03</td>
+<td>任务详情页</td>
+<td>单个任务的完整信息和跟踪记录</td>
+<td>PC / 移动端</td>
+</tr>
+<tr>
+<td>T-04</td>
+<td>我的任务（负责人视角）</td>
+<td>负责人查看自己的待办和进行中任务</td>
+<td>移动端为主</td>
+</tr>
+<tr>
+<td>T-05</td>
+<td>任务反馈页</td>
+<td>负责人提交执行进度和反馈</td>
+<td>移动端为主</td>
+</tr>
+<tr>
+<td>T-06</td>
+<td>工作日志页</td>
+<td>负责人每日/定期工作记录</td>
+<td>移动端为主</td>
+</tr>
+<tr>
+<td>T-07</td>
+<td>任务统计页</td>
+<td>任务完成率、响应速度等统计</td>
+<td>PC</td>
+</tr>
+</tbody>
+</table>
+<h2 id="23-%E9%A1%B5%E9%9D%A2%E8%AF%A6%E7%BB%86%E8%AE%BE%E8%AE%A1">2.3 页面详细设计</h2>
+<h3 id="t-01%E4%BB%BB%E5%8A%A1%E7%9C%8B%E6%9D%BF%E6%80%BB%E9%83%A8%E8%A7%86%E8%A7%92">【T-01】任务看板（总部视角）</h3>
+<h4 id="%E7%9C%8B%E6%9D%BF%E5%B8%83%E5%B1%80--%E6%8C%89%E7%8A%B6%E6%80%81%E5%88%86%E6%A0%8F">看板布局 — 按状态分栏</h4>
+<pre class="hljs"><code><div>┌──────────────────────────────────────────────────────────────────┐
+│  任务看板          筛选: [全部区域▼] [全部类型▼] [全部优先级▼]       │
+│                   视图: [看板] [列表] [日历]     [+ 创建任务]       │
+├───────────┬───────────┬───────────┬───────────┬──────────────────┤
+│  待接收(3)  │ 执行中(5)  │ 待验证(2)  │ 已完成(12) │ 已逾期(1)         │
+│           │           │           │           │                  │
+│ ┌───────┐ │ ┌───────┐ │ ┌───────┐ │ ┌───────┐ │ ┌───────┐        │
+│ │🔴 紧急  │ │ │🟡 普通  │ │ │🟢 普通  │ │ │✅ 完成  │ │ │🔴 逾期  │        │
+│ │电玩区设 │ │ │淘气堡安 │ │ │简餐区新 │ │ │设备巡检 │ │ │xx任务   │        │
+│ │备故障排 │ │ │全检查   │ │ │菜品上架 │ │ │        │ │ │逾期2天  │        │
+│ │查       │ │ │        │ │ │        │ │ │        │ │ │        │        │
+│ │负责人:张│ │ │负责人:李│ │ │负责人:王│ │ │负责人:李│ │ │负责人:张│        │
+│ │截止:2.13│ │ │截止:2.15│ │ │截止:2.14│ │ │完成:2.12│ │ │截止:2.10│        │
+│ └───────┘ │ └───────┘ │ └───────┘ │ └───────┘ │ └───────┘        │
+│           │           │           │           │                  │
+│ ┌───────┐ │ ┌───────┐ │ ┌───────┐ │           │                  │
+│ │...    │ │ │...    │ │ │...    │ │           │                  │
+│ └───────┘ │ └───────┘ │ └───────┘ │           │                  │
+└───────────┴───────────┴───────────┴───────────┴──────────────────┘
+</div></code></pre>
+<h4 id="%E7%AD%9B%E9%80%89%E6%9D%A1%E4%BB%B6">筛选条件</h4>
+<table>
+<thead>
+<tr>
+<th>筛选项</th>
+<th>选项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>区域</td>
+<td>全部 / 简餐区 / 电玩区 / 淘气堡</td>
+<td>按区域筛选</td>
+</tr>
+<tr>
+<td>任务类型</td>
+<td>全部 / 日常 / 活动 / 整改 / 临时</td>
+<td>按类型筛选</td>
+</tr>
+<tr>
+<td>优先级</td>
+<td>全部 / 紧急 / 高 / 普通 / 低</td>
+<td>按优先级筛选</td>
+</tr>
+<tr>
+<td>负责人</td>
+<td>全部 / 指定负责人</td>
+<td>按执行人筛选</td>
+</tr>
+<tr>
+<td>时间范围</td>
+<td>今日 / 本周 / 本月 / 自定义</td>
+<td>按创建时间筛选</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E8%A7%86%E5%9B%BE%E6%A8%A1%E5%BC%8F">视图模式</h4>
+<table>
+<thead>
+<tr>
+<th>视图</th>
+<th>说明</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>看板视图</strong></td>
+<td>按状态分栏，卡片式展示，支持拖拽</td>
+<td>总部日常管理</td>
+</tr>
+<tr>
+<td><strong>列表视图</strong></td>
+<td>表格形式，支持排序和批量操作</td>
+<td>批量处理任务</td>
+</tr>
+<tr>
+<td><strong>日历视图</strong></td>
+<td>按截止日期展示在日历上</td>
+<td>查看时间安排</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="t-02%E4%BB%BB%E5%8A%A1%E5%88%9B%E5%BB%BA%E9%A1%B5">【T-02】任务创建页</h3>
+<h4 id="%E8%A1%A8%E5%8D%95%E5%AD%97%E6%AE%B5">表单字段</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必填</th>
+<th>校验规则</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>任务标题</td>
+<td>文本</td>
+<td>是</td>
+<td>2-50个字符</td>
+<td>简明扼要的标题</td>
+</tr>
+<tr>
+<td>任务类型</td>
+<td>单选</td>
+<td>是</td>
+<td>日常/活动/整改/临时</td>
+<td>不同类型有不同流转规则</td>
+</tr>
+<tr>
+<td>优先级</td>
+<td>单选</td>
+<td>是</td>
+<td>紧急/高/普通/低</td>
+<td>影响通知方式和展示排序</td>
+</tr>
+<tr>
+<td>关联区域</td>
+<td>下拉单选</td>
+<td>是</td>
+<td>系统中已有的区域</td>
+<td>任务归属区域</td>
+</tr>
+<tr>
+<td>指派负责人</td>
+<td>下拉单选</td>
+<td>是</td>
+<td>选择区域后自动带出可选负责人</td>
+<td>执行人</td>
+</tr>
+<tr>
+<td>截止时间</td>
+<td>日期时间</td>
+<td>是</td>
+<td>必须晚于当前时间</td>
+<td>—</td>
+</tr>
+<tr>
+<td>任务描述</td>
+<td>富文本</td>
+<td>是</td>
+<td>≤ 2000字</td>
+<td>详细说明任务要求</td>
+</tr>
+<tr>
+<td>执行要求</td>
+<td>清单列表</td>
+<td>否</td>
+<td>每条 ≤ 200字</td>
+<td>可逐条列出要点</td>
+</tr>
+<tr>
+<td>关联活动</td>
+<td>下拉选择</td>
+<td>否</td>
+<td>当前进行中或筹备中的活动</td>
+<td>活动任务必选</td>
+</tr>
+<tr>
+<td>附件</td>
+<td>文件上传</td>
+<td>否</td>
+<td>图片/PDF/Excel，单文件 ≤ 10MB</td>
+<td>物料模板、参考资料等</td>
+</tr>
+<tr>
+<td>考核权重</td>
+<td>数字</td>
+<td>否</td>
+<td>0-100，默认10</td>
+<td>用于负责人绩效计算</td>
+</tr>
+<tr>
+<td>是否需要数据验证</td>
+<td>开关</td>
+<td>否</td>
+<td>默认关闭</td>
+<td>开启后，完成时系统自动对比关联数据变化</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E4%BB%BB%E5%8A%A1%E7%B1%BB%E5%9E%8B%E4%B8%93%E5%B1%9E%E5%AD%97%E6%AE%B5">任务类型专属字段</h4>
+<table>
+<thead>
+<tr>
+<th>任务类型</th>
+<th>额外字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>日常任务</strong></td>
+<td>重复规则（每日/每周/自定义）</td>
+<td>支持设置循环任务</td>
+</tr>
+<tr>
+<td><strong>活动任务</strong></td>
+<td>关联活动（必选）、活动阶段节点</td>
+<td>绑定活动，分阶段检查</td>
+</tr>
+<tr>
+<td><strong>整改任务</strong></td>
+<td>问题来源（AI预警/人工发现）、预期恢复指标</td>
+<td>关联异常数据</td>
+</tr>
+<tr>
+<td><strong>临时任务</strong></td>
+<td>紧急程度说明</td>
+<td>突发情况处理</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E6%B4%BE%E5%8F%91%E6%B5%81%E7%A8%8B">派发流程</h4>
+<pre class="hljs"><code><div>总部填写任务表单
+        │
+        ▼
+   ┌─────────┐
+   │ 确认派发？ │
+   └────┬────┘
+        │ 确认
+        ▼
+  系统创建任务记录
+        │
+        ├──→ 消息推送给指定负责人（企微/钉钉/App）
+        │     通知内容：任务标题+类型+优先级+截止时间
+        │
+        ├──→ 任务进入&quot;待接收&quot;状态
+        │
+        └──→ 如果是紧急任务，额外发送短信通知
+</div></code></pre>
+<hr>
+<h3 id="t-03%E4%BB%BB%E5%8A%A1%E8%AF%A6%E6%83%85%E9%A1%B5">【T-03】任务详情页</h3>
+<pre class="hljs"><code><div>┌──────────────────────────────────────────────────────────┐
+│  ← 返回    任务详情                    状态: [执行中 🟡]    │
+├──────────────────────────────────────────────────────────┤
+│                                                          │
+│  任务标题：淘气堡&quot;亲子嘉年华&quot;活动执行                         │
+│  任务类型：活动任务      优先级：高                           │
+│  创建人：总部-admin      创建时间：2026-02-13 09:00           │
+│  负责人：李xx（淘气堡）   截止时间：2026-02-25 22:00          │
+│  关联活动：亲子嘉年华（2.15-2.25）                           │
+│                                                          │
+│  ┌──── 任务描述 ──────────────────────────────────────┐   │
+│  │ 负责淘气堡区&quot;亲子嘉年华&quot;活动的全程执行，包括：          │   │
+│  │ 1. 2月14日前完成场地布置和物料准备                      │   │
+│  │ 2. 2月15日10:00正式启动活动                           │   │
+│  │ 3. 活动期间每日统计参与人数和异常情况                    │   │
+│  │ 4. 2月25日活动结束后提交总结报告                       │   │
+│  └───────────────────────────────────────────────────┘   │
+│                                                          │
+│  ┌──── 执行要求清单 ──────────────────────────────────┐   │
+│  │ ☑ 场地布置（2.14前）          已完成 2.14 15:30       │   │
+│  │ ☑ 物料到位检查（2.14前）       已完成 2.14 16:00       │   │
+│  │ ☐ 每日参与人数统计            进行中                   │   │
+│  │ ☐ 活动总结报告（2.25后）       待开始                   │   │
+│  └───────────────────────────────────────────────────┘   │
+│                                                          │
+│  ┌──── 执行反馈记录（时间线） ─────────────────────────┐   │
+│  │                                                     │   │
+│  │  📌 2026-02-15 10:15  李xx                           │   │
+│  │  活动已正式启动，上午客流不错，预计超出预期              │   │
+│  │  [图片1] [图片2]                                     │   │
+│  │                                                     │   │
+│  │  📌 2026-02-14 16:00  李xx                           │   │
+│  │  场地布置和物料全部就绪，附照片确认                      │   │
+│  │  [图片1] [图片2] [图片3]                              │   │
+│  │                                                     │   │
+│  │  📌 2026-02-13 09:30  李xx                           │   │
+│  │  已收到任务，明天开始布置场地                           │   │
+│  │                                                     │   │
+│  └───────────────────────────────────────────────────┘   │
+│                                                          │
+│  ┌──── 关联数据变化 ──────────────────────────────────┐   │
+│  │  活动前7日均值: ¥4,920/日                             │   │
+│  │  活动期间均值:  ¥6,000/日  (+22.0%)                   │   │
+│  │  [查看数据趋势图]                                     │   │
+│  └───────────────────────────────────────────────────┘   │
+│                                                          │
+│  操作: [添加反馈] [标记完成] [转派他人] [催办]              │
+└──────────────────────────────────────────────────────────┘
+</div></code></pre>
+<hr>
+<h3 id="t-04%E6%88%91%E7%9A%84%E4%BB%BB%E5%8A%A1%E8%B4%9F%E8%B4%A3%E4%BA%BA%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%A7%86%E8%A7%92">【T-04】我的任务（负责人移动端视角）</h3>
+<pre class="hljs"><code><div>┌────────────────────────────┐
+│  我的任务          🔔 3     │
+├────────────────────────────┤
+│  [待接收(2)] [执行中(3)]    │
+│  [待验证(1)] [已完成]       │
+├────────────────────────────┤
+│                            │
+│  ⏰ 今日截止                │
+│  ┌────────────────────┐    │
+│  │ 🔴 设备巡检日报        │    │
+│  │ 类型:日常 截止:今日22:00│    │
+│  │ [去反馈]              │    │
+│  └────────────────────┘    │
+│                            │
+│  📋 进行中                  │
+│  ┌────────────────────┐    │
+│  │ 🟡 亲子嘉年华活动执行  │    │
+│  │ 类型:活动 截止:2.25    │    │
+│  │ 进度: 2/4 节点已完成   │    │
+│  │ [去反馈]              │    │
+│  └────────────────────┘    │
+│  ┌────────────────────┐    │
+│  │ 🟡 新品试推广         │    │
+│  │ 类型:临时 截止:2.16    │    │
+│  │ [去反馈]              │    │
+│  └────────────────────┘    │
+│                            │
+│  📨 待接收                  │
+│  ┌────────────────────┐    │
+│  │ 🔵 周末加场安排       │    │
+│  │ 总部派发 2026-02-12   │    │
+│  │ [接收] [拒绝并说明]   │    │
+│  └────────────────────┘    │
+│                            │
+├────────────────────────────┤
+│  [📊数据] [📋任务] [📝日志] [👤我] │
+└────────────────────────────┘
+</div></code></pre>
+<hr>
+<h3 id="t-05%E4%BB%BB%E5%8A%A1%E5%8F%8D%E9%A6%88%E9%A1%B5">【T-05】任务反馈页</h3>
+<h4 id="%E5%8F%8D%E9%A6%88%E8%A1%A8%E5%8D%95">反馈表单</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>反馈内容</td>
+<td>文本</td>
+<td>是</td>
+<td>执行情况说明，≤ 500字</td>
+</tr>
+<tr>
+<td>图片/视频</td>
+<td>文件上传</td>
+<td>否</td>
+<td>现场照片、执行证据，最多9张</td>
+</tr>
+<tr>
+<td>执行要求完成勾选</td>
+<td>复选框</td>
+<td>否</td>
+<td>勾选已完成的要求节点</td>
+</tr>
+<tr>
+<td>遇到的问题</td>
+<td>文本</td>
+<td>否</td>
+<td>困难或需要总部支持的事项</td>
+</tr>
+<tr>
+<td>申请完成</td>
+<td>开关</td>
+<td>否</td>
+<td>开启表示任务已全部执行完毕</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E5%8F%8D%E9%A6%88%E8%A7%A6%E5%8F%91%E8%A7%84%E5%88%99">反馈触发规则</h4>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>系统行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>负责人提交反馈</td>
+<td>记录入库，推送通知给总部（非紧急不弹窗，汇总展示）</td>
+</tr>
+<tr>
+<td>负责人勾选节点完成</td>
+<td>节点状态变更，总部看板实时更新</td>
+</tr>
+<tr>
+<td>负责人申请完成</td>
+<td>任务状态变为&quot;待验证&quot;，总部收到验证通知</td>
+</tr>
+<tr>
+<td>总部验证通过</td>
+<td>任务状态变为&quot;已完成&quot;，触发关联数据效果计算</td>
+</tr>
+<tr>
+<td>总部验证不通过</td>
+<td>任务退回&quot;执行中&quot;，附退回原因，推送给负责人</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="t-06%E5%B7%A5%E4%BD%9C%E6%97%A5%E5%BF%97%E9%A1%B5">【T-06】工作日志页</h3>
+<p>负责人每日/定期提交工作日志，结构化记录工作内容。</p>
+<h4 id="%E6%97%A5%E5%BF%97%E6%A8%A1%E6%9D%BF">日志模板</h4>
+<pre class="hljs"><code><div>┌────────────────────────────┐
+│  📝 提交工作日志             │
+│  日期: 2026-02-12           │
+├────────────────────────────┤
+│                            │
+│  今日完成工作:               │
+│  ┌────────────────────┐    │
+│  │ [文本输入区域]         │    │
+│  │ 1. 上午完成设备巡检    │    │
+│  │ 2. 下午处理客诉2起     │    │
+│  │ 3. 活动物料已到位确认  │    │
+│  └────────────────────┘    │
+│                            │
+│  明日计划:                   │
+│  ┌────────────────────┐    │
+│  │ [文本输入区域]         │    │
+│  └────────────────────┘    │
+│                            │
+│  问题与建议:                 │
+│  ┌────────────────────┐    │
+│  │ [文本输入区域]         │    │
+│  └────────────────────┘    │
+│                            │
+│  现场照片:                   │
+│  [+添加照片] (最多9张)       │
+│                            │
+│  关联任务: (可选)            │
+│  [选择关联任务 ▼]            │
+│                            │
+│          [提交日志]          │
+└────────────────────────────┘
+</div></code></pre>
+<h4 id="%E6%97%A5%E5%BF%97%E6%B1%87%E6%80%BB%E8%A7%84%E5%88%99">日志汇总规则</h4>
+<ul>
+<li>总部后台可按人员、区域、日期筛选查看所有日志</li>
+<li>AI 会读取日志内容，纳入每日/每周汇总报告</li>
+<li>连续3天未提交日志的负责人，系统自动提醒</li>
+</ul>
+<hr>
+<h3 id="t-07%E4%BB%BB%E5%8A%A1%E7%BB%9F%E8%AE%A1%E9%A1%B5">【T-07】任务统计页</h3>
+<h4 id="%E7%BB%9F%E8%AE%A1%E7%BB%B4%E5%BA%A6">统计维度</h4>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>指标</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>按人员</strong></td>
+<td>任务完成率、平均响应时间、逾期率</td>
+<td>负责人绩效参考</td>
+</tr>
+<tr>
+<td><strong>按区域</strong></td>
+<td>区域任务总量、完成率、未完成清单</td>
+<td>区域执行力评估</td>
+</tr>
+<tr>
+<td><strong>按类型</strong></td>
+<td>各类型任务完成率、平均完成时长</td>
+<td>优化任务分配</td>
+</tr>
+<tr>
+<td><strong>按时间</strong></td>
+<td>每日/每周任务量、完成量趋势</td>
+<td>工作量监控</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E5%85%B3%E9%94%AE%E6%8C%87%E6%A0%87">关键指标</h4>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>计算公式</th>
+<th>目标值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>任务完成率</td>
+<td>已完成数 / 总任务数 × 100%</td>
+<td>≥ 90%</td>
+</tr>
+<tr>
+<td>平均响应时间</td>
+<td>AVG(接收时间 - 派发时间)</td>
+<td>≤ 2小时</td>
+</tr>
+<tr>
+<td>平均完成时长</td>
+<td>AVG(完成时间 - 创建时间)</td>
+<td>因类型而异</td>
+</tr>
+<tr>
+<td>逾期率</td>
+<td>逾期数 / 总任务数 × 100%</td>
+<td>≤ 5%</td>
+</tr>
+<tr>
+<td>一次通过率</td>
+<td>一次验证通过数 / 提交验证数 × 100%</td>
+<td>≥ 85%</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="24-%E4%BB%BB%E5%8A%A1%E8%87%AA%E5%8A%A8%E5%8C%96%E8%A7%84%E5%88%99">2.4 任务自动化规则</h2>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>规则名称</th>
+<th>触发条件</th>
+<th>自动操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AT-01</td>
+<td>逾期提醒</td>
+<td>距截止时间 ≤ 4小时且未完成</td>
+<td>推送提醒给负责人 + 总部</td>
+</tr>
+<tr>
+<td>AT-02</td>
+<td>逾期升级</td>
+<td>超过截止时间仍未完成</td>
+<td>标红展示，推送给总部，记入逾期统计</td>
+</tr>
+<tr>
+<td>AT-03</td>
+<td>循环任务自动创建</td>
+<td>日常任务到期后次日</td>
+<td>自动创建新一期任务并派发</td>
+</tr>
+<tr>
+<td>AT-04</td>
+<td>AI 触发整改任务</td>
+<td>AI预警模块发现异常</td>
+<td>自动创建整改任务草稿，总部确认后派发</td>
+</tr>
+<tr>
+<td>AT-05</td>
+<td>完成后数据关联</td>
+<td>任务标记完成且开启数据验证</td>
+<td>自动对比任务创建前后关联区域的数据变化</td>
+</tr>
+<tr>
+<td>AT-06</td>
+<td>日志提醒</td>
+<td>每日20:00检查当日未提交日志的负责人</td>
+<td>推送日志提交提醒</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<hr>
+<h1 id="%E6%A8%A1%E5%9D%97%E4%B8%89%E6%B4%BB%E5%8A%A8%E7%AE%A1%E7%90%86%E4%B8%8E%E6%95%88%E6%9E%9C%E8%BF%BD%E8%B8%AA%E4%B8%AD%E5%BF%83">模块三：活动管理与效果追踪中心</h1>
+<blockquote>
+<p>系统的「放大镜」—— 精准衡量每次活动的投入产出</p>
+</blockquote>
+<h2 id="31-%E6%A8%A1%E5%9D%97%E6%A6%82%E8%BF%B0">3.1 模块概述</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>模块定位</strong></td>
+<td>活动全生命周期管理 + 数据驱动的效果评估</td>
+</tr>
+<tr>
+<td><strong>核心价值</strong></td>
+<td>让每一分钱的营销投入都有据可查，指导未来活动决策</td>
+</tr>
+<tr>
+<td><strong>使用角色</strong></td>
+<td>总部管理员（创建/管理）、区域负责人（执行/反馈）、AI（自动分析）</td>
+</tr>
+<tr>
+<td><strong>优先级</strong></td>
+<td>P1 — 依赖数据中心的基础数据</td>
+</tr>
+</tbody>
+</table>
+<h2 id="32-%E9%A1%B5%E9%9D%A2%E6%B8%85%E5%8D%95">3.2 页面清单</h2>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>页面名称</th>
+<th>说明</th>
+<th>终端</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A-01</td>
+<td>活动列表页</td>
+<td>全部活动总览，按状态/区域筛选</td>
+<td>PC</td>
+</tr>
+<tr>
+<td>A-02</td>
+<td>活动创建/编辑页</td>
+<td>创建新活动，设置目标和执行计划</td>
+<td>PC</td>
+</tr>
+<tr>
+<td>A-03</td>
+<td>活动详情页</td>
+<td>单个活动的完整信息和实时效果</td>
+<td>PC / 移动端</td>
+</tr>
+<tr>
+<td>A-04</td>
+<td>活动效果看板</td>
+<td>活动期间实时数据对比和提升率</td>
+<td>PC / 大屏</td>
+</tr>
+<tr>
+<td>A-05</td>
+<td>活动复盘报告</td>
+<td>活动结束后的AI自动复盘</td>
+<td>PC</td>
+</tr>
+<tr>
+<td>A-06</td>
+<td>活动历史库</td>
+<td>历史活动知识库，为未来活动提供参考</td>
+<td>PC</td>
+</tr>
+</tbody>
+</table>
+<h2 id="33-%E9%A1%B5%E9%9D%A2%E8%AF%A6%E7%BB%86%E8%AE%BE%E8%AE%A1">3.3 页面详细设计</h2>
+<h3 id="a-01%E6%B4%BB%E5%8A%A8%E5%88%97%E8%A1%A8%E9%A1%B5">【A-01】活动列表页</h3>
+<pre class="hljs"><code><div>┌──────────────────────────────────────────────────────────┐
+│  活动管理               [+ 创建活动]                       │
+│  筛选: [全部状态▼] [全部区域▼] [时间范围▼]                   │
+├──────────────────────────────────────────────────────────┤
+│                                                          │
+│  🟢 进行中                                                │
+│  ┌──────────────────────────────────────────────────┐    │
+│  │ 🏷️ 亲子嘉年华                                      │    │
+│  │ 区域: 淘气堡  │  2.15 - 2.25  │  剩余10天           │    │
+│  │ 目标: 营收提升20%  │  当前: +22% ✅ 已达标           │    │
+│  │ 预算: ¥5,000  │  已使用: ¥3,200                     │    │
+│  │ [查看详情]  [查看效果]                                │    │
+│  └──────────────────────────────────────────────────┘    │
+│                                                          │
+│  🟡 筹备中                                                │
+│  ┌──────────────────────────────────────────────────┐    │
+│  │ 🏷️ 电玩区充值有礼                                   │    │
+│  │ 区域: 电玩区  │  计划2.20 - 3.05  │  5天后开始        │    │
+│  │ 目标: 充值金额提升30%  │  预算: ¥2,000               │    │
+│  │ 任务进度: 3/5 准备项已完成                             │    │
+│  │ [查看详情]  [编辑]                                    │    │
+│  └──────────────────────────────────────────────────┘    │
+│                                                          │
+│  ⚫ 已结束（最近3个月）                                     │
+│  ┌──────────────────────────────────────────────────┐    │
+│  │ 🏷️ 元旦特惠周          区域: 全部   1.1 - 1.7        │    │
+│  │ 结果: 营收提升15%（目标18%）  ROI: 280%              │    │
+│  │ [查看复盘报告]                                       │    │
+│  └──────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────┘
+</div></code></pre>
+<hr>
+<h3 id="a-02%E6%B4%BB%E5%8A%A8%E5%88%9B%E5%BB%BA%E7%BC%96%E8%BE%91%E9%A1%B5">【A-02】活动创建/编辑页</h3>
+<h4 id="%E8%A1%A8%E5%8D%95%E5%AD%97%E6%AE%B5--%E5%9F%BA%E6%9C%AC%E4%BF%A1%E6%81%AF">表单字段 — 基本信息</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必填</th>
+<th>校验</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>活动名称</td>
+<td>文本</td>
+<td>是</td>
+<td>2-30字</td>
+<td>活动标题</td>
+</tr>
+<tr>
+<td>活动类型</td>
+<td>单选</td>
+<td>是</td>
+<td>促销/节日/引流/品牌/其他</td>
+<td>分类管理</td>
+</tr>
+<tr>
+<td>关联区域</td>
+<td>多选</td>
+<td>是</td>
+<td>至少选1个区域</td>
+<td>活动覆盖的区域</td>
+</tr>
+<tr>
+<td>开始日期</td>
+<td>日期</td>
+<td>是</td>
+<td>≥ 今日</td>
+<td>活动启动日</td>
+</tr>
+<tr>
+<td>结束日期</td>
+<td>日期</td>
+<td>是</td>
+<td>&gt; 开始日期</td>
+<td>活动截止日</td>
+</tr>
+<tr>
+<td>活动描述</td>
+<td>富文本</td>
+<td>是</td>
+<td>≤ 3000字</td>
+<td>活动方案详细说明</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E8%A1%A8%E5%8D%95%E5%AD%97%E6%AE%B5--%E7%9B%AE%E6%A0%87%E8%AE%BE%E5%AE%9A">表单字段 — 目标设定</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主要目标指标</td>
+<td>下拉</td>
+<td>是</td>
+<td>营收提升率 / 客流提升率 / 客单价提升 / 充值金额 / 自定义</td>
+</tr>
+<tr>
+<td>目标值</td>
+<td>数字</td>
+<td>是</td>
+<td>如&quot;20&quot;代表提升20%</td>
+</tr>
+<tr>
+<td>次要目标（可选）</td>
+<td>同上</td>
+<td>否</td>
+<td>可设置多个次要指标</td>
+</tr>
+<tr>
+<td>活动预算</td>
+<td>数字</td>
+<td>是</td>
+<td>活动总预算，用于计算ROI</td>
+</tr>
+<tr>
+<td>预算明细</td>
+<td>表格</td>
+<td>否</td>
+<td>各项费用明细（物料/人力/推广等）</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E8%A1%A8%E5%8D%95%E5%AD%97%E6%AE%B5--%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92">表单字段 — 执行计划</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>准备事项清单</td>
+<td>清单</td>
+<td>是</td>
+<td>活动开始前需完成的准备工作</td>
+</tr>
+<tr>
+<td>每项指定负责人</td>
+<td>下拉</td>
+<td>是</td>
+<td>从区域负责人中选择</td>
+</tr>
+<tr>
+<td>每项截止时间</td>
+<td>日期</td>
+<td>是</td>
+<td>每项准备的截止日期</td>
+</tr>
+<tr>
+<td>活动期间执行要求</td>
+<td>清单</td>
+<td>否</td>
+<td>活动期间的日常执行要求</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E5%88%9B%E5%BB%BA%E5%90%8E%E8%87%AA%E5%8A%A8%E8%A1%8C%E4%B8%BA">创建后自动行为</h4>
+<pre class="hljs"><code><div>活动创建成功
+     │
+     ├──→ 自动计算基线数据（活动前14天的日均值作为基线）
+     │
+     ├──→ 自动创建&quot;活动准备&quot;任务，派发给相关区域负责人
+     │     每个准备事项生成一条子任务
+     │
+     ├──→ 在数据中心标记活动时间范围（用于趋势图高亮）
+     │
+     └──→ 设置定时任务：
+           · 活动开始日：状态自动变为&quot;进行中&quot;
+           · 活动期间：每日计算当日提升率
+           · 活动结束日：状态变为&quot;已结束&quot;，触发AI复盘
+           · 活动结束后7天：生成余波效应报告
+</div></code></pre>
+<hr>
+<h3 id="a-03%E6%B4%BB%E5%8A%A8%E8%AF%A6%E6%83%85%E9%A1%B5">【A-03】活动详情页</h3>
+<pre class="hljs"><code><div>┌──────────────────────────────────────────────────────────┐
+│  ← 返回    亲子嘉年华 · 活动详情       状态: 进行中 🟢      │
+├──────────────────────────────────────────────────────────┤
+│                                                          │
+│  ┌──── 基本信息 ──────────────────────────────────────┐   │
+│  │ 区域: 淘气堡  |  时间: 2.15-2.25  |  预算: ¥5,000    │   │
+│  │ 目标: 淘气堡营收提升20%                               │   │
+│  │ 已执行天数: 3/11天  |  已使用预算: ¥3,200             │   │
+│  └───────────────────────────────────────────────────┘   │
+│                                                          │
+│  ┌──── 实时效果 ──────────────────────────────────────┐   │
+│  │                                                     │   │
+│  │  ┌──────┐  ┌──────┐  ┌──────┐  ┌──────┐            │   │
+│  │  │当前提升│  │日均营收│  │日均客流│  │ 预估ROI│            │   │
+│  │  │+22% ✅│  │¥6,000│  │ 225人 │  │ 340%  │            │   │
+│  │  │目标20%│  │基线4920│  │基线185│  │       │            │   │
+│  │  └──────┘  └──────┘  └──────┘  └──────┘            │   │
+│  │                                                     │   │
+│  │  [每日数据折线图]                                      │   │
+│  │  ──── 活动期数据(实线)                                 │   │
+│  │  - - - 基线数据(虚线)                                  │   │
+│  │  ░░░░ 目标线(标记)                                     │   │
+│  │                                                     │   │
+│  └───────────────────────────────────────────────────┘   │
+│                                                          │
+│  ┌──── 准备进度 ──────────────────────────────────────┐   │
+│  │ ☑ 活动物料采购     李xx  已完成 2.13                   │   │
+│  │ ☑ 场地布置         李xx  已完成 2.14                   │   │
+│  │ ☑ 人员培训         李xx  已完成 2.14                   │   │
+│  │ ☑ 宣传海报上线     总部  已完成 2.14                   │   │
+│  │ ☐ 活动总结报告     李xx  待完成(2.26截止)              │   │
+│  └───────────────────────────────────────────────────┘   │
+│                                                          │
+│  ┌──── 关联任务 ──────────────────────────────────────┐   │
+│  │ · 亲子嘉年华活动执行 [执行中] 李xx                      │   │
+│  │ · 每日参与人数统计   [执行中] 李xx                      │   │
+│  └───────────────────────────────────────────────────┘   │
+│                                                          │
+│  操作: [编辑活动] [提前结束] [生成中期报告]                   │
+└──────────────────────────────────────────────────────────┘
+</div></code></pre>
+<hr>
+<h3 id="a-04%E6%B4%BB%E5%8A%A8%E6%95%88%E6%9E%9C%E7%9C%8B%E6%9D%BF">【A-04】活动效果看板</h3>
+<h4 id="%E6%A0%B8%E5%BF%83%E6%8C%87%E6%A0%87">核心指标</h4>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>计算公式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>提升率</strong></td>
+<td>(活动期日均 - 基线日均) / 基线日均 × 100%</td>
+<td>核心效果指标</td>
+</tr>
+<tr>
+<td><strong>目标达成率</strong></td>
+<td>当前提升率 / 目标提升率 × 100%</td>
+<td>是否达标</td>
+</tr>
+<tr>
+<td><strong>累计增量营收</strong></td>
+<td>Σ(活动每日营收 - 基线日均)</td>
+<td>活动带来的额外收入</td>
+</tr>
+<tr>
+<td><strong>预估ROI</strong></td>
+<td>(累计增量营收 - 已使用预算) / 已使用预算 × 100%</td>
+<td>投入产出比</td>
+</tr>
+<tr>
+<td><strong>日均客流增量</strong></td>
+<td>活动期日均客流 - 基线日均客流</td>
+<td>引流效果</td>
+</tr>
+<tr>
+<td><strong>客单价变化</strong></td>
+<td>活动期客单价 - 基线客单价</td>
+<td>消费深度变化</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E5%9F%BA%E7%BA%BF%E8%AE%A1%E7%AE%97%E6%96%B9%E6%B3%95">基线计算方法</h4>
+<table>
+<thead>
+<tr>
+<th>基线类型</th>
+<th>计算方式</th>
+<th>使用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>默认基线</strong></td>
+<td>活动前14天的日均值</td>
+<td>通用</td>
+</tr>
+<tr>
+<td><strong>同类型日基线</strong></td>
+<td>活动前4周同一星期几的均值</td>
+<td>受周末效应影响大时</td>
+</tr>
+<tr>
+<td><strong>去年同期</strong></td>
+<td>去年同一时段日均值</td>
+<td>有去年数据时</td>
+</tr>
+<tr>
+<td><strong>自定义基线</strong></td>
+<td>用户手动指定参照时段</td>
+<td>特殊情况</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="a-05%E6%B4%BB%E5%8A%A8%E5%A4%8D%E7%9B%98%E6%8A%A5%E5%91%8Aai%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90">【A-05】活动复盘报告（AI自动生成）</h3>
+<p>活动结束后，AI 自动生成以下报告：</p>
+<pre class="hljs"><code><div>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📈 活动复盘报告 —— 亲子嘉年华
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【活动概况】
+· 活动名称：亲子嘉年华
+· 活动区域：淘气堡
+· 活动时间：2026年2月15日 - 2月25日（共11天）
+· 活动预算：¥5,000（实际使用 ¥4,800）
+
+【效果总结】
+┌───────────┬─────────┬─────────┬──────────┐
+│ 指标       │ 基线     │ 活动期    │ 变化      │
+├───────────┼─────────┼─────────┼──────────┤
+│ 日均营收   │ ¥4,920  │ ¥6,100   │ +24.0%   │
+│ 日均客流   │ 185人   │ 232人    │ +25.4%   │
+│ 客单价     │ ¥26.59  │ ¥26.29   │ -1.1%    │
+│ 累计增量   │ -       │ ¥12,980  │ -        │
+│ ROI       │ -       │ 170.4%  │ -        │
+└───────────┴─────────┴─────────┴──────────┘
+
+【目标达成】
+· 主要目标：营收提升20% → 实际提升24.0% ✅ 超额达成
+· 目标达成率：120%
+
+【每日表现】
+· 最高日：2月22日(周六) ¥8,200 (+66.7%)
+· 最低日：2月18日(周二) ¥5,100 (+3.7%)
+· 趋势：工作日效果一般(+5~15%)，周末效果显著(+40~65%)
+
+【AI 分析洞察】
+1. 活动效果集中在周末：工作日提升有限，建议后续活动
+   重点投放在周末，或设计工作日专属引流方案
+2. 客单价略有下降：说明新增客流以低消费群体为主，
+   建议配套设计消费升级套餐（如捆绑简餐）
+3. 客流提升率(+25.4%)高于营收提升率(+24.0%)：
+   说明引流效果好但转化率有优化空间
+
+【改进建议】
+· 下次类似活动可缩短至7天（1个完整周末+工作日），节省预算
+· 建议增加&quot;满额送&quot;机制，提升客单价
+· 工作日可考虑&quot;错峰优惠&quot;吸引非高峰客群
+
+【余波效应】（活动结束后7天观察）
+· 结束后第1-3天：淘气堡营收仍高于基线8%
+· 结束后第4-7天：逐步回归基线水平
+· 结论：活动无显著长尾效应，为短期刺激型活动
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</div></code></pre>
+<hr>
+<h3 id="a-06%E6%B4%BB%E5%8A%A8%E5%8E%86%E5%8F%B2%E5%BA%93">【A-06】活动历史库</h3>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>历史活动列表</td>
+<td>按时间倒序展示所有已结束活动，支持搜索/筛选</td>
+</tr>
+<tr>
+<td>活动效果排名</td>
+<td>按ROI、提升率、增量营收排名，找到最有效的活动类型</td>
+</tr>
+<tr>
+<td>同类型对比</td>
+<td>同类型活动效果趋势，观察活动效果是否递减</td>
+</tr>
+<tr>
+<td>AI 活动建议</td>
+<td>基于历史数据，AI推荐下一步适合开展的活动类型和时机</td>
+</tr>
+<tr>
+<td>复用模板</td>
+<td>从历史活动一键复制为新活动模板</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="34-%E6%B4%BB%E5%8A%A8%E4%B8%8E%E5%85%B6%E4%BB%96%E6%A8%A1%E5%9D%97%E8%81%94%E5%8A%A8">3.4 活动与其他模块联动</h2>
+<pre class="hljs"><code><div>┌──────────┐     创建活动自动生成任务     ┌──────────┐
+│ 活动中心  │ ─────────────────────→ │ 任务中心  │
+│          │                        │          │
+│          │     读取区域经营数据      │          │
+│          │ ←──────────────────── │          │
+│          │     计算基线和提升率      │          │
+│          │ ←──────────────────── │ 数据中心  │
+│          │                        │          │
+│          │     活动结束触发AI复盘    │          │
+│          │ ─────────────────────→ │ AI中心   │
+│          │                        │          │
+│          │     AI推荐活动方案       │          │
+│          │ ←──────────────────── │ AI中心   │
+└──────────┘                        └──────────┘
+</div></code></pre>
+<hr>
+<hr>
+<h1 id="%E6%A8%A1%E5%9D%97%E5%9B%9Bai-%E5%86%B3%E7%AD%96%E8%BE%85%E5%8A%A9%E4%B8%AD%E5%BF%83">模块四：AI 决策辅助中心</h1>
+<blockquote>
+<p>系统的「大脑」—— 让数据自己说话，替代店长的经验判断</p>
+</blockquote>
+<h2 id="41-%E6%A8%A1%E5%9D%97%E6%A6%82%E8%BF%B0">4.1 模块概述</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>模块定位</strong></td>
+<td>基于大模型的智能分析引擎，自动产出报告、预警和建议</td>
+</tr>
+<tr>
+<td><strong>核心价值</strong></td>
+<td>替代店长的&quot;经验判断&quot;，让AI基于数据给出客观、可执行的运营建议</td>
+</tr>
+<tr>
+<td><strong>使用角色</strong></td>
+<td>总部管理员（查看报告/建议）、区域负责人（接收预警/建议）、系统（自动触发）</td>
+</tr>
+<tr>
+<td><strong>优先级</strong></td>
+<td>P1 — 系统的差异化价值所在</td>
+</tr>
+</tbody>
+</table>
+<h2 id="42-%E9%A1%B5%E9%9D%A2%E6%B8%85%E5%8D%95">4.2 页面清单</h2>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>页面名称</th>
+<th>说明</th>
+<th>终端</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AI-01</td>
+<td>AI 报告中心</td>
+<td>日报/周报/月报/区域诊断报告</td>
+<td>PC / 移动端</td>
+</tr>
+<tr>
+<td>AI-02</td>
+<td>预警中心</td>
+<td>实时预警列表和处理记录</td>
+<td>PC / 移动端</td>
+</tr>
+<tr>
+<td>AI-03</td>
+<td>策略建议页</td>
+<td>AI生成的可执行建议和执行追踪</td>
+<td>PC</td>
+</tr>
+<tr>
+<td>AI-04</td>
+<td>AI 对话助手</td>
+<td>自然语言问答，随时查询经营数据</td>
+<td>PC / 移动端</td>
+</tr>
+<tr>
+<td>AI-05</td>
+<td>趋势预测页</td>
+<td>未来7/14/30天营收预测</td>
+<td>PC</td>
+</tr>
+</tbody>
+</table>
+<h2 id="43-%E9%A1%B5%E9%9D%A2%E8%AF%A6%E7%BB%86%E8%AE%BE%E8%AE%A1">4.3 页面详细设计</h2>
+<h3 id="ai-01ai-%E6%8A%A5%E5%91%8A%E4%B8%AD%E5%BF%83">【AI-01】AI 报告中心</h3>
+<h4 id="%E6%8A%A5%E5%91%8A%E7%B1%BB%E5%9E%8B">报告类型</h4>
+<table>
+<thead>
+<tr>
+<th>报告类型</th>
+<th>生成频率</th>
+<th>生成时间</th>
+<th>推送对象</th>
+<th>内容概述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>智能日报</strong></td>
+<td>每日</td>
+<td>每日08:00前</td>
+<td>总部 + 全部负责人</td>
+<td>昨日全局概况+各区域表现+AI洞察+任务完成情况</td>
+</tr>
+<tr>
+<td><strong>智能周报</strong></td>
+<td>每周</td>
+<td>每周一09:00前</td>
+<td>总部</td>
+<td>上周汇总+周趋势+区域对比+建议+下周预测</td>
+</tr>
+<tr>
+<td><strong>智能月报</strong></td>
+<td>每月</td>
+<td>每月1日10:00前</td>
+<td>总部</td>
+<td>月度深度分析+同比+目标回顾+下月规划建议</td>
+</tr>
+<tr>
+<td><strong>区域诊断</strong></td>
+<td>按需/月度</td>
+<td>手动触发或每月15日</td>
+<td>总部 + 对应负责人</td>
+<td>单个区域的深度诊断分析</td>
+</tr>
+<tr>
+<td><strong>活动复盘</strong></td>
+<td>活动结束后</td>
+<td>活动结束次日</td>
+<td>总部 + 活动负责人</td>
+<td>活动效果全面复盘（详见活动模块）</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E6%97%A5%E6%8A%A5%E8%AF%A6%E7%BB%86%E7%BB%93%E6%9E%84">日报详细结构</h4>
+<pre class="hljs"><code><div>┌──────────────────────────────────────────────────────────┐
+│  📊 智能日报                           2026年2月12日       │
+├──────────────────────────────────────────────────────────┤
+│                                                          │
+│  ┌──── 📋 总体概况 ────────────────────────────────────┐  │
+│  │                                                     │  │
+│  │  昨日总营收: ¥10,000 (较前日 +5.2%, 较上周同日 +8.3%)  │  │
+│  │  昨日客流:   320人   (较前日 +3.8%, 较上周同日 +6.0%)  │  │
+│  │  客单价:     ¥31.25  (较前日 +1.3%, 较上周同日 +2.2%)  │  │
+│  │                                                     │  │
+│  │  本周累计:   ¥32,500 (周目标 ¥70,000 进度 46.4%)      │  │
+│  │  本月累计:   ¥98,000 (月目标 ¥300,000 进度 32.7%)     │  │
+│  │                                                     │  │
+│  └─────────────────────────────────────────────────────┘  │
+│                                                          │
+│  ┌──── 📊 各区域表现 ──────────────────────────────────┐  │
+│  │                                                     │  │
+│  │  排名 │ 区域    │ 营收    │ 占比  │ 较前日 │ 评级     │  │
+│  │  1    │ 淘气堡  │ ¥6,000 │ 60%  │ +8%   │ 🟢优秀   │  │
+│  │  2    │ 电玩区  │ ¥3,000 │ 30%  │ -2%   │ 🟡关注   │  │
+│  │  3    │ 简餐区  │ ¥1,000 │ 10%  │ +1%   │ 🟢正常   │  │
+│  │                                                     │  │
+│  │  亮点: 淘气堡在&quot;亲子嘉年华&quot;活动带动下表现突出            │  │
+│  │  关注: 电玩区连续3天环比下降                             │  │
+│  │                                                     │  │
+│  └─────────────────────────────────────────────────────┘  │
+│                                                          │
+│  ┌──── 🤖 AI 洞察与建议 ──────────────────────────────┐  │
+│  │                                                     │  │
+│  │  ⚠️ 预警 (1条)                                       │  │
+│  │  · 电玩区连续3天营收环比下降(累计-8.5%)，近7日均值       │  │
+│  │    低于30日均值12%，需重点关注。                        │  │
+│  │    → [已自动创建整改任务 #T-0089]                      │  │
+│  │                                                     │  │
+│  │  💡 建议 (2条)                                        │  │
+│  │  · 建议对电玩区设备使用率进行排查，近期XX类设备          │  │
+│  │    投币量下降明显，可能需要维护或更换                     │  │
+│  │    → [一键创建任务]                                    │  │
+│  │                                                     │  │
+│  │  · 简餐区饮品类近2周持续低迷(占比从25%降至20%)，         │  │
+│  │    建议尝试&quot;下午茶时段买一送一&quot;策略                      │  │
+│  │    → [一键创建活动]  → [一键创建任务]                   │  │
+│  │                                                     │  │
+│  │  ✅ 正面 (1条)                                        │  │
+│  │  · 淘气堡&quot;亲子嘉年华&quot;活动第3天，提升率22%，             │  │
+│  │    已超过20%目标，建议保持当前执行节奏                   │  │
+│  │                                                     │  │
+│  └─────────────────────────────────────────────────────┘  │
+│                                                          │
+│  ┌──── ✅ 任务完成情况 ────────────────────────────────┐  │
+│  │                                                     │  │
+│  │  昨日任务: 已完成 5/6 (完成率 83%)                     │  │
+│  │  · ✅ 淘气堡安全检查 - 李xx - 已完成                   │  │
+│  │  · ✅ 简餐区库存盘点 - 王xx - 已完成                   │  │
+│  │  · ✅ 活动每日数据统计 - 李xx - 已完成                  │  │
+│  │  · ✅ 电玩区卫生清洁 - 张xx - 已完成                   │  │
+│  │  · ✅ 新员工交接确认 - 王xx - 已完成                   │  │
+│  │  · ❌ 电玩区设备巡检报告 - 张xx - 未完成(已催办)        │  │
+│  │                                                     │  │
+│  │  负责人日志提交: 3/3 全部已提交 ✅                      │  │
+│  │                                                     │  │
+│  └─────────────────────────────────────────────────────┘  │
+│                                                          │
+│  ┌──── 📊 补充数据 ─────────────────────────────────────┐ │
+│  │                                                     │  │
+│  │  高峰时段: 14:00-17:00 (占全天营收52%)                │  │
+│  │  低谷时段: 09:00-11:00 (占全天营收8%)                  │  │
+│  │  热门品类TOP3: 散客票 / 亲子套票 / 充值卡               │  │
+│  │                                                     │  │
+│  └─────────────────────────────────────────────────────┘  │
+│                                                          │
+│  [导出PDF]  [分享到企微]  [查看原始数据]                     │
+└──────────────────────────────────────────────────────────┘
+</div></code></pre>
+<h4 id="%E5%91%A8%E6%8A%A5%E9%A2%9D%E5%A4%96%E5%86%85%E5%AE%B9%E5%9C%A8%E6%97%A5%E6%8A%A5%E5%9F%BA%E7%A1%80%E4%B8%8A%E5%A2%9E%E5%8A%A0">周报额外内容（在日报基础上增加）</h4>
+<table>
+<thead>
+<tr>
+<th>板块</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>周趋势分析</td>
+<td>本周每日数据走势 + 与上周对比折线图</td>
+</tr>
+<tr>
+<td>区域排名变化</td>
+<td>各区域本周排名 vs 上周排名</td>
+</tr>
+<tr>
+<td>周度目标回顾</td>
+<td>周目标达成情况（如有设定）</td>
+</tr>
+<tr>
+<td>下周预测</td>
+<td>基于历史数据的下周营收预测范围</td>
+</tr>
+<tr>
+<td>重点事项提醒</td>
+<td>下周有活动/节假日等特殊安排</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E6%9C%88%E6%8A%A5%E9%A2%9D%E5%A4%96%E5%86%85%E5%AE%B9%E5%9C%A8%E5%91%A8%E6%8A%A5%E5%9F%BA%E7%A1%80%E4%B8%8A%E5%A2%9E%E5%8A%A0">月报额外内容（在周报基础上增加）</h4>
+<table>
+<thead>
+<tr>
+<th>板块</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>月度同比分析</td>
+<td>与去年同月对比（如有数据）</td>
+</tr>
+<tr>
+<td>品类结构变化</td>
+<td>各品类占比月度变化趋势</td>
+</tr>
+<tr>
+<td>成本效益分析</td>
+<td>本月活动总投入 vs 总增量（如可获取成本数据）</td>
+</tr>
+<tr>
+<td>负责人考核汇总</td>
+<td>各负责人月度任务完成率、响应速度排名</td>
+</tr>
+<tr>
+<td>下月经营建议</td>
+<td>AI综合分析给出的下月运营方向</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="ai-02%E9%A2%84%E8%AD%A6%E4%B8%AD%E5%BF%83">【AI-02】预警中心</h3>
+<h4 id="%E9%A2%84%E8%AD%A6%E8%A7%84%E5%88%99%E9%85%8D%E7%BD%AE">预警规则配置</h4>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>预警名称</th>
+<th>监测对象</th>
+<th>触发条件</th>
+<th>严重程度</th>
+<th>自动操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>W-01</td>
+<td>营收骤降</td>
+<td>各区域日营收</td>
+<td>日营收 &lt; 近7日均值 × 70%</td>
+<td>🔴严重</td>
+<td>推送总部+负责人，创建整改任务草稿</td>
+</tr>
+<tr>
+<td>W-02</td>
+<td>连续下降</td>
+<td>各区域日营收</td>
+<td>连续3天环比下降</td>
+<td>🟡警告</td>
+<td>推送总部</td>
+</tr>
+<tr>
+<td>W-03</td>
+<td>客流异常</td>
+<td>各区域客流</td>
+<td>日客流 &lt; 近7日均值 × 60%</td>
+<td>🔴严重</td>
+<td>推送总部+负责人</td>
+</tr>
+<tr>
+<td>W-04</td>
+<td>零数据</td>
+<td>各区域</td>
+<td>营业时间内超2小时无数据</td>
+<td>🔴严重</td>
+<td>推送总部+负责人（可能是系统故障）</td>
+</tr>
+<tr>
+<td>W-05</td>
+<td>活动未达标</td>
+<td>进行中活动</td>
+<td>活动过半，提升率 &lt; 目标 × 50%</td>
+<td>🟡警告</td>
+<td>推送总部+活动负责人</td>
+</tr>
+<tr>
+<td>W-06</td>
+<td>任务逾期</td>
+<td>所有任务</td>
+<td>超过截止时间未完成</td>
+<td>🟡警告</td>
+<td>推送总部</td>
+</tr>
+<tr>
+<td>W-07</td>
+<td>品类异常</td>
+<td>各品类</td>
+<td>某品类日营收 &lt; 近14日均值 × 50%</td>
+<td>🟡警告</td>
+<td>纳入日报分析</td>
+</tr>
+<tr>
+<td>W-08</td>
+<td>客单价异常</td>
+<td>各区域</td>
+<td>客单价 &lt; 近14日均值 × 80%</td>
+<td>🟡警告</td>
+<td>纳入日报分析</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E9%A2%84%E8%AD%A6%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B">预警处理流程</h4>
+<pre class="hljs"><code><div>系统检测到异常
+      │
+      ▼
+┌──────────┐
+│ 生成预警记录 │ → 记录: 预警类型、触发值、对比值、影响区域
+└────┬─────┘
+     │
+     ▼
+┌──────────┐
+│ 推送通知   │ → 企微/钉钉/App推送给相关人
+└────┬─────┘
+     │
+     ▼
+┌──────────┐        ┌──────────┐
+│ 🔴严重预警 │ ───→  │ 自动创建   │ → 创建整改任务草稿，待总部确认
+└──────────┘        │ 整改任务   │
+                    └──────────┘
+┌──────────┐
+│ 🟡一般预警 │ ───→ 纳入日报AI分析，给出建议
+└──────────┘
+
+     │
+     ▼ 人工处理后
+┌──────────┐
+│ 标记已处理 │ → 记录处理人、处理措施、处理时间
+└────┬─────┘
+     │
+     ▼
+┌──────────┐
+│ 效果跟踪   │ → 处理后持续监测7天，观察指标是否恢复
+└──────────┘
+</div></code></pre>
+<h4 id="%E9%A2%84%E8%AD%A6%E5%88%97%E8%A1%A8%E9%A1%B5">预警列表页</h4>
+<pre class="hljs"><code><div>┌──────────────────────────────────────────────────────────┐
+│  🔔 预警中心            筛选: [全部严重程度▼] [全部区域▼]    │
+│                        [未处理(3)] [已处理] [全部]          │
+├──────────────────────────────────────────────────────────┤
+│                                                          │
+│  🔴 2026-02-12 14:30  营收骤降                             │
+│  电玩区截至14:00营收¥800，仅为近7日同期均值的58%              │
+│  关联: 张xx(电玩区负责人)                                    │
+│  [查看详情] [创建整改任务] [标记已处理]                        │
+│                                                          │
+│  🟡 2026-02-12 08:00  连续下降                             │
+│  电玩区连续3天营收环比下降(累计-8.5%)                        │
+│  AI建议: 排查设备使用率，重点关注XX类设备                      │
+│  [查看详情] [采纳建议创建任务] [忽略]                         │
+│                                                          │
+│  🟡 2026-02-11 20:00  品类异常                             │
+│  简餐区饮品类日营收¥95，为近14日均值的47.5%                   │
+│  AI建议: 考虑调整饮品品类或增加促销                           │
+│  [查看详情] [采纳建议] [忽略]                                │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+</div></code></pre>
+<hr>
+<h3 id="ai-03%E7%AD%96%E7%95%A5%E5%BB%BA%E8%AE%AE%E9%A1%B5">【AI-03】策略建议页</h3>
+<p>AI 基于数据分析主动给出的运营建议。</p>
+<h4 id="%E5%BB%BA%E8%AE%AE%E7%BB%93%E6%9E%84">建议结构</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>建议标题</td>
+<td>一句话概括</td>
+</tr>
+<tr>
+<td>问题定位</td>
+<td>什么数据出了问题</td>
+</tr>
+<tr>
+<td>原因分析</td>
+<td>AI推断的可能原因</td>
+</tr>
+<tr>
+<td>建议措施</td>
+<td>具体可执行的操作建议（1-3条）</td>
+</tr>
+<tr>
+<td>预期效果</td>
+<td>预计能带来多少提升</td>
+</tr>
+<tr>
+<td>优先级</td>
+<td>高/中/低</td>
+</tr>
+<tr>
+<td>关联数据</td>
+<td>支撑分析的具体数据</td>
+</tr>
+<tr>
+<td>快捷操作</td>
+<td>[一键创建任务] / [一键创建活动]</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E5%BB%BA%E8%AE%AE%E7%8A%B6%E6%80%81%E6%B5%81%E8%BD%AC">建议状态流转</h4>
+<pre class="hljs"><code><div>AI生成建议 → 待审核 → 总部采纳 → 已创建任务/活动 → 效果追踪 → 已验证
+                │
+                └→ 总部忽略 → 归档（保留记录供后续参考）
+</div></code></pre>
+<hr>
+<h3 id="ai-04ai-%E5%AF%B9%E8%AF%9D%E5%8A%A9%E6%89%8B">【AI-04】AI 对话助手</h3>
+<p>支持自然语言提问，AI 查询数据库并生成回答。</p>
+<h4 id="%E7%A4%BA%E4%BE%8B%E5%AF%B9%E8%AF%9D">示例对话</h4>
+<table>
+<thead>
+<tr>
+<th>用户提问</th>
+<th>AI 回答示意</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&quot;今天淘气堡营收多少？&quot;</td>
+<td>&quot;截至15:00，淘气堡今日营收¥4,200，较昨日同期+12%，占全部营收62%。&quot;</td>
+</tr>
+<tr>
+<td>&quot;上周哪个区域表现最差？&quot;</td>
+<td>&quot;上周电玩区表现最弱，周营收¥18,500，环比下降6.2%，主要受XX设备使用率下降影响。&quot;</td>
+</tr>
+<tr>
+<td>&quot;对比上个月简餐区的套餐类销售情况&quot;</td>
+<td>自动生成表格+趋势图，给出分析</td>
+</tr>
+<tr>
+<td>&quot;电玩区最近为什么下降？&quot;</td>
+<td>综合分析客流、品类结构、设备数据，给出多角度原因推断</td>
+</tr>
+<tr>
+<td>&quot;下个月应该做什么活动？&quot;</td>
+<td>基于历史活动效果和当前数据趋势，推荐活动方案</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0%E8%A6%81%E7%82%B9">技术实现要点</h4>
+<pre class="hljs"><code><div>用户提问（自然语言）
+      │
+      ▼
+┌──────────────┐
+│ 意图识别 + NL2SQL│ → 将自然语言转化为数据库查询
+└──────┬───────┘
+       │
+       ▼
+┌──────────────┐
+│ 执行查询       │ → 查询数据库获取原始数据
+└──────┬───────┘
+       │
+       ▼
+┌──────────────┐
+│ 大模型生成回答  │ → 结合数据 + 上下文，生成自然语言回答
+└──────┬───────┘
+       │
+       ▼
+┌──────────────┐
+│ 返回回答+图表   │ → 文字回答 + 自动生成的数据图表
+└──────────────┘
+</div></code></pre>
+<hr>
+<h3 id="ai-05%E8%B6%8B%E5%8A%BF%E9%A2%84%E6%B5%8B%E9%A1%B5">【AI-05】趋势预测页</h3>
+<table>
+<thead>
+<tr>
+<th>预测类型</th>
+<th>方法</th>
+<th>展示</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7天营收预测</td>
+<td>基于近30天数据 + 周期性分析 + 节假日因素</td>
+<td>折线图 + 置信区间</td>
+</tr>
+<tr>
+<td>14天客流预测</td>
+<td>同上</td>
+<td>折线图 + 置信区间</td>
+</tr>
+<tr>
+<td>月度营收预测</td>
+<td>基于近3-6个月数据 + 同比趋势</td>
+<td>柱状图 + 预测范围</td>
+</tr>
+<tr>
+<td>活动效果预测</td>
+<td>基于历史同类型活动数据</td>
+<td>预估提升率范围</td>
+</tr>
+</tbody>
+</table>
+<h4 id="%E9%A2%84%E6%B5%8B%E5%B1%95%E7%A4%BA">预测展示</h4>
+<pre class="hljs"><code><div>┌──────────────────────────────────────────────────────────┐
+│  趋势预测            区域: [全部 ▼]   预测周期: [7天 ▼]     │
+├──────────────────────────────────────────────────────────┤
+│                                                          │
+│  未来7天营收预测:                                           │
+│  预估总营收: ¥65,000 ~ ¥72,000（中位数 ¥68,500）           │
+│                                                          │
+│  [折线图]                                                 │
+│  ────── 历史数据（实线）                                    │
+│  - - - - 预测数据（虚线）                                   │
+│  ░░░░░░ 置信区间（阴影区域，80%置信度）                       │
+│                                                          │
+│  影响因素:                                                 │
+│  · 📅 2月15日-16日为周末，预计高于工作日30-40%               │
+│  · 🏷️ &quot;亲子嘉年华&quot;活动仍在进行中，预计持续带动淘气堡区       │
+│  · 📉 电玩区持续低迷趋势尚未扭转，预计维持低位               │
+│                                                          │
+│  AI建议:                                                  │
+│  · 本周总营收有望达到¥70,000目标，但需关注电玩区拖累          │
+│  · 建议在2月14日(周五)加大电玩区引流力度                      │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+</div></code></pre>
+<hr>
+<h2 id="44-ai-%E6%9C%8D%E5%8A%A1%E6%8A%80%E6%9C%AF%E6%96%B9%E6%A1%88">4.4 AI 服务技术方案</h2>
+<h3 id="prompt-%E5%B7%A5%E7%A8%8B%E8%AE%BE%E8%AE%A1">Prompt 工程设计</h3>
+<table>
+<thead>
+<tr>
+<th>AI 功能</th>
+<th>输入数据</th>
+<th>Prompt 策略</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>日报生成</td>
+<td>昨日全量经营数据 + 任务完成数据 + 活动数据</td>
+<td>结构化模板 + 数据注入 + 分析指令</td>
+</tr>
+<tr>
+<td>异常分析</td>
+<td>异常指标值 + 近期趋势 + 品类明细</td>
+<td>问题定位 + 原因推断 + 建议生成</td>
+</tr>
+<tr>
+<td>活动复盘</td>
+<td>活动期间数据 + 基线数据 + 目标值</td>
+<td>效果评估 + 归因分析 + 改进建议</td>
+</tr>
+<tr>
+<td>对话助手</td>
+<td>用户问题 + 数据库Schema + 查询结果</td>
+<td>NL2SQL + 数据解读 + 自然语言回答</td>
+</tr>
+<tr>
+<td>趋势预测</td>
+<td>历史30-90天数据 + 日历信息 + 活动计划</td>
+<td>时间序列分析 + 因素权重 + 区间预测</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ai-%E8%B0%83%E7%94%A8%E9%A2%91%E7%8E%87%E4%B8%8E%E6%88%90%E6%9C%AC">AI 调用频率与成本</h3>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>调用频率</th>
+<th>单次Token估算</th>
+<th>月成本估算(DeepSeek)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>日报</td>
+<td>1次/天</td>
+<td>~3,000 tokens</td>
+<td>~¥3/月</td>
+</tr>
+<tr>
+<td>周报</td>
+<td>1次/周</td>
+<td>~5,000 tokens</td>
+<td>~¥2/月</td>
+</tr>
+<tr>
+<td>月报</td>
+<td>1次/月</td>
+<td>~8,000 tokens</td>
+<td>~¥0.5/月</td>
+</tr>
+<tr>
+<td>预警分析</td>
+<td>~5次/天</td>
+<td>~1,500 tokens</td>
+<td>~¥7/月</td>
+</tr>
+<tr>
+<td>对话助手</td>
+<td>~20次/天</td>
+<td>~2,000 tokens</td>
+<td>~¥40/月</td>
+</tr>
+<tr>
+<td><strong>合计</strong></td>
+<td>—</td>
+<td>—</td>
+<td><strong>~¥50-80/月</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>注：基于 DeepSeek API 定价估算，实际费用视使用量浮动。</p>
+</blockquote>
+<hr>
+<hr>
+<h1 id="%E6%A8%A1%E5%9D%97%E4%BA%94%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E6%94%AF%E6%92%91%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90%E6%B6%88%E6%81%AF">模块五：系统基础支撑（用户·权限·消息）</h1>
+<blockquote>
+<p>系统的「骨骼」—— 支撑所有业务模块运转的基础设施</p>
+</blockquote>
+<h2 id="51-%E7%94%A8%E6%88%B7%E4%B8%8E%E8%A7%92%E8%89%B2%E7%AE%A1%E7%90%86">5.1 用户与角色管理</h2>
+<h3 id="%E8%A7%92%E8%89%B2%E6%9D%83%E9%99%90%E7%9F%A9%E9%98%B5">角色权限矩阵</h3>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>总部管理员</th>
+<th>区域负责人</th>
+<th>协同管理员</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>数据中心</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>查看全局看板</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>查看本区域看板</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅（只读）</td>
+</tr>
+<tr>
+<td>查看其他区域看板</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>品类下钻</td>
+<td>✅（全部）</td>
+<td>✅（本区域）</td>
+<td>✅（本区域，只读）</td>
+</tr>
+<tr>
+<td>数据录入</td>
+<td>✅</td>
+<td>✅（本区域）</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>数据修正</td>
+<td>✅（审批）</td>
+<td>✅（申请）</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>报表导出</td>
+<td>✅</td>
+<td>✅（本区域）</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>任务中心</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>创建任务</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>派发任务</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>接收/执行任务</td>
+<td>❌</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>任务反馈</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅（协助）</td>
+</tr>
+<tr>
+<td>验证任务</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>查看全部任务</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>查看本区域任务</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅（只读）</td>
+</tr>
+<tr>
+<td>提交工作日志</td>
+<td>❌</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>活动中心</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>创建/编辑活动</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>查看活动详情</td>
+<td>✅</td>
+<td>✅（关联的）</td>
+<td>✅（只读）</td>
+</tr>
+<tr>
+<td>查看活动效果</td>
+<td>✅</td>
+<td>✅（关联的）</td>
+<td>✅（只读）</td>
+</tr>
+<tr>
+<td><strong>AI中心</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>查看全部报告</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>查看本区域报告</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅（只读）</td>
+</tr>
+<tr>
+<td>预警处理</td>
+<td>✅</td>
+<td>✅（本区域）</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>AI对话助手</td>
+<td>✅（全量数据）</td>
+<td>✅（本区域数据）</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>采纳/忽略建议</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td><strong>系统管理</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>用户管理</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>区域管理</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>品类管理</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>系统设置</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+</tbody>
+</table>
+<h3 id="%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86%E5%8A%9F%E8%83%BD">用户管理功能</h3>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>添加用户</td>
+<td>填写姓名、手机号、角色、管辖区域</td>
+</tr>
+<tr>
+<td>编辑用户</td>
+<td>修改角色、区域、状态</td>
+</tr>
+<tr>
+<td>停用/启用</td>
+<td>停用后无法登录，数据保留</td>
+</tr>
+<tr>
+<td>重置密码</td>
+<td>管理员可重置负责人密码</td>
+</tr>
+<tr>
+<td>登录日志</td>
+<td>记录每次登录时间、设备、IP</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="52-%E6%B6%88%E6%81%AF%E9%80%9A%E7%9F%A5%E4%BD%93%E7%B3%BB">5.2 消息通知体系</h2>
+<h3 id="%E9%80%9A%E7%9F%A5%E6%B8%A0%E9%81%93">通知渠道</h3>
+<table>
+<thead>
+<tr>
+<th>渠道</th>
+<th>适用场景</th>
+<th>优先级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>App内通知</strong></td>
+<td>所有通知</td>
+<td>默认</td>
+</tr>
+<tr>
+<td><strong>企业微信/钉钉</strong></td>
+<td>任务派发、预警、日报推送</td>
+<td>首选</td>
+</tr>
+<tr>
+<td><strong>短信</strong></td>
+<td>紧急预警、账号安全</td>
+<td>仅紧急</td>
+</tr>
+</tbody>
+</table>
+<h3 id="%E9%80%9A%E7%9F%A5%E4%BA%8B%E4%BB%B6%E6%B8%85%E5%8D%95">通知事件清单</h3>
+<table>
+<thead>
+<tr>
+<th>事件</th>
+<th>接收人</th>
+<th>渠道</th>
+<th>内容模板</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>新任务派发</td>
+<td>指定负责人</td>
+<td>企微+App</td>
+<td>&quot;您有新任务：{标题}，请在{截止时间}前完成&quot;</td>
+</tr>
+<tr>
+<td>任务即将逾期</td>
+<td>负责人</td>
+<td>企微+App</td>
+<td>&quot;任务{标题}将在{小时}后到期，请尽快处理&quot;</td>
+</tr>
+<tr>
+<td>任务已逾期</td>
+<td>负责人+总部</td>
+<td>企微+App</td>
+<td>&quot;任务{标题}已逾期，请立即处理&quot;</td>
+</tr>
+<tr>
+<td>任务完成待验证</td>
+<td>总部</td>
+<td>App</td>
+<td>&quot;负责人{姓名}已提交任务{标题}，请验证&quot;</td>
+</tr>
+<tr>
+<td>严重预警</td>
+<td>总部+负责人</td>
+<td>企微+短信</td>
+<td>&quot;预警：{区域}{预警类型}，当前值{值}&quot;</td>
+</tr>
+<tr>
+<td>一般预警</td>
+<td>总部</td>
+<td>App</td>
+<td>&quot;预警：{区域}{预警类型}&quot;</td>
+</tr>
+<tr>
+<td>日报生成</td>
+<td>总部+全部负责人</td>
+<td>企微</td>
+<td>&quot;昨日经营日报已生成，总营收¥{值}，[查看详情]&quot;</td>
+</tr>
+<tr>
+<td>活动开始</td>
+<td>活动负责人</td>
+<td>企微+App</td>
+<td>&quot;活动{名称}今日正式开始&quot;</td>
+</tr>
+<tr>
+<td>活动目标预警</td>
+<td>总部+负责人</td>
+<td>企微</td>
+<td>&quot;活动{名称}过半，提升率仅{值}，低于目标&quot;</td>
+</tr>
+</tbody>
+</table>
+<h3 id="%E9%80%9A%E7%9F%A5%E5%81%8F%E5%A5%BD%E8%AE%BE%E7%BD%AE">通知偏好设置</h3>
+<p>用户可自定义：</p>
+<ul>
+<li>免打扰时段（如22:00-08:00仅接收严重预警）</li>
+<li>各类通知的开关</li>
+<li>首选通知渠道</li>
+</ul>
+<hr>
+<h2 id="53-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E7%BD%AE">5.3 系统设置</h2>
+<table>
+<thead>
+<tr>
+<th>设置项</th>
+<th>说明</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>营业时间</td>
+<td>乐园每日营业起止时间</td>
+<td>09:00 - 22:00</td>
+</tr>
+<tr>
+<td>数据刷新频率</td>
+<td>看板数据刷新间隔</td>
+<td>5分钟</td>
+</tr>
+<tr>
+<td>日报生成时间</td>
+<td>每日日报自动生成时间</td>
+<td>08:00</td>
+</tr>
+<tr>
+<td>预警阈值</td>
+<td>各类预警的触发阈值（可调）</td>
+<td>见预警规则</td>
+</tr>
+<tr>
+<td>基线计算周期</td>
+<td>活动基线默认取多少天</td>
+<td>14天</td>
+</tr>
+<tr>
+<td>日志提交截止</td>
+<td>每日工作日志最晚提交时间</td>
+<td>22:00</td>
+</tr>
+<tr>
+<td>数据保留时间</td>
+<td>历史明细数据保留多久</td>
+<td>3年</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<hr>
+<h1 id="%E9%99%84%E5%BD%95%E6%A8%A1%E5%9D%97%E9%97%B4%E4%BA%A4%E4%BA%92%E5%85%B3%E7%B3%BB">附录：模块间交互关系</h1>
+<h2 id="%E5%AE%8C%E6%95%B4%E6%95%B0%E6%8D%AE%E6%B5%81%E8%BD%AC%E5%9B%BE">完整数据流转图</h2>
+<pre class="hljs"><code><div>┌─────────┐
+│ POS/手工  │ ──数据录入──→ ┌──────────────────┐
+│ 数据源    │               │ 模块一：数据中心    │
+└─────────┘               │ (采集·聚合·展示)   │
+                          └────────┬─────────┘
+                                   │
+                    ┌──────────────┼──────────────┐
+                    │              │              │
+                    ▼              ▼              ▼
+           ┌──────────┐  ┌──────────────┐  ┌──────────┐
+           │模块四:AI   │  │模块三:活动中心 │  │模块二:任务│
+           │(分析·预警  │  │(基线计算·     │  │(数据验证·│
+           │ ·建议·报告)│  │ 效果追踪)     │  │ 效果关联)│
+           └─────┬────┘  └──────┬───────┘  └────┬─────┘
+                 │              │               │
+                 │    AI生成     │  活动自动      │
+                 │    整改任务    │  创建任务      │
+                 │    草稿       │               │
+                 └──────┬───────┘               │
+                        │                       │
+                        ▼                       │
+                 ┌──────────────┐               │
+                 │ 模块二：任务    │ ←─────────────┘
+                 │ (派发·执行·    │
+                 │  反馈·跟踪)    │
+                 └──────┬───────┘
+                        │
+                        │ 负责人反馈+数据变化
+                        ▼
+                 回流到数据中心 → 形成闭环
+</div></code></pre>
+<h2 id="%E6%A8%A1%E5%9D%97%E9%97%B4%E6%8E%A5%E5%8F%A3%E6%B8%85%E5%8D%95">模块间接口清单</h2>
+<table>
+<thead>
+<tr>
+<th>调用方</th>
+<th>被调用方</th>
+<th>接口</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AI中心 →</td>
+<td>数据中心</td>
+<td>获取经营数据</td>
+<td>AI分析和报告生成需要原始数据</td>
+</tr>
+<tr>
+<td>AI中心 →</td>
+<td>任务中心</td>
+<td>获取任务统计</td>
+<td>日报中包含任务完成情况</td>
+</tr>
+<tr>
+<td>AI中心 →</td>
+<td>任务中心</td>
+<td>创建整改任务草稿</td>
+<td>预警自动触发整改任务</td>
+</tr>
+<tr>
+<td>AI中心 →</td>
+<td>活动中心</td>
+<td>获取活动数据</td>
+<td>日报中包含活动效果</td>
+</tr>
+<tr>
+<td>活动中心 →</td>
+<td>数据中心</td>
+<td>获取区域经营数据</td>
+<td>计算基线、提升率</td>
+</tr>
+<tr>
+<td>活动中心 →</td>
+<td>任务中心</td>
+<td>批量创建任务</td>
+<td>活动自动拆解为执行任务</td>
+</tr>
+<tr>
+<td>任务中心 →</td>
+<td>数据中心</td>
+<td>获取数据快照</td>
+<td>任务创建/完成时记录数据</td>
+</tr>
+<tr>
+<td>任务中心 →</td>
+<td>消息服务</td>
+<td>发送通知</td>
+<td>任务派发、逾期等通知</td>
+</tr>
+<tr>
+<td>数据中心 →</td>
+<td>AI中心</td>
+<td>触发异常检测</td>
+<td>数据更新后检查是否触发预警</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="%E6%96%87%E6%A1%A3%E4%BF%AE%E8%AE%A2%E8%AE%B0%E5%BD%95">文档修订记录</h2>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>日期</th>
+<th>修改内容</th>
+<th>修改人</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.0</td>
+<td>2026-02-12</td>
+<td>初始版本，含五大模块详细设计</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><em>文档结束 — 如需进一步细化到 API 接口文档或数据库建表 SQL，请随时提出。</em></p>
+
+</body>
+</html>
