@@ -33,7 +33,13 @@ module.exports = {
   ],
   ignorePatterns: [
     'src/components/PostPainter/**',
-    'src/utils/qqmap-wx-jssdk.min.js'
+    'src/utils/qqmap-wx-jssdk.min.js',
+    'dist/**',
+    'node_modules/**',
+    '**/*.d.ts',
+    'unpackage/**',
+    '*.config.ts',
+    '*.config.js'
   ],
   parser: 'vue-eslint-parser',
   parserOptions: {

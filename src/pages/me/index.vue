@@ -67,46 +67,6 @@
         </div>
       </div>
 
-      <div v-if="appUser.id" class="baby">
-        <div class="header" data-content="我的宝贝"></div>
-        <div v-if="babyList.length > 0" class="content">
-          <div v-for="item in babyList" :key="item.id">
-            <BabyInfo :data="item" @refresh="getBabyList" />
-          </div>
-          <div
-            v-if="babyList.length < (appUser.baby_number ?? 2)"
-            class="flex justify-center">
-            <nut-button
-              plain
-              type="primary"
-              size="small"
-              @click="navTo('/pages/baby/form')">
-              <template #icon>
-                <nut-icon name="plus" />
-              </template>
-              去添加
-            </nut-button>
-          </div>
-        </div>
-        <div v-else class="content">
-          <div class="flex flex-col items-center gap-y-[30rpx]">
-            <span class="text-[28rpx] text-[#999] font-[500]">
-              暂无宝贝信息
-            </span>
-            <nut-button
-              plain
-              type="primary"
-              size="small"
-              @click="navTo('/pages/baby/form')">
-              <template #icon>
-                <nut-icon name="plus" />
-              </template>
-              去添加
-            </nut-button>
-          </div>
-        </div>
-      </div>
-
       <BindMobile
         v-model:visible="bindMobileVisible"
         :get-phone-number="getPhoneNumber" />
@@ -117,7 +77,6 @@
 <script setup>
 import { useAppStore } from '../../stores/app'
 import { storeToRefs } from 'pinia'
-import { getBabyListRes, getUserTabletRes } from '../../api'
 import { useLogin } from '../../hooks/useLogin'
 import { navTo, toast } from '../../utils/uni'
 import orderIcon from '../../static/images/me/order.png'

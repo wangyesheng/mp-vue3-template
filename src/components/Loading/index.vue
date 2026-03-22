@@ -105,7 +105,7 @@ export default {
     },
     color: {
       type: String,
-      default: '#8153fe'
+      default: '#1890ff'
     },
     showText: {
       type: Boolean,

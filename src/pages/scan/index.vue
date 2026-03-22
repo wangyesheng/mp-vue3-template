@@ -138,7 +138,7 @@ function restoreScreenBrightness() {
           label:last-child {
             padding: 5rpx 20rpx;
             display: inline-block;
-            background: #8153fe;
+            background: #1890ff;
             border-radius: 8rpx;
             width: fit-content;
             font-weight: 400;

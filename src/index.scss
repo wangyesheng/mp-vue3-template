@@ -1,8 +1,9 @@
 :root,
 page {
   --nut-button-large-height: 90rpx;
-  --hw-primary-color: #8153fe;
-  --hw-primary-bg-color: #f5f5f5;
+  --hw-primary-color: #1890ff;
+  --hw-primary-bg-color: #f5f6fa;
+  background: var(--hw-primary-bg-color);
 }
 
 .__bindMobilePopup {
@@ -61,6 +62,7 @@ page {
 .__title {
   font-size: 34rpx;
   color: #333;
+  font-weight: 550;
   position: relative;
 
   &::before {
@@ -72,8 +74,8 @@ page {
     background: var(--hw-primary-color);
     position: absolute;
     top: 50%;
+    left: 0;
     transform: translateY(-50%);
-    left: 20rpx;
   }
 }
 
@@ -356,7 +358,7 @@ page {
 
   &.type1 {
     background: rgba(129, 83, 254, 0.1);
-    color: #8153fe;
+    color: #1890ff;
   }
 
   &.type2 {
