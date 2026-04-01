@@ -1,7 +1,7 @@
 :root,
 page {
   --nut-button-large-height: 90rpx;
-  --hw-primary-color: #1890ff;
+  --uvt-primary-color: #1890ff;
   --hw-primary-bg-color: #f5f6fa;
   background: var(--hw-primary-bg-color);
 }
@@ -71,7 +71,7 @@ page {
     width: 10rpx;
     height: 50%;
     border-radius: 50%;
-    background: var(--hw-primary-color);
+    background: var(--uvt-primary-color);
     position: absolute;
     top: 50%;
     left: 0;
@@ -128,7 +128,7 @@ page {
 
         &.active {
           label {
-            color: var(--hw-primary-color) !important;
+            color: var(--uvt-primary-color) !important;
           }
         }
       }
@@ -298,7 +298,7 @@ page {
             background: #fff;
             height: 12vh;
             padding: 0 20rpx;
-            border: 2rpx solid var(--hw-primary-color);
+            border: 2rpx solid var(--uvt-primary-color);
             box-sizing: border-box;
             border-radius: 10rpx;
 

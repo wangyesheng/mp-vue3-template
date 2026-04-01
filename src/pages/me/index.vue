@@ -199,7 +199,7 @@ onShow(() => {
   .userInfo {
     width: 100%;
     height: 560rpx;
-    background: var(--hw-primary-color);
+    background: var(--uvt-primary-color);
     position: relative;
 
     & > .inner {

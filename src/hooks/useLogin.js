@@ -77,9 +77,7 @@ export function useLogin(cb) {
       avatar: bindMobileUserProfile.current.avatarUrl,
       mobile: phoneInfo.phoneNumber
     }
-    const {
-      userinfo: { token }
-    } = await checkLoginRes(reqData)
+    const { token } = await checkLoginRes(reqData)
     appStore.setAppToken(token)
     await appStore.refreshAppUser()
     bindMobileVisible.value = false

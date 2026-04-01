@@ -1,57 +1,93 @@
 <template>
-  <AppContainer custom-class="!bg-[#f5f6fa]" :need-min-height="true">
-    <div class="__order-bind">
-      <div class="section">
-        <div class="__title pl-[30rpx] mb-[20rpx]">订单信息</div>
-        <div class="info-list">
-          <div class="info-item">
-            <span class="label">订单号</span>
-            <span class="value">{{ orderInfo.order_sn || '-' }}</span>
+  <AppContainer>
+    <div class="order-bind">
+      <!-- 订单信息 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">订单信息</div>
+        </div>
+        <div class="card-body">
+          <div class="info-row">
+            <span class="info-label">订单号</span>
+            <span class="info-value">{{ orderInfo.order_sn }}</span>
           </div>
-          <div class="info-item">
-            <span class="label">产品型号</span>
-            <span class="value">{{ orderInfo.product_name || '-' }}</span>
+          <div class="info-row">
+            <span class="info-label">产品</span>
+            <span class="info-value">{{ orderInfo.product_name }}</span>
           </div>
-          <div class="info-item">
-            <span class="label">SN批次号</span>
-            <span class="value">{{ orderInfo.sn_code || '-' }}</span>
+          <div class="info-row">
+            <span class="info-label">服务项目</span>
+            <span class="info-value">{{ orderInfo.service_name }}</span>
           </div>
-          <div class="info-item">
-            <span class="label">施工时间</span>
-            <span class="value">{{ orderInfo.construction_time || '-' }}</span>
+          <div class="info-row">
+            <span class="info-label">备注</span>
+            <span class="info-value">{{ orderInfo.remark }}</span>
           </div>
         </div>
       </div>
 
-      <div class="section">
-        <div class="__title pl-[30rpx] mb-[20rpx]">施工门店</div>
-        <div class="info-list">
-          <div class="info-item">
-            <span class="label">门店名称</span>
-            <span class="value">{{ orderInfo.store_name || '-' }}</span>
+      <!-- 施工门店 -->
+      <div v-if="orderInfo.is_construction == 1" class="card">
+        <div class="card-header">
+          <div class="card-title">施工门店</div>
+        </div>
+        <div class="card-body">
+          <div class="info-row">
+            <span class="info-label">门店名称</span>
+            <span class="info-value">{{ orderInfo.store.store_name }}</span>
           </div>
-          <div class="info-item">
-            <span class="label">地址</span>
-            <span class="value">{{ orderInfo.store_address || '-' }}</span>
+          <div class="info-row">
+            <span class="info-label">地址</span>
+            <text class="info-value address" user-select>
+              {{ orderInfo.store.store_address }}
+            </text>
           </div>
-          <div class="info-item">
-            <span class="label">联系电话</span>
-            <span class="value phone" @tap="callStore">
-              {{ orderInfo.store_phone || '-' }}
-            </span>
+          <div class="info-row last" @tap="callStore">
+            <span class="info-label">联系电话</span>
+            <div class="phone-row">
+              <span class="info-value phone">
+                {{ orderInfo.store.store_mobile }}
+              </span>
+              <nut-button plain size="mini" type="primary">拨打</nut-button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="section">
-        <div class="__title pl-[30rpx] mb-[20rpx]">推荐信息</div>
-        <div class="referral-input">
-          <nut-input placeholder="选填，请输入推荐人的推荐码" clearable />
+      <!-- 推荐信息 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">推荐信息</div>
+          <nut-tag plain round custom-color="#999">选填</nut-tag>
+        </div>
+        <div class="referral-wrap">
+          <nut-input
+            v-model="referralCode"
+            placeholder="请输入推荐人的推荐码"
+            clearable />
         </div>
       </div>
 
+      <!-- 底部按钮 -->
       <div class="bottom-bar">
-        <nut-button block type="primary" size="large" @click="handleBind">
+        <nut-button
+          v-if="appToken"
+          block
+          size="large"
+          type="primary"
+          custom-color="linear-gradient(135deg, #1890ff 0%, #0e4fc4 100%)"
+          :disabled="loading"
+          :loading="loading"
+          @click="onBind">
+          {{ loading ? '绑定中...' : '立即绑定' }}
+        </nut-button>
+        <nut-button
+          v-else
+          block
+          size="large"
+          type="primary"
+          custom-color="linear-gradient(135deg, #1890ff 0%, #0e4fc4 100%)"
+          @click="login">
           立即绑定
         </nut-button>
       </div>
@@ -64,143 +100,231 @@
 </template>
 
 <script setup>
-import { getOrderBindInfoRes, bindOrderRes } from '@/api'
-import { toast, callPhone } from '../../utils/uni'
+import { bindOrderRes, getOrderInfoRes } from '@/api'
+import { callPhone, navTo } from '../../utils/uni'
 import { useAppStore } from '@/stores/app'
 import { useLogin } from '@/hooks/useLogin'
 
 const appStore = useAppStore()
 const { appToken } = storeToRefs(appStore)
 
-const orderSn = ref('')
 const orderInfo = ref({})
 const referralCode = ref('')
+const loading = ref(false)
 
-const { bindMobileVisible, login, getPhoneNumber } = useLogin(handleBind)
+const { bindMobileVisible, login, getPhoneNumber } = useLogin()
 
-onLoad((options) => {
-  if (options.order_sn) {
-    orderSn.value = options.order_sn
-    getOrderBindInfo()
+onLoad(async ({ order_sn = '20260330234609367393' }) => {
+  if (order_sn) {
+    const data = await getOrderInfoRes(order_sn)
+    orderInfo.value = data
   }
 })
 
-async function getOrderBindInfo() {
-  const data = await getOrderBindInfoRes(orderSn.value)
-  if (data) {
-    orderInfo.value = data
-  }
-}
-
-async function handleBind() {
-  if (!appToken.value) {
-    login()
-    return
-  }
-
-  if (!orderSn.value) {
-    return toast('订单信息异常')
-  }
-
+async function onBind() {
   try {
-    uni.showLoading({ title: '绑定中...', mask: true })
+    loading.value = true
     await bindOrderRes({
-      order_sn: orderSn.value,
+      order_sn: orderInfo.value.order_sn,
       referral_code: referralCode.value || undefined
     })
-    uni.hideLoading()
-    uni.showModal({
-      title: '绑定成功',
-      content: '订单已成功绑定到您的账户',
-      confirmText: '确定',
-      showCancel: false,
-      success: () => {
-        uni.switchTab({ url: '/pages/home/index' })
-      }
-    })
-  } catch (error) {
-    uni.hideLoading()
+    navTo('/pages/home/index')
+  } finally {
+    loading.value = false
   }
 }
 
 function callStore() {
-  if (orderInfo.value.store_phone) {
-    callPhone(orderInfo.value.store_phone)
+  if (orderInfo.value.store.store_phone) {
+    callPhone(orderInfo.value.store.store_phone)
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.__order-bind {
-  padding: 24rpx;
-  padding-bottom: 100rpx;
+.order-bind {
+  padding: 24rpx 24rpx 160rpx;
 
-  .section {
-    background: #fff;
-    border-radius: 16rpx;
-    padding: 32rpx;
+  // 顶部产品卡片
+  .product-card {
+    display: flex;
+    align-items: center;
+    gap: 24rpx;
+    background: linear-gradient(135deg, #1a6ff5 0%, #0e4fc4 100%);
+    border-radius: 20rpx;
+    padding: 36rpx 32rpx;
     margin-bottom: 24rpx;
+    position: relative;
+    overflow: hidden;
 
-    .section-title {
-      font-size: 32rpx;
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 24rpx;
-      padding-left: 16rpx;
-      border-left: 6rpx solid #1890ff;
+    &::after {
+      content: '';
+      position: absolute;
+      right: -40rpx;
+      top: -40rpx;
+      width: 200rpx;
+      height: 200rpx;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
     }
 
-    .info-list {
-      .info-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        padding: 16rpx 0;
-        border-bottom: 1rpx solid #f5f5f5;
+    &::before {
+      content: '';
+      position: absolute;
+      right: 60rpx;
+      bottom: -60rpx;
+      width: 240rpx;
+      height: 240rpx;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.04);
+    }
 
-        &:last-child {
-          border-bottom: none;
-        }
+    .product-icon {
+      width: 88rpx;
+      height: 88rpx;
+      border-radius: 20rpx;
+      background: rgba(255, 255, 255, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 44rpx;
+      flex-shrink: 0;
+    }
 
-        .label {
-          font-size: 28rpx;
-          color: #999;
-          flex-shrink: 0;
-          width: 160rpx;
-        }
+    .product-info {
+      flex: 1;
+      min-width: 0;
 
-        .value {
-          font-size: 28rpx;
-          color: #333;
-          text-align: right;
-          flex: 1;
+      .product-name {
+        font-size: 32rpx;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 10rpx;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
 
-          &.phone {
-            color: #1890ff;
-            text-decoration: underline;
-          }
-        }
+      .product-sn {
+        font-size: 24rpx;
+        color: rgba(255, 255, 255, 0.7);
+        font-family: monospace;
       }
     }
 
-    .referral-input {
-      :deep(.nut-input) {
-        background: #f5f6fa;
-        border-radius: 10rpx;
+    .status-badge {
+      flex-shrink: 0;
+      font-size: 22rpx;
+      color: #1a6ff5;
+      background: #fff;
+      border-radius: 20rpx;
+      padding: 8rpx 20rpx;
+      font-weight: 500;
+    }
+  }
+
+  // 通用卡片
+  .card {
+    background: #fff;
+    border-radius: 20rpx;
+    margin-bottom: 20rpx;
+    overflow: hidden;
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12rpx;
+      padding: 32rpx 32rpx 0;
+
+      .card-title {
+        font-size: 30rpx;
+        font-weight: 600;
+        color: #1a1a1a;
+      }
+
+      .optional-tag {
+        font-size: 22rpx;
+        color: #999;
+        background: #f5f5f5;
+        border-radius: 8rpx;
+        padding: 4rpx 14rpx;
+      }
+    }
+
+    .card-body {
+      padding: 16rpx 32rpx 8rpx;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22rpx 0;
+      border-bottom: 1rpx solid #f7f7f7;
+
+      &.last {
+        border-bottom: none;
+      }
+
+      .info-label {
+        font-size: 28rpx;
+        color: #888;
+        flex-shrink: 0;
+        width: 160rpx;
+      }
+
+      .info-value {
+        font-size: 28rpx;
+        color: #222;
+        text-align: right;
+        flex: 1;
+
+        &.mono {
+          font-family: monospace;
+          font-size: 26rpx;
+          letter-spacing: 1rpx;
+        }
+
+        &.address {
+          line-height: 1.5;
+        }
+
+        &.phone {
+          color: var(--uvt-primary-color);
+          font-weight: 500;
+        }
+      }
+
+      .phone-row {
+        display: flex;
+        align-items: center;
+        gap: 16rpx;
+      }
+    }
+
+    .referral-wrap {
+      padding: 20rpx 24rpx 28rpx;
+      :deep() {
+        .nut-input {
+          background: #f5f6fa;
+          border-radius: 10rpx;
+        }
       }
     }
   }
 
+  // 底部按钮
   .bottom-bar {
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
     z-index: 999;
-    padding: 24rpx 32rpx;
-    padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
-    background: #fff;
-    box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.05);
+    padding: 20rpx 32rpx;
+    padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20rpx);
+    border-top: 1rpx solid rgba(0, 0, 0, 0.04);
   }
 }
 </style>

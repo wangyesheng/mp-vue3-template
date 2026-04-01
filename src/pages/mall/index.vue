@@ -137,7 +137,7 @@ onLoad(() => {
           .price {
             display: flex;
             column-gap: 5rpx;
-            color: var(--hw-primary-color);
+            color: var(--uvt-primary-color);
 
             label:first-child {
               font-weight: 550;

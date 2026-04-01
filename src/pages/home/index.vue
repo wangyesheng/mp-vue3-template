@@ -1,18 +1,18 @@
 <template>
-  <AppContainer custom-class="!bg-[#f5f6fa]" :need-min-height="true">
+  <AppContainer>
     <div class="__home">
       <!-- 顶部渐变背景 -->
       <div class="header-bg">
         <!-- 第一板块：用户信息 -->
         <div class="user-card">
-          <image class="avatar" mode="aspectFill" />
+          <image class="avatar" mode="aspectFill" :src="appUser.avatar" />
           <div class="user-info">
-            <div class="nickname">微信用户</div>
-            <div class="phone">138****8888</div>
+            <div class="nickname">{{ appUser.nickname }}</div>
+            <div class="phone">{{ appUser.mobile }}</div>
           </div>
           <div class="points-tag">
-            <text class="icon">💎</text>
-            <text>积分 1200</text>
+            <text class="i-mdi-diamond-stone !text-[32rpx]"></text>
+            <text>积分 {{ appUser.score }}</text>
           </div>
         </div>
       </div>
@@ -26,37 +26,52 @@
             </div>
           </div>
 
-          <nut-tabs v-model="orderType">
-            <nut-tab-pane title="待施工">
-              <div class="order-list">
+          <nut-tabs v-model="orderType" type="smile">
+            <nut-tab-pane title="我的订单" :type="0">
+              <PageList :api="getOrderListRes">
+                <template #item="{ data }">
+                  <div class="order-card">
+                    <div class="card-head">
+                      <span class="sn">订单号：{{ data.order_sn }}</span>
+                    </div>
+                    <div class="card-body">
+                      <image
+                        class="product-img border-2 border-white shadow-md"
+                        :src="data.store?.store_image"
+                        mode="aspectFill" />
+                      <div class="product-info">
+                        <div class="name">
+                          {{ data.product_name }}
+                          {{ data.service_name && ` - ${data.service_name}` }}
+                        </div>
+                        <div class="shop">
+                          施工门店：{{ data.store?.store_name }}
+                        </div>
+                        <div class="shop">
+                          施工地址：{{ data.store?.store_address }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-foot">
+                      <nut-button
+                        size="small"
+                        type="primary"
+                        custom-color="linear-gradient(135deg, #1890ff 0%, #40a9ff 50%, #096dd9 100%)">
+                        确认施工完成
+                      </nut-button>
+                    </div>
+                  </div>
+                </template>
+              </PageList>
+              <!-- <div class="order-list">
                 <div
                   v-for="item in mockOrders"
                   :key="item.id"
-                  class="order-card">
-                  <div class="card-head">
-                    <span class="sn">订单号：{{ item.sn }}</span>
-                  </div>
-                  <div class="card-body">
-                    <image
-                      class="product-img"
-                      :src="item.img"
-                      mode="aspectFill" />
-                    <div class="product-info">
-                      <div class="name">{{ item.product }}</div>
-                      <div class="shop">施工门店：{{ item.shop }}</div>
-                      <div class="time">施工时间：{{ item.time }}</div>
-                    </div>
-                  </div>
-                  <div class="card-foot">
-                    <nut-button size="small" type="primary">
-                      到店施工
-                    </nut-button>
-                  </div>
-                </div>
-              </div>
+                  class="order-card"></div>
+              </div> -->
             </nut-tab-pane>
 
-            <nut-tab-pane title="施工中">
+            <nut-tab-pane title="积分商城">
               <div class="order-list">
                 <div
                   v-for="item in mockOrders"
@@ -102,14 +117,13 @@
                   </div>
                   <div class="card-foot">
                     <nut-button
+                      type="primary"
                       size="small"
                       @click="navTo('/pages/warranty/index', false)">
                       查看质保单
                     </nut-button>
                     <nut-button size="small">去评价</nut-button>
-                    <nut-button size="small" type="warning">
-                      申请售后
-                    </nut-button>
+                    <nut-button size="small">申请售后</nut-button>
                   </div>
                 </div>
               </div>
@@ -145,7 +159,7 @@
 
         <!-- 第三板块：积分商城 -->
         <div class="section">
-          <div class="section-head">
+          <div class="section-head mb-[30rpx]">
             <div class="title-wrap">
               <span class="title">积分商城</span>
             </div>
@@ -179,9 +193,12 @@
 </template>
 
 <script setup>
+import { getOrderListRes } from '@/api'
 import { navTo } from '../../utils/uni'
+import { useAppStore } from '@/stores/app'
 
 const orderType = ref(0)
+const { appUser, appToken } = storeToRefs(useAppStore())
 
 // Mock 待绑定订单数据
 const mockOrders = ref([
@@ -232,6 +249,12 @@ const mockGoods = ref([
     img: null
   }
 ])
+
+onShow(() => {
+  if (!appToken.value) {
+    navTo('/pages/login/index', false)
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -322,7 +345,6 @@ const mockGoods = ref([
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 24rpx;
 
       .title-wrap {
         display: flex;
@@ -360,76 +382,70 @@ const mockGoods = ref([
   }
 
   // 订单列表
-  .order-list {
-    display: flex;
-    flex-direction: column;
-    gap: 24rpx;
+  .order-card {
+    background: #fff;
+    border-radius: 20rpx;
+    padding: 0 24rpx;
+    box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.02);
 
-    .order-card {
-      background: #fff;
-      border-radius: 20rpx;
-      padding: 0 24rpx;
-      box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.02);
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24rpx 0;
+      border-bottom: 1rpx solid #f5f5f5;
 
-      .card-head {
+      .sn {
+        font-size: 26rpx;
+        color: #666;
+      }
+
+      .status {
+        font-size: 26rpx;
+        color: #f59e0b;
+        font-weight: 500;
+      }
+    }
+
+    .card-body {
+      display: flex;
+      padding: 24rpx 0;
+
+      .product-img {
+        width: 140rpx;
+        height: 140rpx;
+        border-radius: 12rpx;
+        background: #f5f5f5;
+        flex-shrink: 0;
+      }
+
+      .product-info {
+        margin-left: 20rpx;
+        flex: 1;
         display: flex;
+        flex-direction: column;
         justify-content: space-between;
-        align-items: center;
-        padding: 24rpx 0;
-        border-bottom: 1rpx solid #f5f5f5;
 
-        .sn {
-          font-size: 26rpx;
-          color: #666;
+        .name {
+          font-size: 30rpx;
+          font-weight: 600;
+          color: #333;
         }
 
-        .status {
-          font-size: 26rpx;
-          color: #f59e0b;
-          font-weight: 500;
+        .shop,
+        .time {
+          font-size: 24rpx;
+          color: #888;
         }
       }
+    }
 
-      .card-body {
-        display: flex;
-        padding: 24rpx 0;
-
-        .product-img {
-          width: 140rpx;
-          height: 140rpx;
-          border-radius: 12rpx;
-          background: #f5f5f5;
-          flex-shrink: 0;
-        }
-
-        .product-info {
-          margin-left: 20rpx;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-
-          .name {
-            font-size: 30rpx;
-            font-weight: 600;
-            color: #333;
-          }
-
-          .shop,
-          .time {
-            font-size: 24rpx;
-            color: #888;
-          }
-        }
-      }
-
-      .card-foot {
-        padding: 20rpx 0;
-        border-top: 1rpx solid #f5f5f5;
-        display: flex;
-        justify-content: flex-end;
-        column-gap: 10rpx;
-      }
+    .card-foot {
+      padding: 20rpx 0;
+      border-top: 1rpx solid #f5f5f5;
+      display: flex;
+      justify-content: flex-end;
+      column-gap: 10rpx;
     }
   }
 

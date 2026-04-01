@@ -1,5 +1,5 @@
 <template>
-  <view v-if="pageInfo.data.length > 0" id="pageListWrap" class="page-wrap">
+  <view v-if="pageInfo.data?.length > 0" id="pageListWrap" class="page-wrap">
     <view class="page-list">
       <view
         v-for="(item, index) in pageInfo.data"
@@ -24,6 +24,8 @@
 </template>
 
 <script setup>
+import { useAppStore } from '@/stores/app'
+
 const props = defineProps({
   active: {
     type: Boolean,
@@ -48,6 +50,8 @@ const props = defineProps({
   }
 })
 
+const { appToken } = storeToRefs(useAppStore())
+
 const instance = getCurrentInstance()
 
 const pageInfo = ref({
@@ -58,7 +62,8 @@ const pageInfo = ref({
     limit: props.limit
   }),
   isOverScreen = ref(false),
-  isRefresh = ref(false) // 刷新页面时不显示 loading
+  isRefresh = ref(false),
+  isError = ref(false) // 刷新页面时不显示 loading
 
 watch(
   () => props.active,
@@ -73,6 +78,7 @@ watch(
 )
 
 async function getData(page) {
+  if (!appToken.value) return
   try {
     pageInfo.value.loading = true
     if (page == 1) {
@@ -103,6 +109,9 @@ async function getData(page) {
       // 数据加载完成后检查是否超过一屏
       checkOverScreen()
     }
+  } catch (error) {
+    isError.value = true
+    pageInfo.value.loading = false
   } finally {
     pageInfo.value.loading = false
   }
@@ -131,7 +140,8 @@ onReachBottom(async () => {
     props.active &&
     !pageInfo.value.end &&
     !pageInfo.value.loading &&
-    !isRefresh.value
+    !isRefresh.value &&
+    !isError.value
   ) {
     pageInfo.value.page++
     await getData()
@@ -172,8 +182,6 @@ defineExpose({
 
 <style lang="scss" scoped>
 .page-wrap {
-  padding-bottom: env(safe-area-inset-bottom);
-
   .page-list {
     display: flex;
     flex-direction: column;

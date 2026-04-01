@@ -26,14 +26,14 @@ export default {
 .dot {
   width: 20rpx;
   height: 20rpx;
-  background: var(--hw-primary-color);
+  background: var(--uvt-primary-color);
   border-radius: 50%;
   position: absolute;
   top: calc(50% - 5rpx);
 }
 
 .dot1 {
-  background: var(--hw-primary-color);
+  background: var(--uvt-primary-color);
   left: 0rpx;
   -webkit-animation: bounce 0.5s cubic-bezier(0.77, 0.47, 0.64, 0.28) alternate
     infinite;
@@ -41,7 +41,7 @@ export default {
 }
 
 .dot2 {
-  background: var(--hw-primary-color);
+  background: var(--uvt-primary-color);
   left: 40rpx;
   -webkit-animation: bounce 0.5s 0.2s cubic-bezier(0.77, 0.47, 0.64, 0.28)
     alternate infinite;
@@ -50,7 +50,7 @@ export default {
 }
 
 .dot3 {
-  background: var(--hw-primary-color);
+  background: var(--uvt-primary-color);
   left: 80rpx;
   -webkit-animation: bounce 0.5s 0.4s cubic-bezier(0.77, 0.47, 0.64, 0.28)
     alternate infinite;

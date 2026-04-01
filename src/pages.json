@@ -9,9 +9,22 @@
   },
   "pages": [
     {
+      "path": "pages/order/bind",
+      "style": {
+        "navigationBarTitleText": "订单绑定"
+      }
+    },
+    {
       "path": "pages/home/index",
       "style": {
         "navigationBarTitleText": "首页",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/login/index",
+      "style": {
+        "navigationBarTitleText": "登录",
         "navigationStyle": "custom"
       }
     },
@@ -20,12 +33,6 @@
       "style": {
         "navigationBarTitleText": "质保信息",
         "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/order/bind",
-      "style": {
-        "navigationBarTitleText": "订单绑定"
       }
     },
     {
@@ -60,7 +67,7 @@
     }
   ],
   "globalStyle": {
-    "navigationBarTextStyle": "white",
+    "navigationBarTextStyle": "black",
     "navigationBarTitleText": "首页",
     "navigationBarBackgroundColor": "#f5f6fa",
     "backgroundColor": "#f5f6fa"

@@ -29,10 +29,13 @@ declare module 'vue' {
     NutCell: typeof import('nutui-uniapp/components/cell/cell.vue')['default']
     NutCellGroup: typeof import('nutui-uniapp/components/cellgroup/cellgroup.vue')['default']
     NutConfigProvider: typeof import('nutui-uniapp/components/configprovider/configprovider.vue')['default']
+    NutEmpty: typeof import('nutui-uniapp/components/empty/empty.vue')['default']
+    NutIcon: typeof import('nutui-uniapp/components/icon/icon.vue')['default']
     NutInput: typeof import('nutui-uniapp/components/input/input.vue')['default']
     NutPopup: typeof import('nutui-uniapp/components/popup/popup.vue')['default']
     NutTabPane: typeof import('nutui-uniapp/components/tabpane/tabpane.vue')['default']
     NutTabs: typeof import('nutui-uniapp/components/tabs/tabs.vue')['default']
+    NutTag: typeof import('nutui-uniapp/components/tag/tag.vue')['default']
     NutToast: typeof import('nutui-uniapp/components/toast/toast.vue')['default']
     PageList: typeof import('./src/components/PageList/index.vue')['default']
   }

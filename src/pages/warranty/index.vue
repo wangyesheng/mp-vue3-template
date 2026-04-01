@@ -1,11 +1,13 @@
 <template>
   <AppContainer>
     <div class="__warranty">
-      <div class="header">
+      <div class="header" :style="{ paddingTop: bgTop + 'px' }">
         <div class="header-content">
           <div class="shield">
             <div class="shield-icon">
-              <text class="icon-text">✓</text>
+              <image
+                src="../../static/images/effective.png"
+                mode="aspectFill" />
             </div>
           </div>
           <div class="status-text">质保生效中</div>
@@ -99,10 +101,24 @@
         <text>如有疑问请联系施工门店或客服</text>
       </div>
     </div>
+    <div
+      class="fixed left-[20rpx]"
+      :style="{ top: iconTop + 'px' }"
+      @click="back">
+      <nut-icon name="rect-left" custom-color="#fff" size="20" />
+    </div>
   </AppContainer>
 </template>
 
 <script setup>
+const menuButtonInfo = uni.getMenuButtonBoundingClientRect()
+
+const bgTop = menuButtonInfo.height + menuButtonInfo.top
+// menuButtonInfo.top 胶囊距离顶部得距离
+// menuButtonInfo.height / 2 胶囊自身高度的一半
+// 10 图标自身高度的一半
+const iconTop = menuButtonInfo.top + menuButtonInfo.height / 2 - 10
+
 const warrantyInfo = ref({
   vehicle_model: '特斯拉 Model Y 2024款',
   plate_number: '京A·88888',
@@ -127,19 +143,20 @@ function previewPhoto(index) {
     urls: warrantyInfo.value.photos
   })
 }
+
+const back = () => uni.navigateBack()
 </script>
 
 <style lang="scss" scoped>
 .__warranty {
   .header {
     width: 100%;
-    height: 500rpx;
+    height: 550rpx;
     overflow: hidden;
     background: linear-gradient(135deg, #1890ff 0%, #40a9ff 50%, #096dd9 100%);
     display: flex;
     justify-content: center;
-    align-items: flex-end;
-    padding-bottom: 40rpx;
+    align-items: center;
 
     .header-content {
       display: flex;
@@ -157,18 +174,17 @@ function previewPhoto(index) {
         margin-bottom: 20rpx;
 
         .shield-icon {
-          width: 84rpx;
-          height: 84rpx;
+          width: 90rpx;
+          height: 90rpx;
           background: rgba(255, 255, 255, 0.95);
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
 
-          .icon-text {
-            font-size: 48rpx;
-            color: #1890ff;
-            font-weight: bold;
+          image {
+            width: 64rpx;
+            height: 64rpx;
           }
         }
       }
