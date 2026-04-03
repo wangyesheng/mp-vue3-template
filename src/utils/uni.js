@@ -39,8 +39,9 @@ export function switchTab(url, needToken = true) {
   uni.switchTab({ url })
 }
 
-export function previewImage(urls) {
+export function previewImage(index, urls) {
   uni.previewImage({
+    index,
     urls
   })
 }

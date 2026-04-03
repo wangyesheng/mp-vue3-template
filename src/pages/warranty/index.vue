@@ -10,12 +10,16 @@
                 mode="aspectFill" />
             </div>
           </div>
-          <div class="status-text">质保生效中</div>
-          <div class="warranty-period">
-            <text class="period-label">质保有效期</text>
+          <div class="status-text">
+            {{ orderInfo.is_warranty == 1 ? '质保生效中' : '质保单生成中' }}
+          </div>
+          <div v-if="orderInfo.is_warranty == 1" class="warranty-period">
+            <text class="period-label">
+              质保有效期（{{ orderInfo.warranty_days }}天）
+            </text>
             <text class="period-value">
-              {{ warrantyInfo.warranty_start }} 至
-              {{ warrantyInfo.warranty_end }}
+              {{ orderInfo.warranty_start_time }} 至
+              {{ orderInfo.warranty_end_time }}
             </text>
           </div>
         </div>
@@ -31,17 +35,19 @@
         <div class="card-body">
           <div class="info-row">
             <span class="info-label">车型</span>
-            <span class="info-value">{{ warrantyInfo.vehicle_model }}</span>
+            <span class="info-value">{{ orderInfo.vehicle_type }}</span>
           </div>
           <div class="info-row">
             <span class="info-label">车牌号</span>
             <span class="info-value plate">
-              {{ warrantyInfo.plate_number }}
+              {{ orderInfo.plate_number }}
             </span>
           </div>
           <div class="info-row no-border">
             <span class="info-label">车架号</span>
-            <span class="info-value mono">{{ warrantyInfo.vin }}</span>
+            <span class="info-value mono">
+              {{ orderInfo.frame_number || '-' }}
+            </span>
           </div>
         </div>
       </div>
@@ -55,20 +61,23 @@
         </div>
         <div class="card-body">
           <div class="info-row">
-            <span class="info-label">产品型号</span>
-            <span class="info-value">{{ warrantyInfo.product_name }}</span>
+            <span class="info-label">产品</span>
+            <span class="info-value">{{ orderInfo.product_name }}</span>
           </div>
           <div class="info-row">
-            <span class="info-label">SN批次号</span>
-            <span class="info-value mono">{{ warrantyInfo.sn_code }}</span>
+            <span class="info-label">服务项目</span>
+            <span class="info-value">{{ orderInfo.service_name }}</span>
           </div>
+
           <div class="info-row">
             <span class="info-label">施工时间</span>
-            <span class="info-value">{{ warrantyInfo.construction_time }}</span>
+            <span class="info-value">
+              {{ orderInfo.end_time }}
+            </span>
           </div>
           <div class="info-row no-border">
             <span class="info-label">施工门店</span>
-            <span class="info-value">{{ warrantyInfo.store_name }}</span>
+            <span class="info-value">{{ orderInfo.store.store_name }}</span>
           </div>
         </div>
       </div>
@@ -79,15 +88,15 @@
             <text>📷</text>
           </div>
           <span class="card-title">完工图片</span>
-          <span class="photo-count">共{{ warrantyInfo.photos.length }}张</span>
+          <span class="photo-count">共{{ completeCarPhotos.length }}张</span>
         </div>
         <div class="card-body">
           <div class="photo-grid">
             <div
-              v-for="(photo, index) in warrantyInfo.photos"
+              v-for="(photo, index) in completeCarPhotos"
               :key="index"
               class="photo-item"
-              @tap="previewPhoto(index)">
+              @tap="previewImage(index, completeCarPhotos)">
               <image :src="photo" mode="aspectFill" />
               <div class="photo-mask">
                 <text class="mask-text">点击查看</text>
@@ -111,38 +120,27 @@
 </template>
 
 <script setup>
-const menuButtonInfo = uni.getMenuButtonBoundingClientRect()
+import { getOrderDetailRes } from '@/api'
+import { previewImage } from '@/utils/uni'
 
+const menuButtonInfo = uni.getMenuButtonBoundingClientRect()
 const bgTop = menuButtonInfo.height + menuButtonInfo.top
 // menuButtonInfo.top 胶囊距离顶部得距离
 // menuButtonInfo.height / 2 胶囊自身高度的一半
 // 10 图标自身高度的一半
 const iconTop = menuButtonInfo.top + menuButtonInfo.height / 2 - 10
 
-const warrantyInfo = ref({
-  vehicle_model: '特斯拉 Model Y 2024款',
-  plate_number: '京A·88888',
-  vin: 'LRWYGCEK5NC123456',
-  product_name: '车衣/CY001',
-  sn_code: '20260313-1',
-  construction_time: '2026-03-13 14:00',
-  store_name: '北京朝阳旗舰店',
-  warranty_start: '2026-03-13',
-  warranty_end: '2031-03-13',
-  photos: [
-    'https://img.zcool.cn/community/01a0a75c3c05c5a801213f26a5dfaa.jpg',
-    'https://img.zcool.cn/community/01a0a75c3c05c5a801213f26a5dfaa.jpg',
-    'https://img.zcool.cn/community/01a0a75c3c05c5a801213f26a5dfaa.jpg',
-    'https://img.zcool.cn/community/01a0a75c3c05c5a801213f26a5dfaa.jpg'
-  ]
-})
-
-function previewPhoto(index) {
-  uni.previewImage({
-    current: index,
-    urls: warrantyInfo.value.photos
+const orderInfo = ref({}),
+  completeCarPhotos = computed(() => {
+    const { end_front_photos, end_side_photos, end_back_photos } =
+      orderInfo.value
+    return [end_front_photos, ...end_side_photos, end_back_photos]
   })
-}
+
+onLoad(async ({ id }) => {
+  const data = await getOrderDetailRes(id)
+  orderInfo.value = data
+})
 
 const back = () => uni.navigateBack()
 </script>
@@ -335,7 +333,7 @@ const back = () => uni.navigateBack()
             right: 0;
             bottom: 0;
             height: 56rpx;
-            background: linear-gradient(transparent, rgba(0, 0, 0, 0.4));
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
             display: flex;
             align-items: flex-end;
             justify-content: center;

@@ -9,16 +9,17 @@
   },
   "pages": [
     {
-      "path": "pages/order/bind",
-      "style": {
-        "navigationBarTitleText": "订单绑定"
-      }
-    },
-    {
       "path": "pages/home/index",
       "style": {
         "navigationBarTitleText": "首页",
-        "navigationStyle": "custom"
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/order/bind",
+      "style": {
+        "navigationBarTitleText": "订单绑定"
       }
     },
     {

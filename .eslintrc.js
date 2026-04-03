@@ -70,6 +70,8 @@ module.exports = {
     {
       files: ['*.vue'],
       rules: {
+        // 模板里用到的变量/函数须在 <script setup> 中定义（含 import），否则报错
+        'vue/no-undef-properties': 'error',
         'vue/no-v-model-argument': 'off', // 允许 v-model:xxx 写法
         '@typescript-eslint/no-explicit-any': 'off', // 允许 any 类型
         // 关闭 vue3-recommended 的格式规则，让 Prettier 处理

@@ -20,114 +20,64 @@
       <div class="main-content">
         <!-- 第二板块：待绑定订单 -->
         <div class="section">
-          <div class="section-head">
+          <div class="section-head mb-[30rpx]">
             <div class="title-wrap">
-              <span class="title">订单管理</span>
+              <span class="title">我的订单</span>
             </div>
           </div>
 
+          <PageList ref="pageListRef" :api="getOrderListRes">
+            <template #item="{ data }">
+              <div class="order-card">
+                <div class="card-head">
+                  <span class="sn">订单号：{{ data.order_sn }}</span>
+                </div>
+                <div class="card-body">
+                  <image
+                    class="product-img border-2 border-white shadow-md"
+                    :src="data.store?.store_image"
+                    mode="aspectFill" />
+                  <div class="product-info">
+                    <div class="name">
+                      {{ data.product_name }}
+                      {{ data.service_name && ` - ${data.service_name}` }}
+                    </div>
+                    <div class="shop">
+                      施工门店：{{ data.store?.store_name }}
+                    </div>
+                    <div class="shop">
+                      施工地址：{{ data.store?.store_address }}
+                    </div>
+                  </div>
+                </div>
+                <div v-if="data.status < 4" class="card-foot">
+                  <nut-button
+                    size="small"
+                    type="primary"
+                    custom-color="linear-gradient(135deg, #1890ff 0%, #40a9ff 50%, #096dd9 100%)"
+                    @click="onOrderConfirm(data.id)">
+                    确认施工完成
+                  </nut-button>
+                </div>
+                <div v-if="data.status == 4" class="card-foot">
+                  <nut-button
+                    type="primary"
+                    size="small"
+                    @click="navTo(`/pages/warranty/index?id=${data.id}`)">
+                    查看质保单
+                  </nut-button>
+                  <nut-button size="small" @click="onCheckRate(data)">
+                    {{ data.is_reviewed == 1 ? '查看评价' : '去评价' }}
+                  </nut-button>
+                  <nut-button size="small">申请售后</nut-button>
+                </div>
+              </div>
+            </template>
+          </PageList>
+          <!-- 
           <nut-tabs v-model="orderType" type="smile">
-            <nut-tab-pane title="我的订单" :type="0">
-              <PageList :api="getOrderListRes">
-                <template #item="{ data }">
-                  <div class="order-card">
-                    <div class="card-head">
-                      <span class="sn">订单号：{{ data.order_sn }}</span>
-                    </div>
-                    <div class="card-body">
-                      <image
-                        class="product-img border-2 border-white shadow-md"
-                        :src="data.store?.store_image"
-                        mode="aspectFill" />
-                      <div class="product-info">
-                        <div class="name">
-                          {{ data.product_name }}
-                          {{ data.service_name && ` - ${data.service_name}` }}
-                        </div>
-                        <div class="shop">
-                          施工门店：{{ data.store?.store_name }}
-                        </div>
-                        <div class="shop">
-                          施工地址：{{ data.store?.store_address }}
-                        </div>
-                      </div>
-                    </div>
-                    <div class="card-foot">
-                      <nut-button
-                        size="small"
-                        type="primary"
-                        custom-color="linear-gradient(135deg, #1890ff 0%, #40a9ff 50%, #096dd9 100%)">
-                        确认施工完成
-                      </nut-button>
-                    </div>
-                  </div>
-                </template>
-              </PageList>
-              <!-- <div class="order-list">
-                <div
-                  v-for="item in mockOrders"
-                  :key="item.id"
-                  class="order-card"></div>
-              </div> -->
-            </nut-tab-pane>
+            <nut-tab-pane title="我的订单" :type="0"></nut-tab-pane>
 
-            <nut-tab-pane title="积分商城">
-              <div class="order-list">
-                <div
-                  v-for="item in mockOrders"
-                  :key="item.id"
-                  class="order-card">
-                  <div class="card-head">
-                    <span class="sn">订单号：{{ item.sn }}</span>
-                  </div>
-                  <div class="card-body">
-                    <image
-                      class="product-img"
-                      :src="item.img"
-                      mode="aspectFill" />
-                    <div class="product-info">
-                      <div class="name">{{ item.product }}</div>
-                      <div class="shop">施工门店：{{ item.shop }}</div>
-                      <div class="time">施工时间：{{ item.time }}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </nut-tab-pane>
-
-            <nut-tab-pane title="已完成">
-              <div class="order-list">
-                <div
-                  v-for="item in mockOrders"
-                  :key="item.id"
-                  class="order-card">
-                  <div class="card-head">
-                    <span class="sn">订单号：{{ item.sn }}</span>
-                  </div>
-                  <div class="card-body">
-                    <image
-                      class="product-img"
-                      :src="item.img"
-                      mode="aspectFill" />
-                    <div class="product-info">
-                      <div class="name">{{ item.product }}</div>
-                      <div class="shop">施工门店：{{ item.shop }}</div>
-                      <div class="time">施工时间：{{ item.time }}</div>
-                    </div>
-                  </div>
-                  <div class="card-foot">
-                    <nut-button
-                      type="primary"
-                      size="small"
-                      @click="navTo('/pages/warranty/index', false)">
-                      查看质保单
-                    </nut-button>
-                    <nut-button size="small">去评价</nut-button>
-                    <nut-button size="small">申请售后</nut-button>
-                  </div>
-                </div>
-              </div>
-            </nut-tab-pane>
             <nut-tab-pane title="售后处理">
               <div class="order-list">
                 <div
@@ -154,7 +104,7 @@
                 </div>
               </div>
             </nut-tab-pane>
-          </nut-tabs>
+          </nut-tabs> -->
         </div>
 
         <!-- 第三板块：积分商城 -->
@@ -168,7 +118,6 @@
               <text class="arrow">></text>
             </div>
           </div>
-
           <scroll-view class="mall-scroll" scroll-x :show-scrollbar="false">
             <div class="mall-track">
               <div v-for="item in mockGoods" :key="item.id" class="mall-card">
@@ -188,37 +137,117 @@
           </scroll-view>
         </div>
       </div>
+      <nut-popup
+        v-model:visible="ratePopupVisible"
+        round
+        position="bottom"
+        safe-area-inset-bottom>
+        <div class="popupWrap">
+          <div class="__title px-[20rpx]">订单评价</div>
+          <div class="popup-inner rate">
+            <nut-form>
+              <nut-form-item
+                v-for="rate in rateMap"
+                :key="rate.key"
+                :label="rate.label">
+                <nut-rate
+                  v-model="rateInfo[rate.key]"
+                  active-color="#fa200c"
+                  size="20" />
+              </nut-form-item>
+            </nut-form>
+            <nut-button
+              v-if="currentOrder.is_reviewed != 1"
+              block
+              size="large"
+              type="primary"
+              @click="debounce(onSubmitRate)">
+              确认提交
+            </nut-button>
+          </div>
+        </div>
+      </nut-popup>
     </div>
   </AppContainer>
 </template>
 
 <script setup>
-import { getOrderListRes } from '@/api'
+import {
+  confirmOrderRes,
+  getOrderListRes,
+  getRateInfoRes,
+  rateOrderRes
+} from '@/api'
 import { navTo } from '../../utils/uni'
 import { useAppStore } from '@/stores/app'
+import debounce from '@/utils/debounce'
 
-const orderType = ref(0)
 const { appUser, appToken } = storeToRefs(useAppStore())
+const pageListRef = ref(),
+  currentOrder = ref({}),
+  ratePopupVisible = ref(false),
+  rateInfo = ref({
+    service_rating: 0,
+    environment_rating: 0,
+    technology_rating: 0
+  }),
+  rateMap = [
+    {
+      key: 'service_rating',
+      label: '服务评价'
+    },
+    {
+      key: 'environment_rating',
+      label: '环境评价'
+    },
+    {
+      key: 'technology_rating',
+      label: '技术评价'
+    }
+  ]
 
-// Mock 待绑定订单数据
-const mockOrders = ref([
-  {
-    id: 1,
-    sn: '20260313-001',
-    product: '隐形车衣 CY001',
-    shop: '北京朝阳旗舰店',
-    time: '2026-03-13 14:00',
-    img: null
-  },
-  {
-    id: 2,
-    sn: '20260313-002',
-    product: '全车隔热膜 尊享版',
-    shop: '北京海淀体验中心',
-    time: '2026-03-14 10:00',
-    img: null
+const onCheckRate = async (data) => {
+  currentOrder.value = data
+  if (data.is_reviewed == 1) {
+    const result = await getRateInfoRes(data.id)
+    rateInfo.value.service_rating = result.service_rating
+    rateInfo.value.environment_rating = result.environment_rating
+    rateInfo.value.technology_rating = result.technology_rating
+  } else {
+    rateInfo.value = {
+      service_rating: 0,
+      environment_rating: 0,
+      technology_rating: 0
+    }
   }
-])
+  ratePopupVisible.value = true
+}
+
+async function onSubmitRate() {
+  await rateOrderRes({
+    order_id: currentOrder.value.id,
+    ...rateInfo.value
+  })
+  refresh()
+  ratePopupVisible.value = false
+}
+
+async function onOrderConfirm(id) {
+  uni.showModal({
+    title: '提示',
+    content: '请仔细检查车辆施工后状况',
+    async success({ confirm }) {
+      if (confirm) {
+        await confirmOrderRes(id)
+        pageListRef.value.refresh()
+      }
+    }
+  })
+}
+
+function refresh() {
+  pageListRef.value?.refresh()
+}
 
 // Mock 积分商城数据
 const mockGoods = ref([

@@ -69,3 +69,39 @@ export function getOrderListRes(data) {
     data
   })
 }
+
+export function getOrderDetailRes(order_id) {
+  return request({
+    url: '/api/order/detail',
+    method: 'get',
+    data: {
+      order_id
+    }
+  })
+}
+
+export function confirmOrderRes(order_id) {
+  return request({
+    url: '/api/order/confirm',
+    method: 'post',
+    data: { order_id }
+  })
+}
+
+export function rateOrderRes(data) {
+  return request({
+    url: '/api/order/review',
+    method: 'post',
+    data
+  })
+}
+
+export function getRateInfoRes(order_id) {
+  return request({
+    url: '/api/order/get_review',
+    method: 'get',
+    data: {
+      order_id
+    }
+  })
+}
