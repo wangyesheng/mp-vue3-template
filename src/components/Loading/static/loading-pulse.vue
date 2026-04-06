@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: 'loading-pulse',
+  name: 'LoadingPulse',
   props: {
     color: {
       type: String,

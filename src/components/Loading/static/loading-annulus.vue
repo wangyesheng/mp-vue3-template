@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'loading-annulus',
+  name: 'LoadingAnnulus',
   props: {
     color: {
       type: String,

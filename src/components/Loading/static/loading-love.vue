@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  name: 'loading-love',
+  name: 'LoadingLove',
   data() {
     return {}
   }

@@ -42,10 +42,17 @@ module.exports = {
     '*.config.js'
   ],
   parser: 'vue-eslint-parser',
+  // 嵌套解析：纯 JS 用 espree，「非 async 里写 await」会报 Parsing error（TS 解析器常不报错）；
+  // lang="ts" 的块仍走 @typescript-eslint/parser。
   parserOptions: {
     ecmaVersion: 'latest',
-    parser: '@typescript-eslint/parser',
-    sourceType: 'module'
+    sourceType: 'module',
+    parser: {
+      js: 'espree',
+      jsx: 'espree',
+      ts: '@typescript-eslint/parser',
+      tsx: '@typescript-eslint/parser'
+    }
   },
   plugins: ['vue', '@typescript-eslint'],
   rules: {

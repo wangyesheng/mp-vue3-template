@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: 'loading-triangle',
+  name: 'LoadingTriangle',
   data() {
     return {}
   }

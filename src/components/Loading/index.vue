@@ -31,8 +31,8 @@
         <loading13 v-if="type == 'equal'" :color="color"></loading13>
       </view>
       <view
-        class="tips"
         v-if="showText"
+        class="tips"
         :style="{ color: textColor, fontSize: textSize, marginTop: textGap }">
         {{ text }}
       </view>

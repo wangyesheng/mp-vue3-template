@@ -1,9 +1,19 @@
 {
+  // 与 .prettierrc 的 "endOfLine": "lf" 一致，减少 Windows 下先 CRLF 再被 ESLint 报 Delete CR
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
   "editor.codeActionsOnSave": {
+    // 保存时顺带跑 ESLint fix（含 eslint-plugin-prettier 时也会修行尾）
     "source.fixAll.eslint": "explicit"
   },
   "editor.formatOnSave": true,
+  // 确保 .vue 走 ESLint（Problems 里能看到解析错误，如非 async 使用 await）
+  "eslint.probe": ["javascript", "javascriptreact", "vue", "json"],
+  "eslint.workingDirectories": [{ "mode": "auto" }],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // 使用项目里的 Prettier 配置（含 endOfLine）
+  "prettier.requireConfig": true,
   "[vue]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },

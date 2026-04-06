@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'loading-equal',
+  name: 'LoadingEqual',
   props: {
     color: {
       type: String,

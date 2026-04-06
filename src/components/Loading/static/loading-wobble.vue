@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: 'loading-wobble',
+  name: 'LoadingWobble',
   props: {
     color: {
       type: String,

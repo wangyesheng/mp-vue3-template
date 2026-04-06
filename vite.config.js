@@ -49,7 +49,10 @@ export default defineConfig({
     },
     preprocessorOptions: {
       scss: {
-        additionalData: '@import "nutui-uniapp/styles/variables.scss";'
+        additionalData: '@import "nutui-uniapp/styles/variables.scss";',
+        // nutui-uniapp 仍用 @import；Vite 4 走 Sass legacy API，均会刷弃用日志
+        quietDeps: true,
+        silenceDeprecations: ['import', 'legacy-js-api']
       }
     }
   }

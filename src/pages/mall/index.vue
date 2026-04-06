@@ -1,16 +1,42 @@
 <template>
   <AppContainer>
-    <div class="__mall">
-      <div class="banner">
-        <div class="score">
-          <div class="left">
-            <image :src="appUser.avatar" mode="aspectFill" />
-            <span>{{ appUser.nickname }}</span>
+    <div class="mall">
+      <div
+        class="relative overflow-hidden rounded-xl bg-gradient-to-br from-[#1890ff] to-blue-600 py-4 px-6 text-white mb-4">
+        <div class="relative flex items-center justify-between mb-6">
+          <div class="flex items-center gap-4">
+            <div
+              class="w-12 h-12 p-1 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-inner">
+              <image
+                class="w-full h-full rounded-md"
+                :src="appUser.avatar"
+                mode="aspectFill" />
+            </div>
+            <div>
+              <h2 class="text-base font-bold">{{ appUser.nickname }}</h2>
+              <div class="flex items-center gap-1 text-blue-100 text-sm">
+                {{ appUser.mobile }}
+              </div>
+            </div>
           </div>
-          <div class="right">
-            <span>{{ appUser.score }}</span>
-            <span>积分</span>
+        </div>
+
+        <div class="relative flex items-end justify-between">
+          <div>
+            <p class="text-blue-100 text-sm mb-1">当前可用积分</p>
+            <div class="flex items-baseline gap-2">
+              <span class="text-4xl font-black tracking-tighter">
+                {{ appUser.score }}
+              </span>
+              <span class="text-lg font-medium text-blue-100">积分</span>
+            </div>
           </div>
+          <button
+            class="!mx-0 bg-white text-blue-600 px-4 py-2 rounded-2xl font-bold text-sm shadow-lg shadow-blue-900/20 flex items-center gap-2"
+            @click="navTo('/pages/mall/record')">
+            兑换记录
+            <span class="i-mdi-arrow-right"></span>
+          </button>
         </div>
       </div>
 
@@ -18,10 +44,10 @@
         <div v-for="good in goods" :key="good.id" class="item">
           <image :src="good.image" mode="aspectFill" />
           <div class="inner">
-            <span class="title">{{ good.title }}</span>
+            <span class="title">{{ good.name }}</span>
             <div class="action">
               <div class="price">
-                <span>{{ good.price }}</span>
+                <span>{{ good.points }}</span>
                 <span>积分</span>
               </div>
               <nut-button type="primary" size="small" @click="onExchange(good)">
@@ -33,36 +59,23 @@
       </div>
       <Empty v-else description="暂无兑换商品" custom-class="mt-[10vh]" />
     </div>
-    <div
-      class="absolute left-[20rpx]"
-      :style="{ top: iconTop + 'px' }"
-      @click="onBack">
-      <nut-icon name="rect-left" custom-color="#fff" size="20" />
-    </div>
   </AppContainer>
 </template>
 
 <script setup>
 import { useAppStore } from '../../stores/app'
-import { exchangeRes, getMallGoodsRes } from '@/api'
-import { toast } from '@/utils/uni'
+import { navTo } from '../../utils/uni'
+import { exchangeGoodRes, getGoodsRes } from '@/api'
 
 const appStore = useAppStore(),
   { appUser } = storeToRefs(appStore),
-  iconTop = computed(() => {
-    const data = uni.getMenuButtonBoundingClientRect()
-    // data.top 胶囊距离顶部得距离
-    // data.height / 2 胶囊自身高度的一半
-    // 10 图标自身高度的一半
-    return data.top + data.height / 2 - 10
-  }),
   goods = ref([])
 async function getGoods() {
-  const { data } = await getMallGoodsRes({
+  const result = await getGoodsRes({
     page: 1,
     limit: 500
   })
-  goods.value = data
+  goods.value = result.data
 }
 
 function onExchange(good) {
@@ -71,16 +84,13 @@ function onExchange(good) {
     content: '确定要兑换该商品吗？',
     async success({ confirm }) {
       if (confirm) {
-        await exchangeRes(good.id)
-        toast('兑换成功，快去卡包查看吧！')
+        await exchangeGoodRes({
+          goods_id: good.id
+        })
         appStore.refreshAppUser()
       }
     }
   })
-}
-
-function onBack() {
-  uni.navigateBack()
 }
 
 onLoad(() => {
@@ -90,11 +100,58 @@ onLoad(() => {
 </script>
 
 <style lang="scss" scoped>
-.__mall {
+.mall {
+  padding: 30rpx;
+
+  .score {
+    background: rgba(174, 215, 253, 0.1);
+    border: 2rpx solid #1890ff;
+    border-radius: 15rpx;
+    padding: 20rpx 30rpx;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20rpx;
+
+    .left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      image {
+        width: 80rpx;
+        height: 80rpx;
+        border-radius: 50%;
+        border: 2rpx solid #fff;
+        margin-bottom: 5rpx;
+      }
+
+      label {
+        font-weight: 550;
+        color: #333;
+        font-size: 28rpx;
+      }
+    }
+
+    .right {
+      align-self: flex-end;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 550;
+      color: #333;
+
+      label:first-child {
+        font-size: 60rpx;
+      }
+
+      label:last-child {
+        font-size: 28rpx;
+      }
+    }
+  }
   .content {
-    padding: 30rpx;
-    padding-bottom: calc(30rpx + env(safe-area-inset-bottom));
-    box-sizing: border-box;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
@@ -149,67 +206,6 @@ onLoad(() => {
               align-self: flex-start;
             }
           }
-        }
-      }
-    }
-  }
-  .banner {
-    background: url(https://hwly.tuomuit.com/wechat/img/gift-bg.jpg);
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    width: 100%;
-    height: 640rpx;
-    position: relative;
-    .score {
-      width: 680rpx;
-      background: #f2f2f2;
-      border-radius: 15rpx;
-      position: absolute;
-      left: 50%;
-      bottom: 20rpx;
-      transform: translateX(-50%);
-      padding: 20rpx 30rpx;
-      box-sizing: border-box;
-
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .left {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        image {
-          width: 80rpx;
-          height: 80rpx;
-          border-radius: 50%;
-          border: 2rpx solid #fff;
-          margin-bottom: 5rpx;
-        }
-
-        label {
-          font-weight: 550;
-          color: #333;
-          font-size: 28rpx;
-        }
-      }
-
-      .right {
-        align-self: flex-end;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        font-weight: 550;
-        color: #333;
-
-        label:first-child {
-          font-size: 60rpx;
-        }
-
-        label:last-child {
-          font-size: 28rpx;
         }
       }
     }

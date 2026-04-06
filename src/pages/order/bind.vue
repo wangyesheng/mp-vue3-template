@@ -12,7 +12,7 @@
             <span class="info-value">{{ orderInfo.order_sn }}</span>
           </div>
           <div class="info-row">
-            <span class="info-label">产品</span>
+            <span class="info-label">购买产品</span>
             <span class="info-value">{{ orderInfo.product_name }}</span>
           </div>
           <div class="info-row">

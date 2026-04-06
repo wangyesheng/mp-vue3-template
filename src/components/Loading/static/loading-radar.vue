@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: 'loading-radar',
+  name: 'LoadingRadar',
   data() {
     return {}
   }

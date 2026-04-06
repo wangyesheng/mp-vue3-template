@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: 'loading-sword',
+  name: 'LoadingSword',
   props: {
     color: {
       type: String,

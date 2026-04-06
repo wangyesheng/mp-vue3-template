@@ -105,3 +105,47 @@ export function getRateInfoRes(order_id) {
     }
   })
 }
+
+export function afterSaleSubmitRes(data) {
+  return request({
+    url: '/api/order/aftersale',
+    method: 'post',
+    data
+  })
+}
+
+export function getAfterSaleTimelineRes(aftersale_id) {
+  return request({
+    url: '/api/order/get_aftersale_timeline',
+    method: 'get',
+    data: {
+      aftersale_id
+    }
+  })
+}
+
+export function getAfterSaleDetailRes(aftersale_id) {
+  return request({
+    url: '/api/order/get_aftersale',
+    method: 'get',
+    data: {
+      aftersale_id
+    }
+  })
+}
+
+export function getGoodsRes(data) {
+  return request({
+    url: '/api/points/goods_list',
+    method: 'get',
+    data
+  })
+}
+
+export function exchangeGoodRes(data) {
+  return request({
+    url: '/api/points/exchange',
+    method: 'post',
+    data
+  })
+}

@@ -100,6 +100,13 @@
     "ExtractPublicPropTypes": true,
     "WritableComputedRef": true,
     "useNotify": true,
-    "useToast": true
+    "useToast": true,
+    "DirectiveBinding": true,
+    "MaybeRef": true,
+    "MaybeRefOrGetter": true,
+    "onWatcherCleanup": true,
+    "useId": true,
+    "useModel": true,
+    "useTemplateRef": true
   }
 }

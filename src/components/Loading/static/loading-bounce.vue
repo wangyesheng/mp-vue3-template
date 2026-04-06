@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: 'loading-bounce',
+  name: 'LoadingBounce',
   data() {
     return {}
   }

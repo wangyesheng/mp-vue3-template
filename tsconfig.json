@@ -18,14 +18,9 @@
     },
     "types": ["@dcloudio/types"]
   },
-  "include": [
-    "src/**/*",
-    "components.d.ts"
-  ],
+  "include": ["src/**/*", "components.d.ts"],
   "exclude": ["node_modules", "dist"],
   "vueCompilerOptions": {
     "nativeTags": ["block", "template", "slot"]
   }
 }
-
-
