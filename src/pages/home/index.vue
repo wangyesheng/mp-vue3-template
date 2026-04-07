@@ -9,7 +9,7 @@
             class="avatar"
             open-type="chooseAvatar"
             @chooseavatar="onChooseAvatar">
-            <image :src="appUser.avatar" mode="aspectFill" />
+            <image mode="aspectFill" :src="appUser.avatar" />
           </button>
           <div class="user-info">
             <input
@@ -35,132 +35,26 @@
             <div class="title-wrap">
               <span class="title">我的订单</span>
             </div>
+            <div class="more" @tap="navTo('/pages/order/list')">
+              <span>查看更多</span>
+              <span class="i-mdi-chevron-right ml-[5rpx]"></span>
+            </div>
           </div>
 
-          <PageList ref="pageListRef" :api="getOrderListRes">
-            <template #item="{ data }">
-              <div class="order-card">
-                <div class="card-head">
-                  <span class="sn">订单号：{{ data.order_sn }}</span>
-                  <span
-                    v-if="data.is_aftersaled == 0"
-                    class="status"
-                    :style="{ color: orderTypeMap[data.status].color }">
-                    {{ orderTypeMap[data.status].label }}
-                  </span>
-                  <span v-else class="status text-[#ff0000]">售后中</span>
-                </div>
-                <div class="card-body">
-                  <div class="product-info">
-                    <div class="flex items-center gap-x-1 mb-2">
-                      <span class="i-mdi-taxi text-[#1890ff] text-xl"></span>
-                      <span class="text-base font-bold">
-                        {{ data.vehicle_type }}
-                      </span>
-                    </div>
-                    <div class="product-item">
-                      <div class="label">
-                        <!-- <span class="i-mdi-package-variant-closed"></span> -->
-                        <span>购买产品：</span>
-                      </div>
-                      <div class="value">
-                        {{ data.product_name }}
-                      </div>
-                    </div>
-                    <div class="product-item">
-                      <div class="label">
-                        <!-- <span class="i-mdi-car-wrench"></span> -->
-                        <span>服务项目：</span>
-                      </div>
-                      <div class="value">
-                        {{ data.service_name }}
-                      </div>
-                    </div>
-                    <div class="product-item">
-                      <div class="label">
-                        <!-- <span class="i-mdi-store-cog-outline"></span> -->
-                        <span>施工门店：</span>
-                      </div>
-                      <div class="value">
-                        <span>
-                          {{ data.store?.store_name }}
-                        </span>
-                        <image
-                          class="w-[40rpx] h-[40rpx] rounded-xl"
-                          :src="data.store?.store_image"
-                          mode="aspectFill"
-                          @click="previewImage(0, [data.store?.store_image])" />
-                      </div>
-                    </div>
-                    <div class="product-item">
-                      <div class="label">
-                        <!-- <span class="i-mdi-phone"></span> -->
-                        <span>门店电话：</span>
-                      </div>
-                      <div class="value">
-                        {{ data.store?.store_mobile }}
-                        <span
-                          class="text-[#1890ff]"
-                          @click="callPhone(data.store?.store_mobile)">
-                          拨打
-                        </span>
-                      </div>
-                    </div>
-                    <div class="product-item">
-                      <div class="label">
-                        <!-- <span class="i-mdi-map-marker-outline"></span> -->
-                        <span>施工地址：</span>
-                      </div>
-                      <div class="value">
-                        {{ data.store?.store_address }}
-
-                        <span
-                          class="text-[#1890ff]"
-                          @click="copy(data.store?.store_address)">
-                          复制
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div v-if="data.status < 4" class="card-foot">
-                  <nut-button
-                    size="small"
-                    type="primary"
-                    @click="onOrderConfirm(data.id)">
-                    确认施工完成
-                  </nut-button>
-                </div>
-                <div v-if="data.status == 4" class="card-foot">
-                  <nut-button
-                    type="primary"
-                    size="small"
-                    @click="navTo(`/pages/warranty/index?id=${data.id}`)">
-                    查看质保单
-                  </nut-button>
-                  <nut-button size="small" @click="onCheckRate(data)">
-                    {{ data.is_reviewed == 1 ? '查看评价' : '去评价' }}
-                  </nut-button>
-                  <nut-button
-                    v-if="data.is_aftersaled == 0"
-                    size="small"
-                    @click="navTo(`/pages/after-sale/index?id=${data.id}`)">
-                    申请售后
-                  </nut-button>
-                  <nut-button
-                    v-if="data.is_aftersaled == 1"
-                    size="small"
-                    @click="
-                      navTo(
-                        `/pages/after-sale/timeline?id=${data.aftersale_id}`
-                      )
-                    ">
-                    查看进度
-                  </nut-button>
-                </div>
-              </div>
-            </template>
-          </PageList>
+          <scroll-view
+            scroll-x
+            class="scroll-container"
+            :show-scrollbar="false">
+            <div class="order-container">
+              <OrderInfo
+                v-for="order in orders"
+                :key="order.id"
+                class="flex-shrink-0 basis-[88%]"
+                :data="order"
+                @refresh="getOrders"
+                @show-rate-popup="() => ratePopupRef.showPopup(order)" />
+            </div>
+          </scroll-view>
         </div>
 
         <!-- 第三板块：积分商城 -->
@@ -174,14 +68,17 @@
               <span class="i-mdi-chevron-right ml-[5rpx]"></span>
             </div>
           </div>
-          <scroll-view class="mall-scroll" scroll-x :show-scrollbar="false">
+          <scroll-view
+            scroll-x
+            class="scroll-container"
+            :show-scrollbar="false">
             <div class="mall-track">
               <div v-for="item in goods" :key="item.id" class="mall-card">
                 <div class="img-wrap">
                   <image
                     class="goods-img"
-                    :src="item.image"
-                    mode="aspectFill" />
+                    mode="aspectFill"
+                    :src="item.image" />
                   <div v-if="item.tag" class="tag">{{ item.tag }}</div>
                 </div>
                 <div class="goods-info">
@@ -196,79 +93,24 @@
           </scroll-view>
         </div>
       </div>
-      <nut-popup
-        v-model:visible="ratePopupVisible"
-        round
-        position="bottom"
-        safe-area-inset-bottom>
-        <div class="popupWrap">
-          <div class="__title px-[20rpx]">订单评价</div>
-          <div class="popup-inner rate">
-            <div class="mx-[40rpx]">
-              <div v-for="item in rateMap" :key="item.key" class="rate-field">
-                <div class="rate-field__label">{{ item.label }}</div>
-                <nut-rate
-                  v-model="rateInfo[item.key]"
-                  active-color="#fa200c"
-                  size="20" />
-              </div>
-              <nut-button
-                v-if="currentOrder.is_reviewed != 1"
-                block
-                size="large"
-                type="primary"
-                @click="debounce(onSubmitRate)">
-                确认提交
-              </nut-button>
-            </div>
-          </div>
-        </div>
-      </nut-popup>
+
+      <RatePopup ref="ratePopupRef" />
     </div>
   </AppContainer>
 </template>
 
 <script setup>
-import {
-  confirmOrderRes,
-  getGoodsRes,
-  getOrderListRes,
-  getRateInfoRes,
-  rateOrderRes,
-  updateUserRes
-} from '@/api'
-import { callPhone, copy, navTo, previewImage } from '../../utils/uni'
+import { getGoodsRes, getOrderListRes, updateUserRes } from '@/api'
 import { useAppStore } from '@/stores/app'
-import debounce from '@/utils/debounce'
-import { orderTypeMap } from '@/constant'
 import { useUploader } from '@/hooks/useUploader'
+import { navTo } from '@/utils/uni'
 
 const appStore = useAppStore()
 const { appUser, appToken } = storeToRefs(appStore)
 const { upload } = useUploader()
-const pageListRef = ref(),
-  currentOrder = ref({}),
-  ratePopupVisible = ref(false),
-  rateInfo = ref({
-    service_rating: 0,
-    environment_rating: 0,
-    technology_rating: 0
-  }),
-  rateMap = [
-    {
-      key: 'service_rating',
-      label: '服务评价'
-    },
-    {
-      key: 'environment_rating',
-      label: '环境评价'
-    },
-    {
-      key: 'technology_rating',
-      label: '技术评价'
-    }
-  ],
-  goods = ref([])
+const goods = ref([]),
+  orders = ref([]),
+  ratePopupRef = ref()
 
 async function onChooseAvatar(e) {
   const {
@@ -287,50 +129,13 @@ async function onNicknameChange(e) {
   }
 }
 
-const onCheckRate = async (data) => {
-  currentOrder.value = data
-  if (data.is_reviewed == 1) {
-    const result = await getRateInfoRes(data.id)
-    rateInfo.value.service_rating = result.service_rating
-    rateInfo.value.environment_rating = result.environment_rating
-    rateInfo.value.technology_rating = result.technology_rating
-  } else {
-    rateInfo.value = {
-      service_rating: 0,
-      environment_rating: 0,
-      technology_rating: 0
-    }
-  }
-  ratePopupVisible.value = true
-}
-
-async function onSubmitRate() {
-  await rateOrderRes({
-    order_id: currentOrder.value.id,
-    ...rateInfo.value
-  })
-  refresh()
-  ratePopupVisible.value = false
-}
-
-async function onOrderConfirm(id) {
-  uni.showModal({
-    title: '提示',
-    content: '请仔细检查车辆施工后状况',
-    async success({ confirm }) {
-      if (confirm) {
-        await confirmOrderRes(id)
-        pageListRef.value.refresh()
-      }
-    }
-  })
-}
-
-function refresh() {
-  pageListRef.value?.refresh()
+async function getOrders() {
+  const orderRes = await getOrderListRes({ page: 1, limit: 3 })
+  orders.value = orderRes.data
 }
 
 onLoad(async () => {
+  getOrders()
   const result = await getGoodsRes({ page: 1, limit: 5 })
   goods.value = result.data
 })
@@ -342,8 +147,21 @@ onShow(() => {
   }
 
   if (appStore.checkHomeOrderListNeedRefresh()) {
-    refresh()
+    getOrders()
   }
+})
+
+onPullDownRefresh(async () => {
+  try {
+    uni.showLoading({
+      title: '下拉刷新中...',
+      mask: true
+    })
+    await getOrders()
+  } finally {
+    uni.hideLoading()
+  }
+  uni.stopPullDownRefresh()
 })
 </script>
 
@@ -477,95 +295,8 @@ onShow(() => {
     }
   }
 
-  // 订单列表
-  .order-card {
-    background: #fff;
-    border-radius: 20rpx;
-    padding: 0 24rpx;
-    box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.02);
-
-    .card-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 24rpx 0;
-      border-bottom: 1rpx solid #f5f5f5;
-
-      .sn {
-        font-size: 26rpx;
-        color: #666;
-      }
-
-      .status {
-        font-size: 26rpx;
-        font-weight: 500;
-      }
-    }
-
-    .card-body {
-      // display: flex;
-      // align-items: center;
-      padding: 15rpx 0;
-
-      // .product-img {
-      //   width: 180rpx;
-      //   height: 180rpx;
-      //   border-radius: 12rpx;
-      //   border: 2rpx solid #e6e6e6;
-      //   flex-shrink: 0;
-      //   padding: 20rpx;
-
-      //   image {
-      //     width: 100%;
-      //     height: 100%;
-      //   }
-      // }
-
-      .product-info {
-        margin-left: 20rpx;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-
-        .product-item {
-          margin-bottom: 5rpx;
-          display: flex;
-          align-items: center;
-          font-size: 26rpx;
-
-          .label {
-            color: #666;
-            display: flex;
-            align-items: center;
-            column-gap: 10rpx;
-          }
-
-          .value {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            column-gap: 10rpx;
-            color: #333;
-          }
-
-          &:last-of-type {
-            margin-bottom: 0;
-          }
-        }
-      }
-    }
-
-    .card-foot {
-      padding: 20rpx 0;
-      border-top: 1rpx solid #f5f5f5;
-      display: flex;
-      justify-content: flex-end;
-      column-gap: 10rpx;
-    }
-  }
-
   // 积分商城横向滚动
-  .mall-scroll {
+  .scroll-container {
     width: 100%;
     white-space: nowrap;
 
@@ -575,7 +306,7 @@ onShow(() => {
       padding-bottom: 10rpx;
 
       .mall-card {
-        width: 260rpx;
+        width: 276rpx;
         background: #fff;
         border-radius: 16rpx;
         overflow: hidden;
@@ -636,6 +367,12 @@ onShow(() => {
           }
         }
       }
+    }
+
+    .order-container {
+      width: 100%;
+      display: flex;
+      column-gap: 20rpx;
     }
   }
 }

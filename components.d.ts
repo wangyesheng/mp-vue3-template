@@ -39,6 +39,8 @@ declare module 'vue' {
     NutTag: typeof import('nutui-uniapp/components/tag/tag.vue')['default']
     NutTextarea: typeof import('nutui-uniapp/components/textarea/textarea.vue')['default']
     NutToast: typeof import('nutui-uniapp/components/toast/toast.vue')['default']
+    OrderInfo: typeof import('./src/components/OrderInfo/index.vue')['default']
     PageList: typeof import('./src/components/PageList/index.vue')['default']
+    RatePopup: typeof import('./src/components/RatePopup/index.vue')['default']
   }
 }

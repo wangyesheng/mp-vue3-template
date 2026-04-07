@@ -77,7 +77,7 @@
           </div>
           <div class="info-row no-border">
             <span class="info-label">施工门店</span>
-            <span class="info-value">{{ orderInfo.store.store_name }}</span>
+            <span class="info-value">{{ orderInfo.store?.store_name }}</span>
           </div>
         </div>
       </div>
@@ -97,7 +97,7 @@
               :key="index"
               class="photo-item"
               @tap="previewImage(index, completeCarPhotos)">
-              <image :src="photo" mode="aspectFill" />
+              <image mode="aspectFill" :src="photo" />
               <div class="photo-mask">
                 <text class="mask-text">点击查看</text>
               </div>

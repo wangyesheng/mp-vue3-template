@@ -6,8 +6,8 @@
           <div class="header">
             <image
               class="avatar"
-              :src="appUser.avatar"
               mode="aspectFill"
+              :src="appUser.avatar"
               @click="onRefreshAppUser" />
             <div>
               <div class="name">
@@ -62,7 +62,7 @@
           :key="item.label"
           class="item"
           @click="item.handler ? item.handler() : navTo(item.page)">
-          <image :src="item.icon" mode="aspectFill" />
+          <image mode="aspectFill" :src="item.icon" />
           <span>{{ item.label }}</span>
         </div>
       </div>

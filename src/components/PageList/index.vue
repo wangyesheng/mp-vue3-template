@@ -18,7 +18,7 @@
     </view>
   </view>
   <view v-else class="py-[10vh] relative">
-    <Loading v-if="pageInfo.loading" position="absoluted" show-text />
+    <Loading v-if="pageInfo.loading" show-text position="absoluted" />
     <Empty v-else />
   </view>
 </template>

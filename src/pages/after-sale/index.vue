@@ -14,11 +14,11 @@
         <div class="field__body field__body--textarea">
           <nut-textarea
             v-model="afterSaleInfo.problem_desc"
+            limit-show
+            autosize
             placeholder="例如：施工后出现气泡、边角起翘等"
             :rows="5"
-            limit-show
-            :max-length="500"
-            autosize />
+            :max-length="500" />
         </div>
       </div>
 
@@ -34,7 +34,7 @@
               :key="`${url}-${index}`"
               class="uploader-slot uploader-slot--image"
               @click="onClickImage(index)">
-              <image :src="url" mode="aspectFill" />
+              <image mode="aspectFill" :src="url" />
             </div>
             <div
               v-if="afterSaleInfo.images.length < 3"
@@ -52,8 +52,8 @@
         <nut-input
           v-model="afterSaleInfo.contact_name"
           placeholder="请输入姓名"
-          :border="false"
-          input-align="right" />
+          input-align="right"
+          :border="false" />
       </div>
 
       <div class="divider" />
@@ -64,8 +64,8 @@
           v-model="afterSaleInfo.contact_phone"
           placeholder="请输入手机号"
           type="tel"
-          :border="false"
-          input-align="right" />
+          input-align="right"
+          :border="false" />
       </div>
     </div>
 
@@ -74,8 +74,8 @@
         block
         size="large"
         type="primary"
-        :loading="loading"
         custom-color="linear-gradient(135deg, #1890ff 0%, #096dd9 100%)"
+        :loading="loading"
         @click="onSubmit">
         提交申请
       </nut-button>

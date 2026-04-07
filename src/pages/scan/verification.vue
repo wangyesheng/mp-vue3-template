@@ -1,7 +1,7 @@
 <template>
   <AppContainer>
     <div class="__wallet">
-      <nut-tabs v-model="selectedWalletType" type="smile" auto-height>
+      <nut-tabs v-model="selectedWalletType" auto-height type="smile">
         <nut-tab-pane title="单次卡" pane-key="1">
           <PageList
             ref="pageListRef1"

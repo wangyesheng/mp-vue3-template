@@ -17,6 +17,18 @@
       }
     },
     {
+      "path": "pages/order/bind",
+      "style": {
+        "navigationBarTitleText": "订单绑定"
+      }
+    },
+    {
+      "path": "pages/order/list",
+      "style": {
+        "navigationBarTitleText": "我的订单"
+      }
+    },
+    {
       "path": "pages/mall/index",
       "style": {
         "navigationBarTitleText": "积分商城"
@@ -38,12 +50,6 @@
       "path": "pages/after-sale/timeline",
       "style": {
         "navigationBarTitleText": "售后进度"
-      }
-    },
-    {
-      "path": "pages/order/bind",
-      "style": {
-        "navigationBarTitleText": "订单绑定"
       }
     },
     {

@@ -4,7 +4,7 @@
       <div class="qrcode-wrap">
         <div class="userinfo">
           <div v-if="appUser.id" class="inner">
-            <image :src="appUser.avatar" mode="aspectFill" />
+            <image mode="aspectFill" :src="appUser.avatar" />
             <div>
               <span>{{ appUser.nickname }}</span>
               <span>儿童会员</span>
@@ -13,7 +13,7 @@
           <div v-else class="noLogin">Hi，Haowen Baby</div>
         </div>
         <div class="qrcode">
-          <image :src="qrcode" mode="aspectFill" />
+          <image mode="aspectFill" :src="qrcode" />
         </div>
         <div class="logo">
           <div class="inner">

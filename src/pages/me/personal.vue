@@ -7,7 +7,7 @@
             class="avatar"
             open-type="chooseAvatar"
             @chooseavatar="onChooseAvatar">
-            <image :src="tempAvatar" mode="aspectFill" />
+            <image mode="aspectFill" :src="tempAvatar" />
           </button>
         </template>
       </nut-cell>
@@ -17,8 +17,8 @@
             v-model="appUser.nickname"
             placeholder="输入用户名"
             type="nickname"
-            :border="false"
-            input-align="right" />
+            input-align="right"
+            :border="false" />
         </template>
       </nut-cell>
       <nut-cell title="手机号">
@@ -27,8 +27,8 @@
             v-model="appUser.mobile"
             placeholder="输入手机号"
             type="tel"
-            :border="false"
-            input-align="right" />
+            input-align="right"
+            :border="false" />
         </template>
       </nut-cell>
     </nut-cell-group>

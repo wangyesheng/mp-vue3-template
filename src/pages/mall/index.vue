@@ -9,8 +9,8 @@
               class="w-12 h-12 p-1 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-inner">
               <image
                 class="w-full h-full rounded-md"
-                :src="appUser.avatar"
-                mode="aspectFill" />
+                mode="aspectFill"
+                :src="appUser.avatar" />
             </div>
             <div>
               <h2 class="text-base font-bold">{{ appUser.nickname }}</h2>
@@ -42,7 +42,7 @@
 
       <div v-if="goods.length > 0" class="content">
         <div v-for="good in goods" :key="good.id" class="item">
-          <image :src="good.image" mode="aspectFill" />
+          <image mode="aspectFill" :src="good.image" />
           <div class="inner">
             <span class="title">{{ good.name }}</span>
             <div class="action">
@@ -64,7 +64,7 @@
 
 <script setup>
 import { useAppStore } from '../../stores/app'
-import { navTo } from '../../utils/uni'
+import { navTo, toast } from '../../utils/uni'
 import { exchangeGoodRes, getGoodsRes } from '@/api'
 
 const appStore = useAppStore(),
@@ -88,6 +88,7 @@ function onExchange(good) {
           goods_id: good.id
         })
         appStore.refreshAppUser()
+        toast('兑换成功！')
       }
     }
   })

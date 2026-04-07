@@ -149,3 +149,11 @@ export function exchangeGoodRes(data) {
     data
   })
 }
+
+export function getGoodRecoedsRes(data) {
+  return request({
+    url: '/api/points/my_exchange',
+    method: 'get',
+    data
+  })
+}

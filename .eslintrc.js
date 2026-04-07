@@ -56,16 +56,9 @@ module.exports = {
   },
   plugins: ['vue', '@typescript-eslint'],
   rules: {
-    'vue/multi-word-component-names': 0, // 允许单词组件名（如 Empty、Item）
     eqeqeq: 'off', // 允许使用 == 和 != 比较运算符
     camelcase: 'off', // 允许使用下划线命名（如 order_number）
-    'one-var': 'off', // 允许 const a = 1, b = 2 形式
-    'vue/component-tags-order': [
-      'error',
-      {
-        order: ['template', 'script', 'style'] // 强制顺序：template → script → style
-      }
-    ]
+    'one-var': 'off' // 允许 const a = 1, b = 2 形式
   },
   overrides: [
     {
@@ -77,6 +70,35 @@ module.exports = {
     {
       files: ['*.vue'],
       rules: {
+        'vue/component-tags-order': [
+          'error',
+          {
+            order: ['template', 'script', 'style'] // 强制顺序：template → script → style
+          }
+        ], // 属性排序：静态属性在前，动态属性在后
+        'vue/attributes-order': [
+          'error',
+          {
+            order: [
+              'DEFINITION', // is, v-is
+              'LIST_RENDERING', // v-for
+              'CONDITIONALS', // v-if, v-else-if, v-else, v-show, v-cloak
+              'RENDER_MODIFIERS', // v-once, v-pre
+              'GLOBAL', // id
+              'UNIQUE', // ref, key
+              'SLOT', // v-slot, slot, #default
+              'TWO_WAY_BINDING', // v-model
+              'OTHER_DIRECTIVES', // 其他自定义指令
+              'ATTR_SHORTHAND_BOOL', // 简写布尔属性（disabled, readonly, block 等）
+              'ATTR_STATIC', // 静态属性（class, style, type, placeholder 等）
+              'ATTR_DYNAMIC', // 动态绑定属性（:foo="bar"、v-bind:foo）
+              'EVENTS', // @click, v-on
+              'CONTENT' // v-text, v-html
+            ],
+            alphabetical: false // 不在每类内按字母排序
+          }
+        ],
+        'vue/multi-word-component-names': 0, // 允许单词组件名（如 Empty、Item）
         // 模板里用到的变量/函数须在 <script setup> 中定义（含 import），否则报错
         'vue/no-undef-properties': 'error',
         'vue/no-v-model-argument': 'off', // 允许 v-model:xxx 写法

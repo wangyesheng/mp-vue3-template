@@ -1,66 +1,49 @@
 <template>
   <AppContainer>
     <div class="mall-record">
-      <div v-if="records.length" class="record-list">
-        <div v-for="record in records" :key="record.id" class="record-card">
-          <image :src="record.image" mode="aspectFill" class="thumb" />
-          <div class="record-content">
-            <div class="top-row">
-              <div class="name">{{ record.name }}</div>
-              <div class="points">-{{ record.points }} 积分</div>
-            </div>
-            <div class="meta-row">
-              <div>数量：{{ record.quantity }}</div>
-              <div>兑换单号：{{ record.orderNo }}</div>
-            </div>
-            <div class="meta-row">
-              <div>兑换时间：{{ record.time }}</div>
+      <PageList :api="getGoodRecoedsRes">
+        <template #item="{ data: record }">
+          <div class="record-card">
+            <image mode="aspectFill" class="thumb" :src="record.goods_image" />
+            <div class="record-content">
+              <div class="top-row">
+                <div class="name">{{ record.goods_name }}</div>
+                <div class="points">-{{ record.total_points }} 积分</div>
+              </div>
+              <div class="meta-row">
+                <div>数量：{{ record.quantity }}</div>
+              </div>
+              <div class="meta-row">
+                <div>兑换时间：{{ record.createtime }}</div>
+                <div :class="['status', statusMap[record.status].key]">
+                  {{ statusMap[record.status].label }}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <Empty v-else description="暂无兑换记录" custom-class="mt-[10vh]" />
+        </template>
+      </PageList>
     </div>
   </AppContainer>
 </template>
 
 <script setup>
-const records = ref([
-  {
-    id: 1,
-    image: 'https://img.yzcdn.cn/vant/apple-1.jpg',
-    name: '高级洗车毛巾套装',
-    points: 500,
-    quantity: 1,
-    orderNo: 'EX202604060001',
-    time: '2026-04-06 10:23',
-    status: '已完成',
-    statusClass: 'done'
+import { getGoodRecoedsRes } from '@/api'
+
+const statusMap = {
+  0: {
+    key: 'pending',
+    label: '待发货'
   },
-  {
-    id: 2,
-    image: 'https://img.yzcdn.cn/vant/apple-2.jpg',
-    name: '内饰深层清洁剂',
-    points: 1200,
-    quantity: 1,
-    orderNo: 'EX202604050024',
-    time: '2026-04-05 17:42',
-    status: '待发货',
-    statusClass: 'pending'
+  1: {
+    key: 'wait',
+    label: '已发货'
   },
-  {
-    id: 3,
-    image: 'https://img.yzcdn.cn/vant/apple-3.jpg',
-    name: '车载香薰挂件',
-    points: 1500,
-    quantity: 1,
-    orderNo: 'EX202604030008',
-    time: '2026-04-03 13:05',
-    status: '已发货',
-    statusClass: 'shipped'
+  2: {
+    key: 'done',
+    label: '已完成'
   }
-])
+}
 </script>
 
 <style lang="scss" scoped>
@@ -99,8 +82,8 @@ const records = ref([
     box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.06);
 
     .thumb {
-      width: 180rpx;
-      height: 180rpx;
+      width: 120rpx;
+      height: 120rpx;
       border-radius: 20rpx;
       flex-shrink: 0;
       object-fit: cover;
@@ -116,7 +99,7 @@ const records = ref([
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        margin-bottom: 18rpx;
+        margin-bottom: 10rpx;
 
         .name {
           font-size: 30rpx;
@@ -138,6 +121,7 @@ const records = ref([
 
       .meta-row {
         display: flex;
+        align-items: center;
         justify-content: space-between;
         color: #67748a;
         font-size: 24rpx;
@@ -150,17 +134,17 @@ const records = ref([
           color: #0f172a;
         }
 
-        .done {
+        .pending {
           background: rgba(24, 144, 255, 0.12);
           color: #096dd9;
         }
 
-        .pending {
+        .wait {
           background: rgba(250, 173, 20, 0.12);
           color: #d48806;
         }
 
-        .shipped {
+        .done {
           background: rgba(38, 166, 154, 0.12);
           color: #0d9488;
         }

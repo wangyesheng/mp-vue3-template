@@ -1,12 +1,12 @@
 <template>
   <!--  -->
   <view
+    class="container"
     :style="{
       position: position,
       'z-index': zIndex,
       '--opacity': maskOpacity
     }"
-    class="container"
     :class="[
       mask ? 'mask' : '',
       maskMini ? 'mask-mini' : '',

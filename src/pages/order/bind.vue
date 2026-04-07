@@ -38,7 +38,7 @@
           </div>
           <div class="info-row">
             <span class="info-label">地址</span>
-            <text class="info-value address" user-select>
+            <text user-select class="info-value address">
               {{ orderInfo.store.store_address }}
             </text>
           </div>
@@ -48,7 +48,13 @@
               <span class="info-value phone">
                 {{ orderInfo.store.store_mobile }}
               </span>
-              <nut-button plain size="mini" type="primary">拨打</nut-button>
+              <nut-button
+                plain
+                size="mini"
+                type="primary"
+                @click="callPhone(orderInfo.store.store_mobile)">
+                拨打
+              </nut-button>
             </div>
           </div>
         </div>
@@ -63,8 +69,8 @@
         <div class="referral-wrap">
           <nut-input
             v-model="referralCode"
-            placeholder="请输入推荐人的推荐码"
-            clearable />
+            clearable
+            placeholder="请输入推荐人的推荐码" />
         </div>
       </div>
 
@@ -114,7 +120,7 @@ const loading = ref(false)
 
 const { bindMobileVisible, login, getPhoneNumber } = useLogin()
 
-onLoad(async ({ order_sn = '20260402235440329548' }) => {
+onLoad(async ({ order_sn = '20260402235440326684' }) => {
   if (order_sn) {
     const data = await getOrderInfoRes(order_sn)
     orderInfo.value = data
