@@ -71,7 +71,7 @@ onLoad(async ({ id }) => {
 
 <style lang="scss" scoped>
 .timeline {
-  padding: 0 20rpx;
+  padding: 20rpx 30rpx;
 
   :deep() {
     .nut-cell-group__wrap,

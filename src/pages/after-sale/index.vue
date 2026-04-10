@@ -41,7 +41,7 @@
               class="uploader-slot uploader-slot--add"
               @click="onChooseImage(null)">
               <span class="i-mdi-camera uploader-slot__icon" />
-              <span class="uploader-slot__hint">拍摄/选取</span>
+              <span class="uploader-slot__hint">拍照 / 选择</span>
             </div>
           </div>
         </div>
@@ -115,7 +115,6 @@ function onChooseImage(index) {
 
       if (index !== null) {
         afterSaleInfo.value.images[index] = data[0].fullUrl
-        console.log(afterSaleInfo.value.images)
       } else {
         data.forEach(({ fullUrl }) => {
           afterSaleInfo.value.images.push(fullUrl)
@@ -130,15 +129,17 @@ function onChooseImage(index) {
 
 function onClickImage(index) {
   uni.showActionSheet({
-    itemList: ['预览照片', '重新拍照'],
+    itemList: ['预览照片', '重新拍照', '删除照片'],
     success(res) {
       if (res.tapIndex === 0) {
         uni.previewImage({
-          index,
+          current: index,
           urls: afterSaleInfo.value.images
         })
-      } else {
+      } else if (res.tapIndex === 1) {
         onChooseImage(index)
+      } else {
+        afterSaleInfo.value.images.splice(index, 1)
       }
     }
   })

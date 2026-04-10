@@ -49,7 +49,10 @@
               <OrderInfo
                 v-for="order in orders"
                 :key="order.id"
-                class="flex-shrink-0 basis-[88%]"
+                :class="[
+                  'flex-shrink-0',
+                  orders.length == 1 ? 'basis-[100%]' : 'basis-[90%]'
+                ]"
                 :data="order"
                 @refresh="getOrders"
                 @show-rate-popup="() => ratePopupRef.showPopup(order)" />
@@ -94,7 +97,7 @@
         </div>
       </div>
 
-      <RatePopup ref="ratePopupRef" />
+      <RatePopup ref="ratePopupRef" @refresh="getOrders" />
     </div>
   </AppContainer>
 </template>
@@ -130,14 +133,27 @@ async function onNicknameChange(e) {
 }
 
 async function getOrders() {
-  const orderRes = await getOrderListRes({ page: 1, limit: 3 })
+  const orderRes = await getOrderListRes({ page: 1, limit: 2 })
   orders.value = orderRes.data
 }
 
-onLoad(async () => {
-  getOrders()
-  const result = await getGoodsRes({ page: 1, limit: 5 })
+async function getGoods() {
+  const result = await getGoodsRes({ page: 1, limit: 3 })
   goods.value = result.data
+}
+
+onLoad(async () => {
+  if (!appToken.value) return
+  try {
+    uni.showLoading({
+      title: '数据加载中...',
+      mask: true
+    })
+    await getOrders()
+    await getGoods()
+  } finally {
+    uni.hideLoading()
+  }
 })
 
 onShow(() => {
@@ -254,11 +270,14 @@ onPullDownRefresh(async () => {
   .main-content {
     padding: 32rpx 5% 0;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 48rpx; /* 统一各 section 间距 */
   }
 
   // 通用板块样式
   .section {
-    margin-top: 20rpx;
+    margin-top: 0;
 
     .section-head {
       display: flex;
@@ -301,12 +320,13 @@ onPullDownRefresh(async () => {
     white-space: nowrap;
 
     .mall-track {
+      width: 100%;
       display: inline-flex;
-      gap: 20rpx;
-      padding-bottom: 10rpx;
+      column-gap: 20rpx;
 
       .mall-card {
-        width: 276rpx;
+        flex-shrink: 0;
+        width: calc(45% - 10rpx);
         background: #fff;
         border-radius: 16rpx;
         overflow: hidden;

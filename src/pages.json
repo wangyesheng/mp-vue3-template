@@ -67,30 +67,6 @@
       }
     },
     {
-      "path": "pages/me/index",
-      "style": {
-        "navigationBarTitleText": "我的"
-      }
-    },
-    {
-      "path": "pages/me/personal",
-      "style": {
-        "navigationBarTitleText": "编辑个人信息"
-      }
-    },
-    {
-      "path": "pages/me/setting",
-      "style": {
-        "navigationBarTitleText": "设置"
-      }
-    },
-    {
-      "path": "pages/me/richtext",
-      "style": {
-        "navigationBarTitleText": "关于我们"
-      }
-    },
-    {
       "path": "pages/web-view/index",
       "style": {
         "navigationBarTitleText": ""

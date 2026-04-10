@@ -41,7 +41,7 @@ export function switchTab(url, needToken = true) {
 
 export function previewImage(index, urls) {
   uni.previewImage({
-    index,
+    current: index,
     urls
   })
 }

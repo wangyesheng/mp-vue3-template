@@ -6,38 +6,60 @@ page {
   background: var(--hw-primary-bg-color);
 }
 
-.__bindMobilePopup {
+.bind-mobile-popup {
   width: 80%;
-  padding: 30rpx;
-  box-sizing: border-box;
 
-  .nut-button__wrap > view {
+  .popup-wrap {
     display: flex;
+    flex-direction: column;
     align-items: center;
+    padding: 64rpx 56rpx 48rpx;
 
-    image {
-      width: 48rpx;
-      height: 48rpx;
-      margin-right: 20rpx;
+    .icon-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 120rpx;
+      height: 120rpx;
+      margin-bottom: 40rpx;
+      font-size: 56rpx;
+      background: linear-gradient(
+        135deg,
+        rgb(24, 144, 255, 0.2),
+        rgb(24, 144, 255, 0.1)
+      );
+      border-radius: 32rpx;
+    }
+
+    .title {
+      margin-bottom: 20rpx;
+      font-size: 40rpx;
+      font-weight: 700;
+      color: #1a1a2e;
+      letter-spacing: 2rpx;
+    }
+
+    .desc {
+      margin-bottom: 56rpx;
+      font-size: 28rpx;
+      line-height: 1.6;
+      color: #9ca3af;
+      text-align: center;
+    }
+
+    .btn-text {
+      font-size: 32rpx;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .cancel {
+      margin-top: 32rpx;
+      font-size: 28rpx;
+      color: #9ca3af;
     }
   }
-
-  .title {
-    font-size: 32rpx;
-    margin-bottom: 30rpx;
-    text-align: center;
-    color: #666;
-    font-weight: 500;
-  }
-
-  .tips {
-    color: #6b6b6b;
-    font-size: 30rpx;
-    font-weight: 500;
-    margin-bottom: 50rpx;
-  }
 }
-
 .__rechargePopupWrap {
   .customAmount {
     box-sizing: border-box;
@@ -84,7 +106,7 @@ page {
   margin: auto;
 
   .nut-empty__box {
-    width: 195rpx;
+    width: 142rpx;
     height: 128rpx;
   }
 

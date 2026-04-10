@@ -8,7 +8,7 @@
         <!-- Logo 区域 -->
         <view class="logo-wrap">
           <view class="logo">
-            <text class="logo-icon">🚗</text>
+            <image class="w-16 h-16" src="@/static/images/logo.png"></image>
           </view>
           <text class="app-name">轩科质保服务</text>
           <text class="app-desc">您的爱车美容质保管家</text>
@@ -87,8 +87,6 @@ const { login, getPhoneNumber, bindMobileVisible } = useLogin(() =>
         width: 160rpx;
         height: 160rpx;
         margin-bottom: 40rpx;
-        font-size: 80rpx;
-        background: linear-gradient(135deg, #1890ff, #0d8aff);
         border-radius: 40rpx;
         box-shadow: 0 20rpx 60rpx rgb(24, 144, 255, 0.2);
       }

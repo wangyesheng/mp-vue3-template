@@ -14,6 +14,7 @@ Flexbox（弹性盒子布局）是 CSS3 中强大的布局模块，用于创建�
 ## Flex 容器属性
 
 ### 1. display: flex
+
 将元素设置为 flex 容器。
 
 ```css
@@ -23,6 +24,7 @@ Flexbox（弹性盒子布局）是 CSS3 中强大的布局模块，用于创建�
 ```
 
 ### 2. flex-direction
+
 定义主轴方向（子项排列方向）。
 
 - `row`（默认）：水平从左到右
@@ -37,6 +39,7 @@ Flexbox（弹性盒子布局）是 CSS3 中强大的布局模块，用于创建�
 ```
 
 ### 3. justify-content
+
 沿主轴对齐子项。
 
 - `flex-start`（默认）：起点对齐
@@ -53,6 +56,7 @@ Flexbox（弹性盒子布局）是 CSS3 中强大的布局模块，用于创建�
 ```
 
 ### 4. align-items
+
 沿交叉轴对齐子项（单行）。
 
 - `stretch`（默认）：拉伸填充
@@ -68,6 +72,7 @@ Flexbox（弹性盒子布局）是 CSS3 中强大的布局模块，用于创建�
 ```
 
 ### 5. align-content
+
 沿交叉轴对齐多行子项（需 flex-wrap）。
 
 - `stretch`（默认）
@@ -85,6 +90,7 @@ Flexbox（弹性盒子布局）是 CSS3 中强大的布局模块，用于创建�
 ```
 
 ### 6. flex-wrap
+
 控制是否换行。
 
 - `nowrap`（默认）：不换行
@@ -100,6 +106,7 @@ Flexbox（弹性盒子布局）是 CSS3 中强大的布局模块，用于创建�
 ## Flex 子项属性
 
 ### 1. flex-grow
+
 控制子项扩展比例（占用多余空间）。
 
 - 默认值：`0`（不扩展）
@@ -112,11 +119,13 @@ Flexbox（弹性盒子布局）是 CSS3 中强大的布局模块，用于创建�
 ```
 
 **示例**：
+
 - 容器宽度 300px，3 个子项 `flex-basis: 50px`（总 150px，多余 150px）
 - 都 `flex-grow: 1` → 每个扩展 50px，最终 100px
 - 子项1 `flex-grow: 2` → 子项1 扩展 75px，其他 37.5px
 
 ### 2. flex-shrink
+
 控制子项收缩比例（空间不足时缩小）。
 
 - 默认值：`1`（允许收缩）
@@ -129,11 +138,13 @@ Flexbox（弹性盒子布局）是 CSS3 中强大的布局模块，用于创建�
 ```
 
 **示例**：
+
 - 容器宽度 200px，3 个子项 `width: 100px`（总 300px，溢出 100px）
 - 都 `flex-shrink: 1` → 每个收缩 33.33px，最终 66.67px
 - 子项1 `flex-shrink: 0` → 不收缩，其他各收缩 50px
 
 ### 3. flex-basis
+
 设置子项初始大小。
 
 - 默认值：`auto`（根据内容或 width）
@@ -146,6 +157,7 @@ Flexbox（弹性盒子布局）是 CSS3 中强大的布局模块，用于创建�
 ```
 
 ### 4. flex（简写）
+
 `flex: grow shrink basis`
 
 - `flex: 1` → `flex: 1 1 0%`（等分空间）
@@ -159,6 +171,7 @@ Flexbox（弹性盒子布局）是 CSS3 中强大的布局模块，用于创建�
 ```
 
 ### 5. align-self
+
 覆盖容器的 align-items，对单个子项对齐。
 
 - 值同 align-items
@@ -170,6 +183,7 @@ Flexbox（弹性盒子布局）是 CSS3 中强大的布局模块，用于创建�
 ```
 
 ### 6. order
+
 改变子项显示顺序（不影响 DOM）。
 
 - 默认值：`0`
@@ -184,6 +198,7 @@ Flexbox（弹性盒子布局）是 CSS3 中强大的布局模块，用于创建�
 ## 实际用法示例
 
 ### 1. 水平居中垂直居中
+
 ```css
 .container {
   display: flex;
@@ -194,6 +209,7 @@ Flexbox（弹性盒子布局）是 CSS3 中强大的布局模块，用于创建�
 ```
 
 ### 2. 等分布局
+
 ```css
 .container {
   display: flex;
@@ -205,6 +221,7 @@ Flexbox（弹性盒子布局）是 CSS3 中强大的布局模块，用于创建�
 ```
 
 ### 3. 响应式导航栏
+
 ```css
 .nav {
   display: flex;
@@ -212,11 +229,17 @@ Flexbox（弹性盒子布局）是 CSS3 中强大的布局模块，用于创建�
   align-items: center;
 }
 
-.logo { flex-shrink: 0; }
-.menu { display: flex; gap: 20px; }
+.logo {
+  flex-shrink: 0;
+}
+.menu {
+  display: flex;
+  gap: 20px;
+}
 ```
 
 ### 4. 卡片网格（结合 flex-wrap）
+
 ```css
 .grid {
   display: flex;

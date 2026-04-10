@@ -8,7 +8,7 @@
           @show-rate-popup="() => ratePopupRef.showPopup(data)" />
       </template>
     </PageList>
-    <RatePopup ref="ratePopupRef" />
+    <RatePopup ref="ratePopupRef" @refresh="refresh" />
   </AppContainer>
 </template>
 
