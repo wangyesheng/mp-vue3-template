@@ -42,6 +42,7 @@
           </div>
 
           <scroll-view
+            v-if="orders.length > 0"
             scroll-x
             class="scroll-container"
             :show-scrollbar="false">
@@ -58,6 +59,8 @@
                 @show-rate-popup="() => ratePopupRef.showPopup(order)" />
             </div>
           </scroll-view>
+
+          <Empty v-else />
         </div>
 
         <!-- 第三板块：积分商城 -->
@@ -133,7 +136,7 @@ async function onNicknameChange(e) {
 }
 
 async function getOrders() {
-  const orderRes = await getOrderListRes({ page: 1, limit: 2 })
+  const orderRes = await getOrderListRes({ page: 1, limit: 5 })
   orders.value = orderRes.data
 }
 
@@ -162,7 +165,7 @@ onShow(() => {
     return
   }
 
-  if (appStore.checkHomeOrderListNeedRefresh()) {
+  if (appStore.checkNeedRefresh()) {
     getOrders()
   }
 })

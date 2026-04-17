@@ -10,7 +10,14 @@
           <span class="text-base font-bold">
             {{ data.vehicle_type }}
           </span>
-          <span class="text-xs text-[#666]">订单号：{{ data.order_sn }}</span>
+          <span class="text-xs text-[#666]">
+            <span>订单号：{{ data.order_sn }}</span>
+            <span
+              class="ml-0.5 text-[var(--uvt-primary-color)]"
+              @click="copy(data.order_sn)">
+              复制
+            </span>
+          </span>
         </div>
         <div class="text-xs font-[550]">
           <span

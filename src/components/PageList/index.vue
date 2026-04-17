@@ -11,7 +11,7 @@
     <view
       v-if="pageInfo.end && isOverScreen"
       class="h-[6vh] relative flex justify-center items-center text-[#999] text-[28rpx]">
-      没有更多了
+      没有更多了...
     </view>
     <view v-if="pageInfo.loading && !isRefresh" class="h-[6vh] relative">
       <Loading position="absoluted" />
@@ -169,6 +169,7 @@ defineExpose({
   async refresh() {
     try {
       isRefresh.value = true
+      await nextTick()
       await getData(1)
     } finally {
       isRefresh.value = false

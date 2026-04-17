@@ -175,7 +175,7 @@ async function onSubmit() {
       ...afterSaleInfo.value,
       images: afterSaleInfo.value.images.join(',')
     })
-    appStore.markHomeOrderListNeedRefresh()
+    appStore.markNeedRefresh()
     uni.navigateBack()
   } finally {
     loading.value = false

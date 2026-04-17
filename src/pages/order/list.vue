@@ -14,11 +14,19 @@
 
 <script setup>
 import { getOrderListRes } from '@/api'
+import { useAppStore } from '@/stores/app'
 
 const pageListRef = ref(),
-  ratePopupRef = ref()
+  ratePopupRef = ref(),
+  appStore = useAppStore()
 
 function refresh() {
   pageListRef.value?.refresh()
 }
+
+onShow(() => {
+  if (appStore.checkNeedRefresh()) {
+    refresh()
+  }
+})
 </script>

@@ -36,15 +36,15 @@ export const useAppStore = defineStore('app', () => {
     uni.setStorageSync('APP_NAME', value)
   }
 
-  const homeOrderListNeedRefresh = ref(false)
+  const needRefresh = ref(false)
 
-  function markHomeOrderListNeedRefresh() {
-    homeOrderListNeedRefresh.value = true
+  function markNeedRefresh() {
+    needRefresh.value = true
   }
   /** 首页 onShow 调用：若为 true 则清空并返回 true，只消费一次 */
-  function checkHomeOrderListNeedRefresh() {
-    if (!homeOrderListNeedRefresh.value) return false
-    homeOrderListNeedRefresh.value = false
+  function checkNeedRefresh() {
+    if (!needRefresh.value) return false
+    needRefresh.value = false
     return true
   }
 
@@ -57,8 +57,8 @@ export const useAppStore = defineStore('app', () => {
     logout,
     appName,
     getAppName,
-    homeOrderListNeedRefresh,
-    markHomeOrderListNeedRefresh,
-    checkHomeOrderListNeedRefresh
+    needRefresh,
+    markNeedRefresh,
+    checkNeedRefresh
   }
 })
