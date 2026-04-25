@@ -157,3 +157,38 @@ export function getGoodRecoedsRes(data) {
     data
   })
 }
+
+export function saveReceiptInfoRes(data) {
+  return request({
+    url: '/api/address/save',
+    method: 'post',
+    data
+  })
+}
+
+export function getReceiptListRes(data) {
+  return request({
+    url: '/api/address/list',
+    method: 'get',
+    data
+  })
+}
+export function deleteReceiptInfoRes(id) {
+  return request({
+    url: '/api/address/delete',
+    method: 'post',
+    data: {
+      id
+    }
+  })
+}
+
+export function getReceiptInfoRes(id) {
+  return request({
+    url: '/api/address/detail',
+    method: 'get',
+    data: {
+      id
+    }
+  })
+}

@@ -146,7 +146,10 @@ async function getGoods() {
 }
 
 onLoad(async () => {
-  if (!appToken.value) return
+  if (!appToken.value) {
+    navTo('/pages/login/index', false)
+    return
+  }
   try {
     uni.showLoading({
       title: '数据加载中...',

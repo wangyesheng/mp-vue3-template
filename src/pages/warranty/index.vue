@@ -45,9 +45,14 @@
           </div>
           <div class="info-row no-border">
             <span class="info-label">车架号</span>
-            <span class="info-value mono">
-              {{ orderInfo.frame_number || '-' }}
-            </span>
+            <div class="info-value flex items-center justify-end gap-x-1">
+              <span>{{ orderInfo.frame_number || '-' }}</span>
+              <image
+                class="w-6 h-6 rounded-sm"
+                mode="aspectFill"
+                :src="orderInfo.frame_photo"
+                @click="previewImage(0, [orderInfo.frame_photo])" />
+            </div>
           </div>
         </div>
       </div>

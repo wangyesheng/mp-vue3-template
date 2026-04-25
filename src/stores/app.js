@@ -1,3 +1,4 @@
+import { navTo } from '@/utils/uni'
 import { getAppNameRes, getUserInfoRes } from '../api'
 
 export const useAppStore = defineStore('app', () => {
@@ -20,9 +21,7 @@ export const useAppStore = defineStore('app', () => {
   function logout() {
     setAppToken(null)
     setAppUser({})
-    uni.navigateTo({
-      url: '/pages/login/index'
-    })
+    navTo('/pages/login/index', false)
   }
 
   const appName = ref(uni.getStorageSync('APP_NAME'))
@@ -37,11 +36,10 @@ export const useAppStore = defineStore('app', () => {
   }
 
   const needRefresh = ref(false)
-
   function markNeedRefresh() {
     needRefresh.value = true
   }
-  /** 首页 onShow 调用：若为 true 则清空并返回 true，只消费一次 */
+  /** 页面 onShow 调用：若为 true 则清空并返回 true，只消费一次，一般是副作用接口保存成功返回上一个页面时触发 */
   function checkNeedRefresh() {
     if (!needRefresh.value) return false
     needRefresh.value = false

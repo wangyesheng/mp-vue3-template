@@ -17,8 +17,8 @@ export function copy(content, tips = '复制成功') {
 
 export function navTo(url, needToken = true) {
   if (needToken) {
-    const appUser = uni.getStorageSync('APP_USER') || {}
-    if (!appUser.id) {
+    const appToken = uni.getStorageSync('APP_TOKEN')
+    if (appToken) {
       return toast('请授权登录')
     }
   }
@@ -30,8 +30,8 @@ export function navTo(url, needToken = true) {
 
 export function switchTab(url, needToken = true) {
   if (needToken) {
-    const appUser = uni.getStorageSync('APP_USER') || {}
-    if (!appUser.id) {
+    const appToken = uni.getStorageSync('APP_TOKEN')
+    if (appToken) {
       return toast('请授权登录')
     }
   }
@@ -99,4 +99,16 @@ export function addHtmlClassName(htmlString) {
     .replace(/<li/g, '<li class="li"')
     .replace(/<span/g, '<span class="span"')
     .replace(/<img/g, '<img class="img"')
+}
+
+export function confirm(title, content) {
+  return new Promise((resolve) => {
+    uni.showModal({
+      title,
+      content,
+      success: (res) => {
+        resolve(res.confirm)
+      }
+    })
+  })
 }

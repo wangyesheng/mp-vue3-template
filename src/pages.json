@@ -17,6 +17,19 @@
       }
     },
     {
+      "path": "pages/mall/index",
+      "style": {
+        "navigationBarTitleText": "积分商城"
+      }
+    },
+    {
+      "path": "pages/mall/user-address",
+      "style": {
+        "navigationBarTitleText": "收货信息管理",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
       "path": "pages/order/bind",
       "style": {
         "navigationBarTitleText": "订单绑定"
@@ -27,12 +40,6 @@
       "style": {
         "navigationBarTitleText": "我的订单",
         "enablePullDownRefresh": true
-      }
-    },
-    {
-      "path": "pages/mall/index",
-      "style": {
-        "navigationBarTitleText": "积分商城"
       }
     },
     {
