@@ -17,6 +17,12 @@
       }
     },
     {
+      "path": "pages/order/bind",
+      "style": {
+        "navigationBarTitleText": "订单绑定"
+      }
+    },
+    {
       "path": "pages/mall/index",
       "style": {
         "navigationBarTitleText": "积分商城"
@@ -27,12 +33,6 @@
       "style": {
         "navigationBarTitleText": "收货信息管理",
         "enablePullDownRefresh": false
-      }
-    },
-    {
-      "path": "pages/order/bind",
-      "style": {
-        "navigationBarTitleText": "订单绑定"
       }
     },
     {

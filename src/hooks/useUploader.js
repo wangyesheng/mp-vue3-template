@@ -37,9 +37,9 @@ export function useUploader() {
           }
         },
         fail: (uploadFileErr) => {
-          console.log('upload::error', uploadFileErr)
+          console.log('upload::error', uploadFileErr.errMsg)
           toast('上传失败！')
-          reject(uploadFileErr)
+          reject(uploadFileErr.errMsg)
         }
       })
     })

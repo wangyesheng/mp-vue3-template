@@ -215,7 +215,7 @@ function onExchangeSubmit(good) {
       if (confirm) {
         await exchangeGoodRes({
           goods_id: good.id,
-          receipt_id: exchangePopup.value.selectedReceiptId
+          address_id: exchangePopup.value.selectedReceiptId
         })
         appStore.refreshAppUser()
         toast('兑换成功！')

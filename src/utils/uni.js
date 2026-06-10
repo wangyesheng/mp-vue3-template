@@ -16,11 +16,8 @@ export function copy(content, tips = '复制成功') {
 }
 
 export function navTo(url, needToken = true) {
-  if (needToken) {
-    const appToken = uni.getStorageSync('APP_TOKEN')
-    if (appToken) {
-      return toast('请授权登录')
-    }
+  if (needToken && !uni.getStorageSync('APP_TOKEN')) {
+    return toast('请授权登录')
   }
 
   uni.navigateTo({
@@ -29,11 +26,8 @@ export function navTo(url, needToken = true) {
 }
 
 export function switchTab(url, needToken = true) {
-  if (needToken) {
-    const appToken = uni.getStorageSync('APP_TOKEN')
-    if (appToken) {
-      return toast('请授权登录')
-    }
+  if (needToken && !uni.getStorageSync('APP_TOKEN')) {
+    return toast('请授权登录')
   }
 
   uni.switchTab({ url })

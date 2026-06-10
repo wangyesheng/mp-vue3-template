@@ -4,14 +4,12 @@
       <!-- 表单 -->
       <div class="form-card">
         <div class="form-card__head">
-          <span class="form-card__dot" />
-          <span class="form-card__title">联系人信息</span>
+          <span class="form-card__title">收件人信息</span>
         </div>
 
         <div class="form-item">
           <div class="form-item__label">
-            <text class="i-mdi-account-outline form-item__icon" />
-            <span>收件人姓名</span>
+            <span>姓名</span>
             <text class="form-item__required">*</text>
           </div>
           <input
@@ -19,13 +17,12 @@
             class="form-input"
             type="text"
             maxlength="32"
-            placeholder="请输入收件人真实姓名"
+            placeholder="收件人姓名"
             placeholder-class="input-placeholder" />
         </div>
 
         <div class="form-item">
           <div class="form-item__label">
-            <text class="i-mdi-cellphone form-item__icon" />
             <span>手机号码</span>
             <text class="form-item__required">*</text>
           </div>
@@ -34,13 +31,12 @@
             class="form-input"
             type="number"
             maxlength="11"
-            placeholder="请输入11位手机号码"
+            placeholder="收件人手机号码"
             placeholder-class="input-placeholder" />
         </div>
 
         <div class="form-item form-item--textarea">
           <div class="form-item__label">
-            <text class="i-mdi-home-map-marker form-item__icon" />
             <span>收货地址</span>
             <text class="form-item__required">*</text>
           </div>
@@ -67,12 +63,7 @@
     </div>
 
     <div class="bottom-bar">
-      <nut-button
-        block
-        size="large"
-        type="primary"
-        custom-color="linear-gradient(135deg, #1890ff 0%, #0e4fc4 100%)"
-        @click="debounce(onSave)">
+      <nut-button block size="large" type="primary" @click="debounce(onSave)">
         保存地址
       </nut-button>
     </div>
@@ -106,7 +97,7 @@ async function onSave() {
     return
   }
   if (!address.trim()) {
-    toast('请填写详细地址')
+    toast('请填写收货地址')
     return
   }
   await saveReceiptInfoRes(formData.value)

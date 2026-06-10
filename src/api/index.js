@@ -192,3 +192,13 @@ export function getReceiptInfoRes(id) {
     }
   })
 }
+
+export function confirmReceiveRes(exchange_id) {
+  return request({
+    url: '/api/points/confirm_receive',
+    method: 'post',
+    data: {
+      exchange_id
+    }
+  })
+}

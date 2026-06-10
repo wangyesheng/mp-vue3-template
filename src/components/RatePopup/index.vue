@@ -32,6 +32,7 @@
 <script setup>
 import { getRateInfoRes, rateOrderRes } from '@/api'
 import debounce from '@/utils/debounce'
+import { toast } from '@/utils/uni'
 
 const rateMap = [
   {
@@ -63,6 +64,7 @@ async function onSubmitRate() {
     order_id: currentOrder.value.id,
     ...rateInfo.value
   })
+  toast('评价成功！')
   emit('refresh')
   ratePopupVisible.value = false
 }

@@ -27,7 +27,6 @@
           </div>
         </div>
       </div>
-
       <div class="main-content">
         <!-- 第二板块：待绑定订单 -->
         <div class="section">
@@ -79,7 +78,11 @@
             class="scroll-container"
             :show-scrollbar="false">
             <div class="mall-track">
-              <div v-for="item in goods" :key="item.id" class="mall-card">
+              <div
+                v-for="item in goods"
+                :key="item.id"
+                class="mall-card"
+                @click="toMall">
                 <div class="img-wrap">
                   <image
                     class="goods-img"
@@ -143,6 +146,10 @@ async function getOrders() {
 async function getGoods() {
   const result = await getGoodsRes({ page: 1, limit: 3 })
   goods.value = result.data
+}
+
+function toMall() {
+  navTo('/pages/mall/index')
 }
 
 onLoad(async () => {

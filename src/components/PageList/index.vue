@@ -52,6 +52,10 @@ const props = defineProps({
   cols: {
     type: [Number, String],
     default: 1
+  },
+  gap: {
+    type: [Number, String],
+    default: 20
   }
 })
 
@@ -68,15 +72,14 @@ const pageInfo = ref({
   isRefresh = ref(false),
   isError = ref(false) // 刷新页面时不显示 loading
 
-const gap = 20
 function getPageItemStyle() {
   if (props.cols == 1) return { width: '100%' }
 
   // 一行多列的情况下，需要计算(总宽度 - (总列数 - 1 * 间隔 gap)) / 总列数
   // 假设一行三列，gap 设置的是 20，那么第一列与第二列有间隔，第二列与第三列有间隔，也就是总间隔为 2 * 20
-  // 即每列宽度就得以 (100% - (3 - 1 * 20)) / 3 => (100% - 40) / 3 => (100 / 3)% - 40 / 3
+  // 即每列宽度就得以 (100% - ((3 - 1) * 20)) / 3 => (100% - 40) / 3 => (100 / 3)% - 40 / 3
   // 这里还有一个坑，就是假设单位换成 rpx 的话，那么 13.33333rpx 在小程序渲染的时候就会变成 6px，所以此处直接除 2 以 px 为单位
-  const rest = ((props.cols - 1) * gap) / props.cols / 2 + 'px'
+  const rest = ((props.cols - 1) * props.gap) / props.cols / 2 + 'px'
   return {
     width: `calc(${100 / props.cols}% - ${rest})`
   }
