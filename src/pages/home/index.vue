@@ -4,7 +4,7 @@
       <!-- 顶部渐变背景 -->
       <div class="header-bg">
         <!-- 第一板块：用户信息 -->
-        <div class="user-card">
+        <div class="user-card" :data-vip="`推荐码：` + appUser.user_code">
           <button
             class="avatar"
             open-type="chooseAvatar"
@@ -19,7 +19,15 @@
               maxlength="14"
               :value="appUser.nickname"
               @change="onNicknameChange" />
-            <div class="phone">{{ appUser.mobile }}</div>
+            <div class="phone">
+              {{ appUser.mobile }}
+            </div>
+            <div>
+              <nut-tag plain type="primary" @click="copy(appUser.user_code)">
+                <span>推荐码：</span>
+                <span class="font-bold">{{ appUser.user_code }}</span>
+              </nut-tag>
+            </div>
           </div>
           <div class="points-tag">
             <text class="i-mdi-diamond-stone !text-[32rpx]"></text>
@@ -39,13 +47,11 @@
               <span class="i-mdi-chevron-right ml-[5rpx]"></span>
             </div>
           </div>
-
           <scroll-view
-            v-if="orders.length > 0"
             scroll-x
             class="scroll-container"
             :show-scrollbar="false">
-            <div class="order-container">
+            <div v-if="orders.length" class="order-container">
               <OrderInfo
                 v-for="order in orders"
                 :key="order.id"
@@ -57,9 +63,9 @@
                 @refresh="getOrders"
                 @show-rate-popup="() => ratePopupRef.showPopup(order)" />
             </div>
-          </scroll-view>
 
-          <Empty v-else />
+            <Empty v-else />
+          </scroll-view>
         </div>
 
         <!-- 第三板块：积分商城 -->
@@ -77,7 +83,7 @@
             scroll-x
             class="scroll-container"
             :show-scrollbar="false">
-            <div class="mall-track">
+            <div v-if="orders.length" class="mall-track">
               <div
                 v-for="item in goods"
                 :key="item.id"
@@ -99,6 +105,7 @@
                 </div>
               </div>
             </div>
+            <Empty v-else />
           </scroll-view>
         </div>
       </div>
@@ -112,10 +119,10 @@
 import { getGoodsRes, getOrderListRes, updateUserRes } from '@/api'
 import { useAppStore } from '@/stores/app'
 import { useUploader } from '@/hooks/useUploader'
-import { navTo } from '@/utils/uni'
+import { copy, navTo } from '@/utils/uni'
 
 const appStore = useAppStore()
-const { appUser, appToken } = storeToRefs(appStore)
+const { appUser } = storeToRefs(appStore)
 const { upload } = useUploader()
 const goods = ref([]),
   orders = ref([]),
@@ -139,8 +146,8 @@ async function onNicknameChange(e) {
 }
 
 async function getOrders() {
-  const orderRes = await getOrderListRes({ page: 1, limit: 5 })
-  orders.value = orderRes.data
+  const result = await getOrderListRes({ page: 1, limit: 5 })
+  orders.value = result.data
 }
 
 async function getGoods() {
@@ -153,29 +160,22 @@ function toMall() {
 }
 
 onLoad(async () => {
-  if (!appToken.value) {
-    navTo('/pages/login/index', false)
-    return
-  }
-  try {
-    uni.showLoading({
-      title: '数据加载中...',
-      mask: true
-    })
-    await getOrders()
-    await getGoods()
-  } finally {
-    uni.hideLoading()
+  if (appStore.isLogin()) {
+    try {
+      uni.showLoading({
+        title: '数据加载中...',
+        mask: true
+      })
+      await getGoods()
+      await getOrders()
+    } finally {
+      uni.hideLoading()
+    }
   }
 })
 
 onShow(() => {
-  if (!appToken.value) {
-    navTo('/pages/login/index', false)
-    return
-  }
-
-  if (appStore.checkNeedRefresh()) {
+  if (appStore.isLogin() && appStore.checkNeedRefresh()) {
     getOrders()
   }
 })
@@ -218,10 +218,26 @@ onPullDownRefresh(async () => {
       width: 95%;
       background: #fff;
       border-radius: 24rpx 24rpx 0 0;
-      padding: 32rpx;
+      padding: 42rpx 32rpx;
       display: flex;
       align-items: center;
+      column-gap: 20rpx;
       box-shadow: 0 8rpx 32rpx rgba(24, 144, 255, 0.08);
+      position: relative;
+
+      // &::after {
+      //   content: attr(data-vip);
+      //   position: absolute;
+      //   top: 0;
+      //   right: 0;
+      //   padding: 10rpx 20rpx;
+      //   background: rgb(24, 144, 255, 0.1);
+      //   color: #1890ff;
+      //   font-size: 22rpx;
+      //   font-weight: 550;
+      //   border-top-right-radius: 24rpx;
+      //   border-bottom-left-radius: 24rpx;
+      // }
 
       .avatar {
         margin: 0;
@@ -244,13 +260,14 @@ onPullDownRefresh(async () => {
 
       .user-info {
         flex: 1;
-        margin-left: 24rpx;
+        display: flex;
+        flex-direction: column;
+        row-gap: 2rpx;
 
         .nickname {
           font-size: 34rpx;
           font-weight: 600;
           color: #121836;
-          margin-bottom: 8rpx;
         }
 
         .phone {
@@ -331,6 +348,12 @@ onPullDownRefresh(async () => {
   .scroll-container {
     width: 100%;
     white-space: nowrap;
+
+    :deep() {
+      .uni-scroll-view {
+        scrollbar-width: none;
+      }
+    }
 
     .mall-track {
       width: 100%;

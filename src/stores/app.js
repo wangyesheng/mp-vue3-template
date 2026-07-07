@@ -21,7 +21,25 @@ export const useAppStore = defineStore('app', () => {
   function logout() {
     setAppToken(null)
     setAppUser({})
+    redirectToLogin()
+  }
+
+  function isLogin() {
+    if (!appToken.value) {
+      redirectToLogin()
+      return false
+    }
+    return true
+  }
+
+  function redirectToLogin() {
+    // #ifdef MP
     navTo('/pages/login/index', false)
+    // #endif
+
+    // #ifdef H5
+    navTo('/pages/login/h5', false)
+    // #endif
   }
 
   const appName = ref(uni.getStorageSync('APP_NAME'))
@@ -53,6 +71,7 @@ export const useAppStore = defineStore('app', () => {
     setAppUser,
     refreshAppUser,
     logout,
+    isLogin,
     appName,
     getAppName,
     needRefresh,

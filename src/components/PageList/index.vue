@@ -1,6 +1,6 @@
 <template>
   <view v-if="pageInfo.data?.length > 0" id="pageListWrap" class="page-wrap">
-    <view class="page-list" :style="{ '--item-gap': gap + 'rpx' }">
+    <view class="page-list" :style="{ '--item-gap': gap / 2 + 'px' }">
       <view
         v-for="(item, index) in pageInfo.data"
         :key="index"
@@ -75,11 +75,15 @@ const pageInfo = ref({
 function getPageItemStyle() {
   if (props.cols == 1) return { width: '100%' }
 
+  // 总宽度 = 每列宽度 + 间隔总宽度
   // 一行多列的情况下，需要计算(总宽度 - (总列数 - 1 * 间隔 gap)) / 总列数
   // 假设一行三列，gap 设置的是 20，那么第一列与第二列有间隔，第二列与第三列有间隔，也就是总间隔为 2 * 20
   // 即每列宽度就得以 (100% - ((3 - 1) * 20)) / 3 => (100% - 40) / 3 => (100 / 3)% - 40 / 3
   // 这里还有一个坑，就是假设单位换成 rpx 的话，那么 13.33333rpx 在小程序渲染的时候就会变成 6px，所以此处直接除 2 以 px 为单位
+
+  // 每列应减去的间隔距离
   const rest = ((props.cols - 1) * props.gap) / props.cols / 2 + 'px'
+
   return {
     width: `calc(${100 / props.cols}% - ${rest})`
   }
@@ -207,6 +211,7 @@ defineExpose({
     display: flex;
     flex-wrap: wrap;
     gap: var(--item-gap);
+    box-sizing: border-box;
   }
 }
 </style>

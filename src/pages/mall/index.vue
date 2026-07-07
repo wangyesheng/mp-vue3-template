@@ -77,14 +77,16 @@
     </div>
 
     <nut-popup
-      v-model:visible="exchangePopup.visible"
       round
       safe-area-inset-bottom
-      position="bottom">
+      position="bottom"
+      :visible="exchangePopupVisible"
+      @update:visible="exchangePopupVisible = $event">
       <div class="popupWrap">
         <div class="__title flex justify-between items-center px-[20rpx]">
           <span>选择收货信息</span>
           <span
+            v-if="exchangePopup.receiptList.length"
             class="text-xs text-[#1890ff]"
             @click="navTo('/pages/mall/user-address')">
             去新增
@@ -144,6 +146,7 @@
           </div>
 
           <nut-button
+            v-if="exchangePopup.receiptList.length"
             block
             size="large"
             type="primary"
@@ -167,19 +170,18 @@ import {
   getReceiptListRes
 } from '@/api'
 
-const appStore = useAppStore(),
-  { appUser } = storeToRefs(appStore),
-  currentGoods = ref({}),
-  exchangePopup = ref({
-    visible: false,
-    data: {},
-    receiptList: [],
-    selectedReceiptId: null
-  })
+const appStore = useAppStore()
+const { appUser } = storeToRefs(appStore)
+const currentGoods = ref({})
+const exchangePopupVisible = ref(false)
+const exchangePopup = ref({
+  receiptList: [],
+  selectedReceiptId: null
+})
 
 function onShowExchangePopup(value) {
   currentGoods.value = value
-  exchangePopup.value.visible = true
+  exchangePopupVisible.value = true
 }
 
 function onSelectReceipt(item) {
@@ -219,7 +221,7 @@ function onExchangeSubmit(good) {
         })
         appStore.refreshAppUser()
         toast('兑换成功！')
-        exchangePopup.value.visible = false
+        exchangePopupVisible.value = false
       }
     }
   })
@@ -230,10 +232,7 @@ async function getReceiptList() {
   exchangePopup.value.receiptList = data
 }
 
-onLoad(() => {
-  appStore.refreshAppUser()
-  getReceiptList()
-})
+onLoad(getReceiptList)
 
 onShow(() => {
   if (appStore.checkNeedRefresh()) {

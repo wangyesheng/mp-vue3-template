@@ -22,6 +22,17 @@ export function checkLoginRes(data) {
   })
 }
 
+export function h5LoginRes(data) {
+  return request({
+    url: '/api/user/account_login',
+    method: 'post',
+    data: {
+      ...data,
+      platform_type: 1
+    }
+  })
+}
+
 export function getUserInfoRes() {
   return request({
     url: '/api/user/info',
@@ -200,5 +211,29 @@ export function confirmReceiveRes(exchange_id) {
     data: {
       exchange_id
     }
+  })
+}
+
+export function confirmAfterSaleRes(aftersale_id) {
+  return request({
+    url: '/api/order/confirm_aftersale',
+    method: 'post',
+    data: {
+      aftersale_id
+    }
+  })
+}
+
+export function getUserProtocolRes() {
+  return request({
+    url: '/api/index/user_agreement',
+    method: 'get'
+  })
+}
+
+export function getPrivateProtocolRes() {
+  return request({
+    url: '/api/index/privacy_agreement ',
+    method: 'get'
   })
 }

@@ -30,7 +30,7 @@
             :style="{
               color: data.aftersale_status == 2 ? '#22c55e' : '#6b6b6b'
             }">
-            {{ data.aftersale_status == 2 ? '已售后完成' : '已关闭售后' }}
+            {{ data.aftersale_status == 2 ? '售后完成' : '关闭售后' }}
           </span>
         </div>
       </div>
@@ -142,14 +142,23 @@
           @click="navTo(`/pages/after-sale/timeline?id=${data.aftersale_id}`)">
           查看进度
         </nut-button>
+
+        <nut-button
+          v-if="data.handle_status == 2"
+          size="small"
+          type="primary"
+          @click="onOrderConfirm(data.aftersale_id, 2)">
+          确认售后完成
+        </nut-button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { confirmOrderRes } from '@/api'
+import { confirmAfterSaleRes, confirmOrderRes } from '@/api'
 import { orderTypeMap } from '@/constant'
+import { useAppStore } from '@/stores/app'
 import { callPhone, copy, navTo, previewImage } from '@/utils/uni'
 
 defineProps({
@@ -161,13 +170,20 @@ defineProps({
 
 const emit = defineEmits(['refresh', 'showRatePopup'])
 
-async function onOrderConfirm(id) {
+const appStore = useAppStore()
+
+async function onOrderConfirm(id, type = 1) {
   uni.showModal({
     title: '提示',
     content: '请仔细检查车辆施工后状况',
     async success({ confirm }) {
       if (confirm) {
-        await confirmOrderRes(id)
+        if (type == 1) {
+          await confirmOrderRes(id)
+          appStore.refreshAppUser()
+        } else {
+          await confirmAfterSaleRes(id)
+        }
         emit('refresh')
       }
     }

@@ -128,7 +128,13 @@
 import { getOrderDetailRes } from '@/api'
 import { previewImage } from '@/utils/uni'
 
-const menuButtonInfo = uni.getMenuButtonBoundingClientRect()
+const menuButtonInfo = (() => {
+  try {
+    return uni.getMenuButtonBoundingClientRect()
+  } catch {
+    return { height: 0, top: 20 }
+  }
+})()
 const bgTop = menuButtonInfo.height + menuButtonInfo.top
 // menuButtonInfo.top 胶囊距离顶部得距离
 // menuButtonInfo.height / 2 胶囊自身高度的一半
@@ -137,8 +143,11 @@ const iconTop = menuButtonInfo.top + menuButtonInfo.height / 2 - 10
 
 const orderInfo = ref({}),
   completeCarPhotos = computed(() => {
-    const { end_front_photos, end_side_photos, end_back_photos } =
-      orderInfo.value
+    const {
+      end_front_photos,
+      end_side_photos = [],
+      end_back_photos
+    } = orderInfo.value
     return [end_front_photos, ...end_side_photos, end_back_photos]
   })
 

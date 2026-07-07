@@ -2,7 +2,7 @@
   <div :class="customClass">
     <nut-empty :description="description">
       <template #image>
-        <image src="../../static/images/no-data.png" />
+        <img src="../../static/images/no-data.png" />
       </template>
     </nut-empty>
   </div>

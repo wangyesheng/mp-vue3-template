@@ -10,7 +10,7 @@
           <view class="logo">
             <image class="w-16 h-16" src="@/static/images/logo.png"></image>
           </view>
-          <text class="app-name">轩科质保服务</text>
+          <text class="app-name">苏膜质保服务</text>
           <text class="app-desc">您的爱车美容质保管家</text>
         </view>
 
@@ -39,9 +39,17 @@
 
         <text class="privacy-text">
           登录即代表同意
-          <text class="privacy-link">《用户协议》</text>
+          <text
+            class="privacy-link"
+            @click="navTo(`/pages/login/richtext?type=1`, false)">
+            《用户协议》
+          </text>
           和
-          <text class="privacy-link">《隐私政策》</text>
+          <text
+            class="privacy-link"
+            @click="navTo(`/pages/login/richtext?type=2`, false)">
+            《隐私政策》
+          </text>
         </text>
       </view>
 
@@ -54,6 +62,7 @@
 
 <script setup>
 import { useLogin } from '@/hooks/useLogin'
+import { navTo } from '@/utils/uni'
 
 const { login, getPhoneNumber, bindMobileVisible } = useLogin(() =>
   uni.reLaunch({ url: '/pages/home/index' })

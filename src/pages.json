@@ -2,8 +2,6 @@
   "easycom": {
     "autoscan": true,
     "custom": {
-      "^nut-(.*)?-(.*)": "nutui-uniapp/components/$1$2/$1$2.vue",
-      "^nut-(.*)": "nutui-uniapp/components/$1/$1.vue",
       "^(?!nut-)([A-Z][a-zA-Z]*)$": "@/components/$1/index.vue"
     }
   },
@@ -20,6 +18,18 @@
       "path": "pages/order/bind",
       "style": {
         "navigationBarTitleText": "订单绑定"
+      }
+    },
+    {
+      "path": "pages/login/richtext",
+      "style": {
+        "navigationBarTitleText": "用户协议"
+      }
+    },
+    {
+      "path": "pages/login/h5",
+      "style": {
+        "navigationBarTitleText": "登录"
       }
     },
     {
