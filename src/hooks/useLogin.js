@@ -2,59 +2,65 @@ import { ref } from 'vue'
 import { decryUserPhoneRes, checkLoginRes } from '@/api'
 import { useAppStore } from '@/stores/app'
 
-export function useLogin(cb) {
+export function useLogin(validate, cb) {
   const appStore = useAppStore()
   const bindMobileVisible = ref(false)
   let bindMobileUserProfile = {}
 
   async function login() {
-    uni.showLoading({
-      title: '授权登录中...',
-      mask: true
-    })
-    try {
-      const [{ userInfo }, code] = await Promise.all([
-        new Promise((resolve, reject) => {
-          uni.getUserProfile({
-            provider: 'weixin',
-            desc: '用于完善用户资料',
-            success: (response) => {
-              resolve(response)
-            },
-            fail: (err) => {
-              reject(err)
-            }
-          })
-        }),
-        new Promise((resolve, reject) => {
-          uni.login({
-            provider: 'weixin',
-            success: ({ code }) => {
-              resolve(code)
-            },
-            fail: (err) => {
-              reject(err)
-            }
-          })
-        })
-      ])
-
-      if (userInfo && code) {
-        bindMobileUserProfile = {
-          current: userInfo,
-          code
-        }
-        bindMobileVisible.value = true
-      }
-    } catch (error) {
-      console.log('debugger::error_login', error)
-      uni.hideLoading()
-      uni.showToast({
-        title: '微信登录授权失败',
-        icon: 'none'
+    if (validate) {
+      await validate()
+    }
+    await next()
+    async function next() {
+      uni.showLoading({
+        title: '授权登录中...',
+        mask: true
       })
-    } finally {
-      uni.hideLoading()
+      try {
+        const [{ userInfo }, code] = await Promise.all([
+          new Promise((resolve, reject) => {
+            uni.getUserProfile({
+              provider: 'weixin',
+              desc: '用于完善用户资料',
+              success: (response) => {
+                resolve(response)
+              },
+              fail: (err) => {
+                reject(err)
+              }
+            })
+          }),
+          new Promise((resolve, reject) => {
+            uni.login({
+              provider: 'weixin',
+              success: ({ code }) => {
+                resolve(code)
+              },
+              fail: (err) => {
+                reject(err)
+              }
+            })
+          })
+        ])
+
+        if (userInfo && code) {
+          bindMobileUserProfile = {
+            current: userInfo,
+            code
+          }
+          bindMobileVisible.value = true
+        }
+      } catch (error) {
+        console.log('debugger::error_login', error)
+        uni.hideLoading()
+        uni.showToast({
+          title: '微信登录授权失败',
+          icon: 'none'
+        })
+      } finally {
+        uni.hideLoading()
+      }
     }
   }
 

@@ -37,20 +37,24 @@
           <text class="btn-text">立即登录</text>
         </button>
 
-        <text class="privacy-text">
-          登录即代表同意
-          <text
-            class="privacy-link"
-            @click="navTo(`/pages/login/richtext?type=1`, false)">
-            《用户协议》
-          </text>
-          和
-          <text
-            class="privacy-link"
-            @click="navTo(`/pages/login/richtext?type=2`, false)">
-            《隐私政策》
-          </text>
-        </text>
+        <nut-animate type="shake" :show="showAnimate">
+          <nut-checkbox v-model="isAgree" icon-size="14">
+            <text class="privacy-text">
+              登录即代表同意
+              <text
+                class="privacy-link"
+                @click.stop="navTo(`/pages/login/richtext?type=1`, false)">
+                《用户协议》
+              </text>
+              和
+              <text
+                class="privacy-link"
+                @click.stop="navTo(`/pages/login/richtext?type=2`, false)">
+                《隐私政策》
+              </text>
+            </text>
+          </nut-checkbox>
+        </nut-animate>
       </view>
 
       <BindMobile
@@ -64,8 +68,26 @@
 import { useLogin } from '@/hooks/useLogin'
 import { navTo } from '@/utils/uni'
 
-const { login, getPhoneNumber, bindMobileVisible } = useLogin(() =>
-  uni.reLaunch({ url: '/pages/home/index' })
+const isAgree = ref(false),
+  showAnimate = ref(false)
+
+const { login, getPhoneNumber, bindMobileVisible } = useLogin(
+  () => {
+    return new Promise((resolve, reject) => {
+      if (isAgree.value) {
+        resolve()
+      } else {
+        const err = '请先阅读并同意用户协议与隐私政策！'
+        showAnimate.value = true
+        uni.vibrateShort({ type: 'middle' })
+        setTimeout(() => {
+          showAnimate.value = false
+        })
+        reject(new Error(err))
+      }
+    })
+  },
+  () => uni.reLaunch({ url: '/pages/home/index' })
 )
 </script>
 
@@ -147,7 +169,7 @@ const { login, getPhoneNumber, bindMobileVisible } = useLogin(() =>
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0 80rpx;
+    padding: 0 40rpx;
 
     .login-btn {
       display: flex;
@@ -182,6 +204,17 @@ const { login, getPhoneNumber, bindMobileVisible } = useLogin(() =>
         font-size: 34rpx;
         font-weight: 600;
         color: #fff;
+      }
+    }
+
+    :deep() {
+      .nut-checkbox {
+        margin-right: 0 !important;
+        align-items: center !important;
+
+        .nut-checkbox__label {
+          margin-left: 20rpx !important;
+        }
       }
     }
 

@@ -38,7 +38,7 @@
               placeholder="请输入密码"
               placeholder-class="input-placeholder"
               :cursor-spacing="20"
-              :password="showPassword"
+              :password="!showPassword"
               :maxlength="20" />
 
             <view
@@ -46,7 +46,7 @@
               @click="showPassword = !showPassword">
               <nut-icon
                 custom-color="#333"
-                :name="showPassword ? 'marshalling' : 'eye'" />
+                :name="showPassword ? 'eye' : 'marshalling'" />
             </view>
           </view>
 
@@ -91,8 +91,8 @@ import { navTo } from '@/utils/uni'
 const appStore = useAppStore()
 
 const loginParams = ref({
-  account: '15895347201',
-  password: '347201'
+  account: '',
+  password: ''
 })
 const showPassword = ref(false)
 const loading = ref(false)

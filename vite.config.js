@@ -9,7 +9,8 @@ import { WeappTailwindcssDisabled } from './platform'
 import postcssPlugins from './postcss.config.cjs'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
+  base: mode === 'production' ? '/h5/' : '/',
   // uvtw 一定要放在 uni 后面
   plugins: [
     Components({
@@ -56,4 +57,4 @@ export default defineConfig({
       }
     }
   }
-})
+}))

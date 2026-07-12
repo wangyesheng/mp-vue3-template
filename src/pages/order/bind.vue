@@ -64,7 +64,7 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">推荐信息</div>
-          <nut-tag plain round custom-color="#999">选填</nut-tag>
+          <nut-tag plain round type="primary">选填</nut-tag>
         </div>
         <div class="referral-wrap">
           <nut-input
@@ -120,7 +120,7 @@ const loading = ref(false)
 
 const { bindMobileVisible, login, getPhoneNumber } = useLogin()
 
-onLoad(async ({ order_sn = '20260706233802696067' }) => {
+onLoad(async ({ order_sn }) => {
   if (order_sn) {
     const data = await getOrderInfoRes(order_sn)
     orderInfo.value = data
