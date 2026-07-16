@@ -8,8 +8,20 @@
       data.status == 5 ? 'received' : ''
     ]">
     <!-- 门票类型 积分兑换的实物礼品走的是新接口没有order_type，所以这里默认为2 -->
-    <div :class="['orderType', 'type' + (data.is_give == 1 ? 3 : orderType)]">
-      {{ data.is_give == 1 ? '赠送票' : orderType == 1 ? '购买票' : '积分票' }}
+    <div
+      :class="[
+        'orderType',
+        'type' + (data.is_give == 1 ? 3 : data.mall_id == -1 ? 4 : orderType)
+      ]">
+      {{
+        data.is_give == 1
+          ? '赠送票'
+          : orderType == 1
+            ? '购买票'
+            : data.mall_id == -1
+              ? '次卡兑换'
+              : '积分票'
+      }}
     </div>
 
     <div class="inner">
@@ -25,10 +37,14 @@
           </div>
           <!-- 门票 -->
           <div v-else class="tag">
-            <nut-tag plain custom-color="#999">
+            <!-- <nut-tag type="primary">
               {{ data.use_time_text }}
             </nut-tag>
-            <nut-tag plain custom-color="#999">免预约</nut-tag>
+            <nut-tag type="primary">免预约</nut-tag> -->
+
+            <span>{{ data.use_time_text }}</span>
+            <nut-divider direction="vertical"></nut-divider>
+            <span>免预约</span>
           </div>
 
           <div
@@ -47,7 +63,10 @@
             }}
           </div>
         </div>
-        <div v-if="data.status == 1" class="info-right">
+        <div
+          v-if="data.status == 1"
+          class="info-right"
+          :class="data.baby_info?.length ? 'justify-center' : 'justify-end'">
           <span>{{ data.residue_quantity }}</span>
           <span>剩余/{{ data.type == 3 ? '天' : '次' }}</span>
         </div>
@@ -96,6 +115,21 @@
       <nut-button
         v-if="
           !onlyShowBindBabyAction &&
+          canExchange &&
+          data?.is_exchange_coin == 1 &&
+          // 已绑定了宝贝
+          data?.baby_info.length
+        "
+        plain
+        type="primary"
+        size="mini"
+        @click="emit('exchangeGameCoins')">
+        兑换游戏币
+      </nut-button>
+
+      <nut-button
+        v-if="
+          !onlyShowBindBabyAction &&
           // 已绑定了宝贝
           (data?.baby_info.length ||
             // 无需绑定宝贝
@@ -121,6 +155,11 @@ const props = defineProps({
   onlyShowBindBabyAction: {
     type: Boolean,
     default: false
+  },
+  canExchange: {
+    // 多次卡可以兑换游戏币，单次卡和年卡不可以
+    type: Boolean,
+    default: false
   }
 })
 
@@ -129,7 +168,8 @@ const orderType = computed(() => props.data.order_type ?? 2)
 const emit = defineEmits([
   'showBabyPopupVisible',
   'showSelectBabyPopupVisible',
-  'share'
+  'share',
+  'exchangeGameCoins'
 ])
 </script>
 
@@ -212,10 +252,11 @@ const emit = defineEmits([
         .tag {
           display: flex;
           flex-wrap: wrap;
-          column-gap: 10rpx;
           row-gap: 10rpx;
+          color: #999;
+          font-size: 24rpx;
 
-          ::v-deep() {
+          :deep() {
             .nut-tag {
               width: fit-content !important;
             }
@@ -232,17 +273,16 @@ const emit = defineEmits([
         width: 26%;
         display: flex;
         flex-direction: column;
-        justify-content: flex-end;
         align-items: center;
         font-weight: 550;
         color: #000;
 
         label:first-child {
-          font-size: 55rpx;
+          font-size: 50rpx;
         }
 
         label:last-child {
-          font-size: 30rpx;
+          font-size: 24rpx;
         }
       }
     }

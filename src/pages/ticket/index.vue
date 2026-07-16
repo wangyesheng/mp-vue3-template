@@ -14,10 +14,13 @@
                     {{ data.title }}
                   </div>
                   <div class="tag">
-                    <nut-tag plain custom-color="#999">
+                    <!-- <nut-tag plain custom-color="#999">
                       {{ data.use_time_text }}
                     </nut-tag>
-                    <nut-tag plain custom-color="#999">免预约</nut-tag>
+                    <nut-tag plain custom-color="#999">免预约</nut-tag> -->
+                    <span>{{ data.use_time_text }}</span>
+                    <nut-divider direction="vertical"></nut-divider>
+                    <span>免预约</span>
                   </div>
                   <div class="price">
                     <span>¥ {{ data.price }}</span>
@@ -83,8 +86,9 @@ import { navTo } from '../../utils/uni'
           .tag {
             display: flex;
             flex-wrap: wrap;
-            column-gap: 10rpx;
             row-gap: 10rpx;
+            color: #999;
+            font-size: 26rpx;
 
             ::v-deep() {
               .nut-tag {

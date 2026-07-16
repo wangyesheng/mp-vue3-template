@@ -42,8 +42,8 @@ const wrapperStyle = computed(() => {
   align-items: center;
 
   image {
-    width: 50rpx;
-    height: 50rpx;
+    width: 40rpx;
+    height: 40rpx;
     border-radius: 50%;
     border: 4rpx solid rgba(129, 83, 254, 0.1);
     box-sizing: border-box;

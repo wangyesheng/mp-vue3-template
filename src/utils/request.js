@@ -14,12 +14,14 @@ http.interceptor.request = (config) => {
 }
 
 http.interceptor.response = (result) => {
-  const { code, data } = result
-  if (code == 1) {
-    return data
-  } else {
-    return false
-  }
+  return new Promise((resolve, reject) => {
+    const { code, data, msg } = result
+    if (code == 1) {
+      resolve(data)
+    } else {
+      reject(new Error(msg))
+    }
+  })
 }
 
 const request = ({ url, method, data = {} }) => {
@@ -33,8 +35,6 @@ const request = ({ url, method, data = {} }) => {
         let errerData = error
         if (error.statusCode) {
           // http 网络请求报错
-          console.log(error.data)
-
           errerData = error.data
         } else {
           // 后台接口请求报错

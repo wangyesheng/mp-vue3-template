@@ -3,6 +3,7 @@ page {
   --nut-button-large-height: 90rpx;
   --hw-primary-color: #8153fe;
   --hw-primary-bg-color: #f5f5f5;
+  background: var(--hw-primary-bg-color);
 }
 
 .__bindMobilePopup {
@@ -160,7 +161,15 @@ page {
 }
 
 .nut-divider {
-  color: #ddd !important;
+  color: #999 !important;
+
+  &.nut-divider-vertical {
+    margin: 0 10rpx !important;
+    border-color: #999 !important;
+    height: 50% !important;
+    top: 50% !important;
+    transform: translateY(-50%);
+  }
 }
 
 .richtext {
@@ -368,4 +377,31 @@ page {
     background: rgba(57, 220, 35, 0.1);
     color: #16da30;
   }
+
+  &.type4 {
+    background: rgba(212, 107, 8, 0.1);
+    color: #d46b08;
+  }
+}
+
+.store-address {
+  font-weight: 400;
+  font-size: 28rpx;
+  color: #000000;
+  display: flex;
+  align-items: center;
+
+  .icon {
+    font-size: 40rpx;
+    margin-right: 16rpx;
+  }
+}
+
+.nut-button--plain {
+  background: transparent !important;
+}
+
+.nut-input-number__text--input {
+  font-size: 32rpx !important;
+  font-weight: 550;
 }

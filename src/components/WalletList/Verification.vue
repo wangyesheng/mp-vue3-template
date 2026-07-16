@@ -3,14 +3,21 @@
     <div
       :class="[
         'orderType',
-        'type' + (data.is_give == 1 ? 3 : data.order_type ?? 2)
+        'type' +
+          (data.is_give == 1
+            ? 3
+            : data.mall_id == -1
+              ? 4
+              : (data.order_type ?? 2))
       ]">
       {{
         data.is_give == 1
           ? '赠送票'
           : data.order_type == 1
             ? '购买票'
-            : '积分票'
+            : data.mall_id == -1
+              ? '次卡兑换'
+              : '积分票'
       }}
     </div>
     <div class="inner">
@@ -35,7 +42,7 @@
           <div
             v-if="data.baby_info.length"
             class="flex items-center text-[24rpx] text-[#555] font-[500]"
-            @click="() => emit('showBabyPopupVisible')">
+            @click="() => emit('showBabyPopupVisible', data)">
             <span>宝贝信息：</span>
             <BabyStackingInfo :baby-list="data.baby_info" />
           </div>
@@ -78,19 +85,25 @@ const props = defineProps({
 const emit = defineEmits(['refresh', 'showBabyPopupVisible'])
 
 function onVerify() {
-  uni.showModal({
-    title: '提示',
-    content: '核销前请仔细确认卡票信息！',
-    confirmText: '确认无误',
-    success: async ({ confirm }) => {
-      if (confirm) {
-        await (props.data.mall_id
-          ? verifyGiftRes(props.data.id)
-          : verifyRes(props.data.id))
-        emit('refresh')
+  if (props.data.bind_number > 0) {
+    emit('showBabyPopupVisible', props.data)
+  } else {
+    uni.showModal({
+      title: '提示',
+      content: '核销前请仔细确认卡票信息！',
+      confirmText: '确定',
+      success: async ({ confirm }) => {
+        if (confirm) {
+          if (props.data.mall_id) {
+            await verifyGiftRes(props.data.id)
+          } else {
+            await verifyRes(props.data.id)
+          }
+          emit('refresh')
+        }
       }
-    }
-  })
+    })
+  }
 }
 </script>
 

@@ -170,7 +170,7 @@ function onUserKnown() {
     width: 100%;
     border-top-left-radius: 40rpx;
     border-top-right-radius: 40rpx;
-    padding: 30rpx 30rpx calc(15vh + env(safe-area-inset-bottom));
+    padding: 30rpx;
     box-sizing: border-box;
 
     .price {

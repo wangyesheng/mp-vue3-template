@@ -14,24 +14,30 @@
         </div>
       </div>
 
-      <div v-if="goods.length > 0" class="content">
-        <div v-for="good in goods" :key="good.id" class="item">
-          <image :src="good.image" mode="aspectFill" />
-          <div class="inner">
-            <span class="title">{{ good.title }}</span>
-            <div class="action">
-              <div class="price">
-                <span>{{ good.price }}</span>
-                <span>积分</span>
+      <div class="content">
+        <PageList :api="getMallGoodsRes" :cols="2">
+          <template #item="{ data: good }">
+            <div class="item">
+              <image :src="good.image" mode="aspectFill" />
+              <div class="inner">
+                <span class="title">{{ good.title }}</span>
+                <div class="action">
+                  <div class="price">
+                    <span>{{ good.price }}</span>
+                    <span>积分</span>
+                  </div>
+                  <nut-button
+                    type="primary"
+                    size="small"
+                    @click="onExchange(good)">
+                    兑换
+                  </nut-button>
+                </div>
               </div>
-              <nut-button type="primary" size="small" @click="onExchange(good)">
-                兑换
-              </nut-button>
             </div>
-          </div>
-        </div>
+          </template>
+        </PageList>
       </div>
-      <Empty v-else description="暂无兑换商品" custom-class="mt-[10vh]" />
     </div>
     <div
       class="absolute left-[20rpx]"
@@ -55,15 +61,7 @@ const appStore = useAppStore(),
     // data.height / 2 胶囊自身高度的一半
     // 10 图标自身高度的一半
     return data.top + data.height / 2 - 10
-  }),
-  goods = ref([])
-async function getGoods() {
-  const { data } = await getMallGoodsRes({
-    page: 1,
-    limit: 500
   })
-  goods.value = data
-}
 
 function onExchange(good) {
   uni.showModal({
@@ -83,17 +81,13 @@ function onBack() {
   uni.navigateBack()
 }
 
-onLoad(() => {
-  getGoods()
-  appStore.refreshAppUser()
-})
+onShow(appStore.refreshAppUser)
 </script>
 
 <style lang="scss" scoped>
 .__mall {
   .content {
     padding: 30rpx;
-    padding-bottom: calc(30rpx + env(safe-area-inset-bottom));
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
@@ -101,7 +95,6 @@ onLoad(() => {
     row-gap: 20rpx;
 
     .item {
-      width: calc(50% - 10rpx);
       min-height: 400rpx;
       background: #fff;
       display: flex;

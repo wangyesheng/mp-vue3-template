@@ -16,8 +16,8 @@
               <div class="vip">儿童会员</div>
             </div>
           </div>
-          <div class="address">
-            <img src="../../static/images/home/map.png" alt="" />
+          <div class="store-address self-end">
+            <span class="icon i-mdi-map-marker-outline"></span>
             <span>{{ appName }}</span>
           </div>
         </div>
@@ -49,10 +49,12 @@
             <template #item="{ data }">
               <WalletItem
                 :data="data"
+                can-exchange
                 @show-baby-popup-visible="showBabyPopupVisible(data)"
                 @show-select-baby-popup-visible="
                   showSelectBabyPopupVisible(data)
-                " />
+                "
+                @exchange-game-coins="showExchangeGameCoinsPopup(data)" />
             </template>
           </PageList>
         </nut-tab-pane>
@@ -84,7 +86,10 @@
       <SelectBabyPopup
         ref="selectBabyPopupRef"
         :baby-list="babyList"
-        @refresh="refreshOrderInfo" />
+        :refresh="refreshOrderInfo" />
+      <ExchangeGameCoinsPopup
+        ref="exchangeGameCoinsPopupRef"
+        :refresh="refreshOrderInfo" />
     </div>
   </AppContainer>
 </template>
@@ -101,6 +106,7 @@ const { appUser, appName } = storeToRefs(useAppStore())
 const selectedWalletType = ref('1'),
   babyPopupRef = ref(),
   selectBabyPopupRef = ref(),
+  exchangeGameCoinsPopupRef = ref(),
   babyList = ref([]),
   pageListRef3 = ref(),
   pageListRef2 = ref(),
@@ -114,6 +120,10 @@ function showBabyPopupVisible(data) {
 
 function showSelectBabyPopupVisible(data) {
   selectBabyPopupRef.value.show(data)
+}
+
+function showExchangeGameCoinsPopup(data) {
+  exchangeGameCoinsPopupRef.value.show(data)
 }
 
 function getSharePayload(data) {
@@ -196,13 +206,13 @@ onShow(async () => {
 
   & > .info {
     width: 100%;
-    height: 500rpx;
+    height: 420rpx;
     background: #8153fe;
     position: relative;
 
     .user {
       width: 100%;
-      height: 426rpx;
+      height: 400rpx;
       background-image: url(https://hwly.tuomuit.com/wechat/img/wallet-bg.png?ts=2);
       background-size: 100% 100%;
       background-repeat: no-repeat;
@@ -263,9 +273,8 @@ onShow(async () => {
         display: flex;
         align-items: center;
 
-        image {
-          width: 40rpx;
-          height: 40rpx;
+        .icon {
+          font-size: 40rpx;
           margin-right: 16rpx;
         }
       }

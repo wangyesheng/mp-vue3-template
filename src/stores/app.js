@@ -38,6 +38,21 @@ export const useAppStore = defineStore('app', () => {
     uni.setStorageSync('APP_NAME', value)
   }
 
+  /** 等页面 navigateBack 后，列表需要强制刷新时置位 */
+  const needRefresh = ref(false)
+  function markNeedRefresh() {
+    needRefresh.value = true
+  }
+
+  /** 首页 onShow 调用：若为 true 则清空并返回 true，只消费一次 */
+  function checkNeedRefresh(once = true) {
+    if (!needRefresh.value) return false
+    if (once) {
+      needRefresh.value = false
+    }
+    return true
+  }
+
   return {
     appToken,
     setAppToken,
@@ -46,6 +61,8 @@ export const useAppStore = defineStore('app', () => {
     refreshAppUser,
     logout,
     appName,
-    getAppName
+    getAppName,
+    markNeedRefresh,
+    checkNeedRefresh
   }
 })

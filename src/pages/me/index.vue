@@ -1,5 +1,5 @@
 <template>
-  <AppContainer :need-min-height="false">
+  <AppContainer>
     <div class="__me">
       <div class="userInfo">
         <div v-if="appUser.id" class="inner">
@@ -48,8 +48,8 @@
         </div>
         <div class="position">
           <div class="inner">
-            <div>
-              <img src="../../static/images/home/map.png" alt="" />
+            <div class="store-address">
+              <span class="icon i-mdi-map-marker-outline"></span>
               <span>{{ appName }}</span>
             </div>
           </div>
@@ -61,7 +61,11 @@
           v-for="item in funcs"
           :key="item.label"
           class="item"
-          @click="item.handler ? item.handler() : navTo(item.page)">
+          @click="
+            item.handler
+              ? item.handler()
+              : navTo(item.page, item.label != '联系客服')
+          ">
           <image :src="item.icon" mode="aspectFill" />
           <span>{{ item.label }}</span>
         </div>
@@ -358,21 +362,6 @@ onShow(() => {
         height: 138rpx;
         padding: 32rpx 88rpx;
         box-sizing: border-box;
-
-        view {
-          display: flex;
-          align-items: center;
-          image {
-            width: 40rpx;
-            height: 40rpx;
-            margin-right: 16rpx;
-          }
-
-          label {
-            color: #000;
-            font-size: 28rpx;
-          }
-        }
       }
     }
   }
@@ -447,7 +436,7 @@ onShow(() => {
   }
 
   .baby {
-    padding: 20rpx 32rpx 100rpx;
+    padding: 20rpx 32rpx 20rpx;
     box-sizing: border-box;
     position: relative;
 

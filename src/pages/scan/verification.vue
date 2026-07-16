@@ -15,7 +15,7 @@
               <WalletVerification
                 :data="data"
                 @refresh="onRefresh"
-                @show-baby-popup-visible="showBabyPopupVisible(data)" />
+                @show-baby-popup-visible="showBabyPopupVisible" />
             </template>
           </PageList>
         </nut-tab-pane>
@@ -32,7 +32,7 @@
               <WalletVerification
                 :data="data"
                 @refresh="onRefresh"
-                @show-baby-popup-visible="showBabyPopupVisible(data)" />
+                @show-baby-popup-visible="showBabyPopupVisible" />
             </template>
           </PageList>
         </nut-tab-pane>
@@ -49,7 +49,7 @@
               <WalletVerification
                 :data="data"
                 @refresh="onRefresh"
-                @show-baby-popup-visible="showBabyPopupVisible(data)" />
+                @show-baby-popup-visible="showBabyPopupVisible" />
             </template>
           </PageList>
         </nut-tab-pane>
@@ -68,13 +68,16 @@
           </PageList>
         </nut-tab-pane>
       </nut-tabs>
-      <BabyPopupInfo ref="babyPopupRef" />
+      <BabyPopupInfo ref="babyPopupRef" face-verify />
     </div>
   </AppContainer>
 </template>
 
 <script setup>
+import { useAppStore } from '@/stores/app'
 import { getUserWalletsByScanRes } from '../../api'
+
+const appStore = useAppStore()
 
 const selectedWalletType = ref('1'),
   userCode = ref(''),
@@ -88,10 +91,6 @@ function showBabyPopupVisible(data) {
   babyPopupRef.value.show(data)
 }
 
-onLoad((options) => {
-  userCode.value = options.code
-})
-
 function onRefresh() {
   const instance =
     selectedWalletType.value == 1
@@ -104,6 +103,16 @@ function onRefresh() {
 
   instance.value.refresh()
 }
+
+onLoad((options) => {
+  userCode.value = options.code
+})
+
+onShow(() => {
+  if (appStore.checkNeedRefresh()) {
+    onRefresh()
+  }
+})
 </script>
 
 <style lang="scss" scoped>

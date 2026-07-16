@@ -11,13 +11,30 @@
 
       <div class="position">
         <div class="inner">
-          <div>
-            <img src="../../static/images/home/map.png" alt="" />
+          <div class="store-address">
+            <span class="icon i-mdi-map-marker-outline"></span>
             <span>{{ appName }}</span>
           </div>
         </div>
       </div>
       <div class="funcs">
+        <div
+          v-if="appUser.group_id != 1"
+          class="invoice-entry"
+          @tap="navTo('/pages/scan/record')">
+          <div class="invoice-entry-left">
+            <image
+              src="@/static/images/home/revoke-icon.png"
+              class="entry-icon"></image>
+            <div class="entry-info">
+              <div class="entry-title">核销记录</div>
+              <div class="entry-sub">
+                <span>点此查看核销记录</span>
+              </div>
+            </div>
+          </div>
+          <nut-icon name="rect-right" custom-color="#f28519" />
+        </div>
         <div class="entry">
           <div
             class="ticket common"
@@ -78,7 +95,7 @@
           </div>
         </div>
         <div class="activity common">
-          <div class="title">HAOWEN LAND 活动</div>
+          <div class="title">HAOWEN LAND 动态</div>
           <scroll-view
             class="scroll-container"
             scroll-x
@@ -87,7 +104,7 @@
               <div
                 v-for="(activity, index) in wxActivityList"
                 :key="index"
-                :style="{ '--w': wxActivityList.length === 1 ? '100%' : '80%' }"
+                :style="{ '--w': wxActivityList.length === 1 ? '100%' : '90%' }"
                 class="activity-item"
                 @click="onToWebView(activity)">
                 <image :src="activity.thumb_url" mode="aspectFill" />
@@ -167,11 +184,6 @@ onShareTimeline(() => {
 </script>
 
 <style lang="scss" scoped>
-page {
-  ::v-deep() {
-    background: #f2f2f2;
-  }
-}
 .__home {
   position: relative;
 }
@@ -201,27 +213,48 @@ page {
     height: 138rpx;
     padding: 32rpx 88rpx;
     box-sizing: border-box;
-
-    view {
-      display: flex;
-      align-items: center;
-      image {
-        width: 40rpx;
-        height: 40rpx;
-        margin-right: 16rpx;
-      }
-
-      label {
-        color: #000;
-        font-size: 28rpx;
-      }
-    }
   }
 }
 
 .funcs {
-  padding: 30rpx 34rpx 100rpx;
+  padding: 30rpx 34rpx 30rpx;
   box-sizing: border-box;
+
+  .invoice-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20rpx 30rpx;
+    background: linear-gradient(135deg, #fffaed, #ffe3be);
+    border: 2rpx solid #ffc375;
+    border-radius: 20rpx;
+    margin: 6rpx 0 16rpx;
+
+    .invoice-entry-left {
+      display: flex;
+      gap: 20rpx;
+      align-items: center;
+
+      .entry-icon {
+        width: 64rpx;
+        height: 64rpx;
+      }
+
+      .entry-info {
+        .entry-title {
+          margin-bottom: 5rpx;
+          font-size: 28rpx;
+          font-weight: 700;
+          color: #f28519;
+        }
+
+        .entry-sub {
+          font-size: 24rpx;
+          color: #f28519;
+        }
+      }
+    }
+  }
 
   .common {
     box-shadow:
@@ -334,7 +367,7 @@ page {
 
     .scroll-content {
       display: flex;
-      gap: 30rpx;
+      gap: 20rpx;
     }
 
     .activity-item {

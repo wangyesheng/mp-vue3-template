@@ -296,6 +296,14 @@ export function verifyRes(id) {
   })
 }
 
+export function verifyWithCountRes(data) {
+  return request({
+    url: `/api/ticket/new_verify`,
+    method: 'post',
+    data
+  })
+}
+
 export function getMallGoodsRes(data) {
   return request({
     url: `/api/mall/list`,
@@ -400,6 +408,14 @@ export function exchangeRes(id) {
   })
 }
 
+export function exchangeGameCoinsRes(data) {
+  return request({
+    url: `/api/user/exchange_coin`,
+    method: 'post',
+    data
+  })
+}
+
 export function getMyGiftsRes(data) {
   return request({
     url: `/api/user/my_gift`,
@@ -452,5 +468,29 @@ export function getUserBabyListRes(user_id) {
   return request({
     url: `/api/user/baby_list?user_id=${user_id}`,
     method: 'get'
+  })
+}
+
+export function verifyFaceRes(data) {
+  return request({
+    url: `/api/ticket/face_verify`,
+    method: 'post',
+    data
+  })
+}
+
+export function getVerifyRecordsRes(data) {
+  return request({
+    url: `/api/ticket/verify_list`,
+    method: 'get',
+    data
+  })
+}
+
+export function revokeVerifyRes(verify_id) {
+  return request({
+    url: `/api/ticket/revoke`,
+    method: 'post',
+    data: { verify_id }
   })
 }

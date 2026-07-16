@@ -1,24 +1,25 @@
 <template>
-  <view v-if="pageInfo.data.length > 0" id="pageListWrap" class="page-wrap">
-    <view class="page-list">
+  <view v-if="pageInfo.data?.length > 0" id="pageListWrap" class="page-wrap">
+    <view class="page-list" :style="{ '--item-gap': gap / 2 + 'px' }">
       <view
         v-for="(item, index) in pageInfo.data"
         :key="index"
-        class="page-item">
+        class="page-item"
+        :style="getPageItemStyle()">
         <slot name="item" :data="item" />
       </view>
     </view>
     <view
       v-if="pageInfo.end && isOverScreen"
       class="h-[6vh] relative flex justify-center items-center text-[#999] text-[28rpx]">
-      没有更多了
+      没有更多了...
     </view>
     <view v-if="pageInfo.loading && !isRefresh" class="h-[6vh] relative">
       <Loading position="absoluted" />
     </view>
   </view>
   <view v-else class="py-[10vh] relative">
-    <Loading v-if="pageInfo.loading" position="absoluted" show-text />
+    <Loading v-if="pageInfo.loading" show-text position="absoluted" />
     <Empty v-else />
   </view>
 </template>
@@ -45,11 +46,18 @@ const props = defineProps({
     // 占满内容区的高度，一般默认是设备的可使用窗口高度，用于计算是否需要显示底部 `没有更多了` 的文案
     type: Number,
     default: uni.getSystemInfoSync().windowHeight
+  },
+  cols: {
+    type: [Number, String],
+    default: 1
+  },
+  gap: {
+    type: [Number, String],
+    default: 20
   }
 })
 
 const instance = getCurrentInstance()
-
 const pageInfo = ref({
     loading: false,
     end: false,
@@ -58,7 +66,25 @@ const pageInfo = ref({
     limit: props.limit
   }),
   isOverScreen = ref(false),
-  isRefresh = ref(false) // 刷新页面时不显示 loading
+  isRefresh = ref(false),
+  isError = ref(false) // 刷新页面时不显示 loading
+
+function getPageItemStyle() {
+  if (props.cols == 1) return { width: '100%' }
+
+  // 总宽度 = 每列宽度 + 间隔总宽度
+  // 一行多列的情况下，需要计算(总宽度 - (总列数 - 1 * 间隔 gap)) / 总列数
+  // 假设一行三列，gap 设置的是 20，那么第一列与第二列有间隔，第二列与第三列有间隔，也就是总间隔为 2 * 20
+  // 即每列宽度就得以 (100% - ((3 - 1) * 20)) / 3 => (100% - 40) / 3 => (100 / 3)% - 40 / 3
+  // 这里还有一个坑，就是假设单位换成 rpx 的话，那么 13.33333rpx 在小程序渲染的时候就会变成 6px，所以此处直接除 2 以 px 为单位
+
+  // 每列应减去的间隔距离
+  const rest = ((props.cols - 1) * props.gap) / props.cols / 2 + 'px'
+
+  return {
+    width: `calc(${100 / props.cols}% - ${rest})`
+  }
+}
 
 watch(
   () => props.active,
@@ -103,6 +129,9 @@ async function getData(page) {
       // 数据加载完成后检查是否超过一屏
       checkOverScreen()
     }
+  } catch (error) {
+    isError.value = true
+    pageInfo.value.loading = false
   } finally {
     pageInfo.value.loading = false
   }
@@ -131,7 +160,8 @@ onReachBottom(async () => {
     props.active &&
     !pageInfo.value.end &&
     !pageInfo.value.loading &&
-    !isRefresh.value
+    !isRefresh.value &&
+    !isError.value
   ) {
     pageInfo.value.page++
     await getData()
@@ -159,6 +189,7 @@ defineExpose({
   async refresh() {
     try {
       isRefresh.value = true
+      await nextTick()
       await getData(1)
     } finally {
       isRefresh.value = false
@@ -172,12 +203,11 @@ defineExpose({
 
 <style lang="scss" scoped>
 .page-wrap {
-  padding-bottom: env(safe-area-inset-bottom);
-
   .page-list {
     display: flex;
-    flex-direction: column;
-    row-gap: 20rpx;
+    flex-wrap: wrap;
+    gap: var(--item-gap);
+    box-sizing: border-box;
   }
 }
 </style>

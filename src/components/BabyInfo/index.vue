@@ -2,7 +2,7 @@
   <div class="baby-item">
     <div :class="['inner', selected ? 'selected' : '']">
       <div class="left">
-        <image :src="data.avatar" mode="aspectFill" @click.stop="onPreview" />
+        <image :src="data.avatar" mode="aspectFit" @click.stop="onPreview" />
         <div class="right">
           <div class="top">
             <span class="name">{{ data.name }}</span>
@@ -27,15 +27,20 @@
           custom-color="#ff0000"
           @click="onDeleteBaby(data.id)" />
       </div>
+      <div v-if="faceVerify" class="right">
+        <nut-button plain type="primary" size="small" @click="handleVerifyFace">
+          人脸比对
+        </nut-button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { deleteBabyRes } from '@/api'
+import { deleteBabyRes, verifyFaceRes } from '@/api'
 import boyIcon from '@/static/images/me/boy.png'
 import grilIcon from '@/static/images/me/gril.png'
-import { navTo } from '@/utils/uni'
+import { navTo, pathToBase64 } from '@/utils/uni'
 import dayjs from 'dayjs'
 
 const props = defineProps({
@@ -50,6 +55,14 @@ const props = defineProps({
   action: {
     type: Boolean,
     default: false
+  },
+  faceVerify: {
+    type: Boolean,
+    default: false
+  },
+  raw: {
+    type: Object,
+    default: () => ({})
   }
 })
 
@@ -75,6 +88,29 @@ function onDeleteBaby(id) {
         await deleteBabyRes(id)
         emit('refresh')
       }
+    }
+  })
+}
+
+function handleVerifyFace() {
+  // 拉起相机进行人脸比对
+  uni.chooseImage({
+    count: 1,
+    sourceType: ['camera'],
+    sizeType: ['compressed'],
+    async success(res) {
+      const tempFilePath = res.tempFilePaths[0]
+      const path = await pathToBase64(tempFilePath)
+      const data = await verifyFaceRes({
+        user_baby_id: props.data.id,
+        image_base64: path
+      })
+      navTo(
+        `/pages/scan/result?result=${data ? 'success' : 'fail'}&facePhoto=${path}&babies=${JSON.stringify(props.data)}&orderId=${props.raw.id}&max=${props.raw.residue_quantity}`
+      )
+    },
+    fail(err) {
+      console.log('拍照失败:', err)
     }
   })
 }

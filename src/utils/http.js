@@ -43,14 +43,14 @@ class Request {
             this.interceptor.response &&
             typeof this.interceptor.response === 'function'
           ) {
-            const resInterceptors = this.interceptor.response(response)
-            // 如果拦截器不返回false，就将拦截器返回的内容给this.$u.post的then回调
-            if (resInterceptors !== false) {
-              resolve(resInterceptors)
-            } else {
-              // 如果拦截器返回false，意味着拦截器定义者认为返回有问题，直接接入catch回调
-              reject(response)
-            }
+            this.interceptor
+              .response(response.data)
+              .then((res) => {
+                resolve(res)
+              })
+              .catch(() => {
+                reject(response)
+              })
           } else {
             // 如果要求返回原始数据，就算没有拦截器，也返回最原始的数据
             resolve(response)
@@ -61,12 +61,14 @@ class Request {
               this.interceptor.response &&
               typeof this.interceptor.response === 'function'
             ) {
-              const resInterceptors = this.interceptor.response(response.data)
-              if (resInterceptors !== false) {
-                resolve(resInterceptors)
-              } else {
-                reject(response.data)
-              }
+              this.interceptor
+                .response(response.data)
+                .then((res) => {
+                  resolve(res)
+                })
+                .catch(() => {
+                  reject(response)
+                })
             } else {
               // 如果不是返回原始数据(originalData=false)，且没有拦截器的情况下，返回纯数据给then回调
               resolve(response.data)
