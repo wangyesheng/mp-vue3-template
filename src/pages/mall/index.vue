@@ -81,7 +81,9 @@ function onBack() {
   uni.navigateBack()
 }
 
-onShow(appStore.refreshAppUser)
+onShow(() => {
+  appStore.refreshAppUser()
+})
 </script>
 
 <style lang="scss" scoped>

@@ -42,13 +42,6 @@
       }
     },
     {
-      "path": "pages/scan/recoed",
-      "style": {
-        "navigationBarTitleText": "核销记录",
-        "enablePullDownRefresh": true
-      }
-    },
-    {
       "path": "pages/me/wallet",
       "style": {
         "navigationBarTitleText": "我的卡包",

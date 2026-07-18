@@ -23,7 +23,8 @@
               v-if="facePhoto"
               class="photo-img"
               :src="facePhoto"
-              mode="aspectFit" />
+              mode="aspectFit"
+              @click="previewImage([facePhoto])" />
             <div v-else class="photo-placeholder">
               <text>暂无</text>
               <text>抓拍照片</text>
@@ -49,7 +50,8 @@
                 v-if="baby.avatar"
                 class="photo-img w-full h-full"
                 :src="baby.avatar"
-                mode="aspectFit" />
+                mode="aspectFit"
+                @click="previewImage([baby.avatar])" />
               <div v-else class="photo-placeholder">
                 <text>暂无</text>
                 <text>档案照片</text>
@@ -128,6 +130,7 @@
 <script setup>
 import { verifyWithCountRes } from '@/api'
 import { useAppStore } from '@/stores/app'
+import { previewImage } from '@/utils/uni'
 
 const appStore = useAppStore()
 

@@ -19,7 +19,7 @@
       </div>
       <div class="funcs">
         <div
-          v-if="appUser.group_id != 1"
+          v-if="appUser?.group_id && appUser.group_id != 1"
           class="invoice-entry"
           @tap="navTo('/pages/scan/record')">
           <div class="invoice-entry-left">
@@ -164,7 +164,7 @@ function onNavToMP(flag) {
       path: 'pages/weapp/home/home?MallCode=77910002'
     })
   } else {
-    toast('Coming Soon')
+    toast('功能开发中，请稍后')
   }
 }
 

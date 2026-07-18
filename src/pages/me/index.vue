@@ -143,7 +143,7 @@ const funcs = [
     label: '入园预约',
     icon: appointmentIcon,
     handler() {
-      return toast('Coming Soon')
+      return toast('功能开发中，请稍后')
     }
   },
   {
