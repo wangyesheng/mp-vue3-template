@@ -118,7 +118,7 @@ const ticketInfo = ref({}),
   payPopupVisible = ref(false),
   ordersn = ref('')
 
-onLoad(async ({ order_sn = '20260128233215574012' }) => {
+onLoad(async ({ order_sn }) => {
   ordersn.value = order_sn
   try {
     uni.showLoading({
@@ -170,7 +170,7 @@ function onUserKnown() {
     width: 100%;
     border-top-left-radius: 40rpx;
     border-top-right-radius: 40rpx;
-    padding: 30rpx;
+    padding: 30rpx 30rpx 300rpx;
     box-sizing: border-box;
 
     .price {

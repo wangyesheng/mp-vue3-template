@@ -10,10 +10,29 @@
               <span>儿童会员</span>
             </div>
           </div>
-          <div v-else class="noLogin">Hi，Haowen Baby</div>
+          <div v-else class="noLogin">
+            <div class="left">
+              <span class="t1">Hi，Haowen Baby</span>
+              <span class="t3">登录后即可查看专属二维码</span>
+            </div>
+          </div>
         </div>
         <div class="qrcode">
-          <image :src="qrcode" mode="aspectFill" />
+          <image v-if="appUser.id" :src="qrcode" mode="aspectFill" />
+          <div v-else class="no-login">
+            <image src="../../static/images/qrcode.png" mode="aspectFill" />
+            <div class="flex flex-col items-center gap-y-2 mb-5">
+              <span class="t2">登录后查看专属二维码</span>
+              <span class="t3">二维码可用于各种卡券核销</span>
+            </div>
+            <nut-button
+              block
+              type="primary"
+              open-type="getUserInfo"
+              @click="login">
+              立即登录
+            </nut-button>
+          </div>
         </div>
         <div class="logo">
           <div class="inner">
@@ -23,6 +42,10 @@
         </div>
       </div>
     </div>
+
+    <BindMobile
+      v-model:visible="bindMobileVisible"
+      :get-phone-number="getPhoneNumber" />
   </AppContainer>
 </template>
 
@@ -33,18 +56,26 @@ import { getQRCodeRes } from '../../api'
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAppStore } from '../../stores/app'
+import { useLogin } from '@/hooks/useLogin'
 
 const { appUser } = storeToRefs(useAppStore())
+const { bindMobileVisible, login, getPhoneNumber } = useLogin(async () => {
+  await getQRCode()
+})
 
 const qrcode = ref('')
 const originalBrightness = ref(0) // 保存原始亮度
 
+async function getQRCode() {
+  const data = await getQRCodeRes()
+  qrcode.value = data.qrcode
+  setScreenBrightness()
+}
+
 // 页面显示时设置屏幕亮度
 onShow(async () => {
   if (appUser.value.id) {
-    const data = await getQRCodeRes()
-    qrcode.value = data.qrcode
-    setScreenBrightness()
+    await getQRCode()
   }
 })
 
@@ -106,6 +137,23 @@ function restoreScreenBrightness() {
     height: 1126rpx;
     position: relative;
 
+    .t1 {
+      color: #000;
+      font-size: 38rpx;
+      font-weight: 550;
+    }
+
+    .t2 {
+      color: #333;
+      font-size: 32rpx;
+      font-weight: 550;
+    }
+
+    .t3 {
+      color: #4c4c4c;
+      font-size: 26rpx;
+    }
+
     .userinfo {
       position: absolute;
       top: 56rpx;
@@ -149,9 +197,15 @@ function restoreScreenBrightness() {
       }
 
       .noLogin {
-        color: #000;
-        font-weight: 500;
-        font-size: 36rpx;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .left {
+          display: flex;
+          flex-direction: column;
+          row-gap: 20rpx;
+        }
       }
     }
 
@@ -161,11 +215,24 @@ function restoreScreenBrightness() {
       left: 50%;
       transform: translateX(-50%);
       width: 400rpx;
-      height: 400rpx;
+      height: 500rpx;
 
       image {
         width: 100%;
-        height: 100%;
+        height: 400rpx;
+      }
+
+      .no-login {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        image {
+          width: 170.66rpx;
+          height: 170.66rpx;
+          margin-bottom: 40rpx;
+        }
       }
     }
 
