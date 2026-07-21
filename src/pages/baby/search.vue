@@ -19,6 +19,7 @@
           <WalletItem
             :data="data"
             only-show-bind-baby-action
+            @show-baby-popup-visible="showBabyPopupVisible(data)"
             @show-select-baby-popup-visible="
               () => selectBabyPopupRef.show(data)
             " />
@@ -29,6 +30,8 @@
         :baby-list="babyList"
         :code="mobile"
         :refresh="() => pageListRef.refresh()" />
+
+      <BabyPopupInfo ref="babyPopupRef" />
     </div>
   </AppContainer>
 </template>
@@ -41,6 +44,7 @@ import { toast } from '@/utils/uni'
 
 const mobile = ref(''),
   pageListRef = ref(),
+  babyPopupRef = ref(),
   selectBabyPopupRef = ref(),
   babyList = ref([])
 
@@ -50,6 +54,10 @@ async function getBabyList() {
     const data = await getUserBabyListRes(currentUserId)
     babyList.value = data
   }
+}
+
+function showBabyPopupVisible(data) {
+  babyPopupRef.value.show(data)
 }
 
 async function onSearch() {

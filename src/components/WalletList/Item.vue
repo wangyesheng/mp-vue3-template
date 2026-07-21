@@ -88,18 +88,23 @@
       v-else
       class="flex justify-end items-center gap-x-[15rpx] p-[15rpx] border-t-[2rpx] border-solid border-[#f5f5f5] rounded-x">
       <nut-button
-        v-if="data?.baby_info.length === 0 && data.bind_number > 0"
+        v-if="
+          // 员工可以为客户多次绑定宝贝
+          onlyShowBindBabyAction ||
+          // 客户只能一次性绑定宝贝
+          (data?.baby_info.length === 0 && data.bind_number > 0)
+        "
         plain
         type="primary"
         size="mini"
-        @click="emit('showSelectBabyPopupVisible')">
+        @click="emit('showSelectBabyPopupVisible', data)">
         绑定宝贝
       </nut-button>
 
       <nut-button
         v-if="
-          // 只有自己买的票可以赠送，积分兑换或者别人赠送的票不可以
           !onlyShowBindBabyAction &&
+          // 只有自己买的票可以赠送，积分兑换或者别人赠送的票不可以
           orderType == 1 &&
           data.is_give != 1 &&
           (data?.baby_info.length === 0 || data.bind_number == 0)
@@ -152,6 +157,7 @@ const props = defineProps({
     type: Object,
     default: () => ({})
   },
+  // 是否从员工为客户绑定宝贝处过来的
   onlyShowBindBabyAction: {
     type: Boolean,
     default: false

@@ -45,6 +45,7 @@
 </template>
 
 <script setup>
+import deepClone from '@/utils/deepClone'
 import { toast, navTo } from '../../utils/uni'
 import { bindBabyInOrderRes } from '@/api'
 
@@ -95,7 +96,9 @@ function onSelectBabyConfirm() {
   if (!selectedBabyList.value.length) return toast('请先选择宝贝！')
   uni.showModal({
     title: '提示',
-    content: '确定为该门票绑定选中的宝贝信息吗？一旦绑定不可更改、不可赠予！',
+    content: `确定为该门票绑定选中的宝贝信息吗？${
+      props.code ? '' : '一旦绑定不可更改、不可赠予！'
+    }`,
     async success({ confirm }) {
       if (confirm) {
         try {
@@ -118,9 +121,9 @@ function onSelectBabyConfirm() {
 }
 
 defineExpose({
-  show(data) {
+  async show(data) {
     orderInfo.value = data
-    selectedBabyList.value = []
+    selectedBabyList.value = deepClone(data?.baby_info ?? [])
     babyPopupVisible.value = true
   }
 })

@@ -34,9 +34,7 @@
               <WalletItem
                 :data="data"
                 @show-baby-popup-visible="showBabyPopupVisible(data)"
-                @show-select-baby-popup-visible="
-                  showSelectBabyPopupVisible(data)
-                "
+                @show-select-baby-popup-visible="showSelectBabyPopupVisible"
                 @share="onSetShareOrderInfo(data)" />
             </template>
           </PageList>
@@ -52,9 +50,7 @@
                 :data="data"
                 can-exchange
                 @show-baby-popup-visible="showBabyPopupVisible(data)"
-                @show-select-baby-popup-visible="
-                  showSelectBabyPopupVisible(data)
-                "
+                @show-select-baby-popup-visible="showSelectBabyPopupVisible"
                 @share="onSetShareOrderInfo(data)"
                 @exchange-game-coins="showExchangeGameCoinsPopup(data)" />
             </template>
@@ -70,9 +66,7 @@
               <WalletItem
                 :data="data"
                 @show-baby-popup-visible="showBabyPopupVisible(data)"
-                @show-select-baby-popup-visible="
-                  showSelectBabyPopupVisible(data)
-                "
+                @show-select-baby-popup-visible="showSelectBabyPopupVisible"
                 @share="onSetShareOrderInfo(data)" />
             </template>
           </PageList>
