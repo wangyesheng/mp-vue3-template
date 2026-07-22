@@ -51,7 +51,7 @@
         <span class="field__label field__label--fixed">联系人</span>
         <nut-input
           v-model="afterSaleInfo.contact_name"
-          placeholder="请输入姓名"
+          placeholder="请输入联系人"
           input-align="right"
           :border="false" />
       </div>
@@ -62,7 +62,7 @@
         <span class="field__label field__label--fixed">联系电话</span>
         <nut-input
           v-model="afterSaleInfo.contact_phone"
-          placeholder="请输入手机号"
+          placeholder="请输入联系电话"
           type="tel"
           input-align="right"
           :border="false" />
@@ -91,7 +91,6 @@ import { afterSaleSubmitRes } from '@/api'
 import test from '@/utils/test'
 
 const appStore = useAppStore()
-const { appUser } = storeToRefs(appStore)
 const { upload } = useUploader()
 
 const afterSaleInfo = ref({
@@ -147,8 +146,6 @@ function onClickImage(index) {
 
 onLoad((options) => {
   afterSaleInfo.value.order_id = options.id
-  afterSaleInfo.value.contact_name = appUser.value.nickname
-  afterSaleInfo.value.contact_phone = appUser.value.mobile
 })
 
 async function onSubmit() {

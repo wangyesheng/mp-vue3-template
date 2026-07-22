@@ -118,9 +118,13 @@ const orderInfo = ref({})
 const referralCode = ref('')
 const loading = ref(false)
 
-const { bindMobileVisible, login, getPhoneNumber } = useLogin()
+const { bindMobileVisible, login, getPhoneNumber } = useLogin({
+  getOrderSn() {
+    return orderInfo.value.order_sn
+  }
+})
 
-onLoad(async ({ order_sn }) => {
+onLoad(async ({ order_sn = '20260721000238542100' }) => {
   if (order_sn) {
     const data = await getOrderInfoRes(order_sn)
     orderInfo.value = data

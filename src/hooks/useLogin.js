@@ -2,15 +2,13 @@ import { ref } from 'vue'
 import { decryUserPhoneRes, checkLoginRes } from '@/api'
 import { useAppStore } from '@/stores/app'
 
-export function useLogin(validate, cb) {
+export function useLogin({ validate, callback, getOrderSn }) {
   const appStore = useAppStore()
   const bindMobileVisible = ref(false)
   let bindMobileUserProfile = {}
 
   async function login() {
-    if (validate) {
-      await validate()
-    }
+    if (validate) await validate()
     await next()
     async function next() {
       uni.showLoading({
@@ -81,13 +79,14 @@ export function useLogin(validate, cb) {
       openid,
       nickname: bindMobileUserProfile.current.nickName,
       avatar: bindMobileUserProfile.current.avatarUrl,
-      mobile: phoneInfo.phoneNumber
+      mobile: phoneInfo.phoneNumber,
+      order_sn: getOrderSn?.() ?? ''
     }
     const { token } = await checkLoginRes(reqData)
     appStore.setAppToken(token)
     await appStore.refreshAppUser()
     bindMobileVisible.value = false
-    cb?.()
+    callback?.()
   }
 
   return {

@@ -71,24 +71,25 @@ import { navTo } from '@/utils/uni'
 const isAgree = ref(false),
   showAnimate = ref(false)
 
-const { login, getPhoneNumber, bindMobileVisible } = useLogin(
-  () => {
+const { login, getPhoneNumber, bindMobileVisible } = useLogin({
+  validate() {
     return new Promise((resolve, reject) => {
       if (isAgree.value) {
         resolve()
       } else {
-        const err = '请先阅读并同意用户协议与隐私政策！'
         showAnimate.value = true
         uni.vibrateShort({ type: 'middle' })
         setTimeout(() => {
           showAnimate.value = false
         })
-        reject(new Error(err))
+        reject(new Error('请先阅读并同意用户协议与隐私政策！'))
       }
     })
   },
-  () => uni.reLaunch({ url: '/pages/home/index' })
-)
+  callback() {
+    uni.reLaunch({ url: '/pages/home/index' })
+  }
+})
 </script>
 
 <style lang="scss" scoped>
