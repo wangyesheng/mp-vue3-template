@@ -142,7 +142,12 @@
           @click="navTo(`/pages/after-sale/timeline?id=${data.aftersale_id}`)">
           查看进度
         </nut-button>
-
+        <nut-button
+          type="primary"
+          size="small"
+          @click="navTo(`/pages/warranty/index?id=${data.id}`)">
+          查看质保单
+        </nut-button>
         <nut-button
           v-if="data.handle_status == 2"
           size="small"

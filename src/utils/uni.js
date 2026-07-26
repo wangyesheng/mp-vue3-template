@@ -11,6 +11,9 @@ export function copy(content, tips = '复制成功') {
     data: content,
     success() {
       toast(tips)
+    },
+    fail(result) {
+      toast(result.errMsg)
     }
   })
 }

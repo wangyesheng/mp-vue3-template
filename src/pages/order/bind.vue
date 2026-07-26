@@ -124,7 +124,7 @@ const { bindMobileVisible, login, getPhoneNumber } = useLogin({
   }
 })
 
-onLoad(async ({ order_sn = '20260721000238542100' }) => {
+onLoad(async ({ order_sn }) => {
   if (order_sn) {
     const data = await getOrderInfoRes(order_sn)
     orderInfo.value = data
