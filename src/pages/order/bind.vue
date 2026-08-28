@@ -16,6 +16,21 @@
             <span class="info-value">{{ orderInfo.product_name }}</span>
           </div>
           <div class="info-row">
+            <span class="info-label">产品详情</span>
+            <div class="info-value flex flex-col gap-y-2">
+              <div
+                v-for="(item, index) in orderInfo.sn_number"
+                :key="index"
+                class="flex flex-col text-[24rpx] details">
+                <span v-if="item.part_name" class="partname">
+                  {{ item.part_name }}
+                </span>
+                <span>型号：{{ item.part_marque }}</span>
+                <span>SN：{{ item.part_sn }}</span>
+              </div>
+            </div>
+          </div>
+          <div v-if="orderInfo.is_construction == 1" class="info-row">
             <span class="info-label">服务项目</span>
             <span class="info-value">{{ orderInfo.service_name }}</span>
           </div>
@@ -270,7 +285,9 @@ function callStore() {
       justify-content: space-between;
       align-items: center;
       padding: 22rpx 0;
-      border-bottom: 1rpx solid #f7f7f7;
+      &:not(:last-child) {
+        border-bottom: 1rpx solid #f0f0f0;
+      }
 
       &.last {
         border-bottom: none;
@@ -286,8 +303,22 @@ function callStore() {
       .info-value {
         font-size: 28rpx;
         color: #222;
-        text-align: right;
         flex: 1;
+
+        .partname {
+          background-color: #1890ff;
+          border-radius: 8rpx;
+          padding: 2rpx 12rpx;
+          width: fit-content;
+          color: #fff;
+        }
+
+        .details {
+          &:not(:last-child) {
+            padding-bottom: 16rpx;
+            border-bottom: 1rpx solid #f0f0f0;
+          }
+        }
 
         &.mono {
           font-family: monospace;
