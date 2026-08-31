@@ -12,21 +12,23 @@
             <span class="info-value">{{ orderInfo.order_sn }}</span>
           </div>
           <div class="info-row">
-            <span class="info-label">购买产品</span>
+            <span class="info-label">产品名称</span>
             <span class="info-value">{{ orderInfo.product_name }}</span>
           </div>
-          <div class="info-row">
+          <div class="info-row !items-start">
             <span class="info-label">产品详情</span>
             <div class="info-value flex flex-col gap-y-2">
               <div
                 v-for="(item, index) in orderInfo.sn_number"
                 :key="index"
-                class="flex flex-col text-[24rpx] details">
+                class="details">
                 <span v-if="item.part_name" class="partname">
                   {{ item.part_name }}
                 </span>
-                <span>型号：{{ item.part_marque }}</span>
-                <span>SN：{{ item.part_sn }}</span>
+                <div class="flex flex-col gap-y-1">
+                  <div>型号：{{ item.part_marque }}</div>
+                  <div>SN：{{ item.part_sn }}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -282,9 +284,9 @@ function callStore() {
 
     .info-row {
       display: flex;
-      justify-content: space-between;
       align-items: center;
       padding: 22rpx 0;
+
       &:not(:last-child) {
         border-bottom: 1rpx solid #f0f0f0;
       }
@@ -305,15 +307,21 @@ function callStore() {
         color: #222;
         flex: 1;
 
-        .partname {
-          background-color: #1890ff;
-          border-radius: 8rpx;
-          padding: 2rpx 12rpx;
-          width: fit-content;
-          color: #fff;
-        }
-
         .details {
+          display: flex;
+          align-items: flex-start;
+          column-gap: 12rpx;
+          font-size: 24rpx;
+
+          .partname {
+            background-color: #1890ff;
+            border-radius: 8rpx;
+            padding: 2rpx 12rpx;
+            width: 100rpx;
+            color: #fff;
+            text-align: center;
+          }
+
           &:not(:last-child) {
             padding-bottom: 16rpx;
             border-bottom: 1rpx solid #f0f0f0;

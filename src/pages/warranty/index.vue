@@ -8,7 +8,9 @@
           <view class="status-wrap">
             <view class="status-inner">
               <text class="status-title">
-                {{ orderInfo.is_warranty == 1 ? '质保生效中' : '质保单生成中' }}
+                {{
+                  orderInfo.is_warranty == 1 ? '质保单生效中' : '质保单生成中'
+                }}
               </text>
               <text class="status-subtitle">品质保障 | 安全无忧</text>
             </view>
@@ -75,17 +77,22 @@
             <!-- 产品名称 -->
             <view class="info-row">
               <view class="row-label-group">
-                <text class="label-text">产品名称</text>
+                <text class="label-text">名称</text>
               </view>
               <text class="value-text font-dark">
                 {{ orderInfo.product_name }}
               </text>
             </view>
-
+            <view class="info-row">
+              <view class="row-label-group">
+                <text class="label-text">价格</text>
+              </view>
+              <text class="value-text font-dark">¥ {{ orderInfo.price }}</text>
+            </view>
             <!-- 产品详情（时间轴/分项列表） -->
             <view class="info-row align-start">
-              <view class="row-label-group pt-4">
-                <text class="label-text">产品详情</text>
+              <view class="row-label-group">
+                <text class="label-text">详情</text>
               </view>
 
               <!-- 右侧部位详情时间轴 -->
@@ -102,28 +109,29 @@
                     <view v-if="item.part_name" class="position-tag">
                       {{ item.part_name }}
                     </view>
-                    <view class="detail-line">
-                      <text class="detail-label">型号：</text>
-                      <text class="detail-value">{{ item.part_marque }}</text>
-                    </view>
-                    <view class="detail-line">
-                      <text class="detail-label">SN：</text>
-                      <text class="detail-value">{{ item.part_sn }}</text>
-                    </view>
-
-                    <view class="detail-line">
-                      <text class="detail-label">质保有效期：</text>
-                      <text class="detail-value !text-[#1890ff] !font-bold">
-                        {{ item.warranty_years }} 年
-                      </text>
-                    </view>
-                    <view class="detail-line">
-                      <text class="detail-label"></text>
-                      <text
-                        class="detail-value !text-[#1890ff] !font-bold !text-[24rpx]">
-                        {{ item.warranty_start_time }} 至
-                        {{ item.warranty_end_time }}
-                      </text>
+                    <view class="flex flex-col gap-y-1">
+                      <view class="detail-line">
+                        <text class="detail-label">型号：</text>
+                        <text class="detail-value">{{ item.part_marque }}</text>
+                      </view>
+                      <view class="detail-line">
+                        <text class="detail-label">SN：</text>
+                        <text class="detail-value">{{ item.part_sn }}</text>
+                      </view>
+                      <view class="detail-line">
+                        <text class="detail-label">质保有效期：</text>
+                        <text class="detail-value !text-[#1890ff] !font-bold">
+                          {{ item.warranty_years }} 年
+                        </text>
+                      </view>
+                      <view class="detail-line">
+                        <text class="detail-label"></text>
+                        <text
+                          class="detail-value !text-[#1890ff] !font-bold !text-[24rpx]">
+                          {{ item.warranty_start_time }} 至
+                          {{ item.warranty_end_time }}
+                        </text>
+                      </view>
                     </view>
                   </view>
                 </view>
@@ -436,23 +444,24 @@ const back = () => uni.navigateBack()
 
     .timeline-content {
       display: flex;
-      flex-direction: column;
       align-items: flex-start;
+      flex-wrap: wrap;
+      column-gap: 12rpx;
 
       .position-tag {
         background-color: #1890ff;
         border-radius: 8rpx;
-        padding: 4rpx 16rpx;
+        padding: 4rpx 12rpx;
         color: #ffffff;
         font-size: 22rpx;
         font-weight: 600;
-        margin-bottom: 12rpx;
+        text-align: center;
+        width: 100rpx;
       }
 
       .detail-line {
         display: flex;
         font-size: 25rpx;
-        line-height: 1.6;
         color: #475569;
 
         .detail-label {

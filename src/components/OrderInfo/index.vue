@@ -238,7 +238,8 @@ const appStore = useAppStore()
 async function onOrderConfirm(id, type = 1) {
   uni.showModal({
     title: '提示',
-    content: '请仔细检查车辆施工后状况，点击确定即代表已完成检查且未发现问题。',
+    content:
+      '请检查您爱车状态，漆面或玻璃本身等车辆其他地方是否因施工产生损坏，点击确认即代表已检查且未发现问题，该提示不影响购买产品自身售后。',
     async success({ confirm }) {
       if (confirm) {
         if (type == 1) {

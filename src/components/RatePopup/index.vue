@@ -5,7 +5,7 @@
     safe-area-inset-bottom
     position="bottom">
     <div class="popupWrap">
-      <div class="__title px-[20rpx]">订单评价</div>
+      <div class="__title px-[20rpx]">施工评价</div>
       <div class="popup-inner rate">
         <div class="mx-[40rpx]">
           <div v-for="item in rateMap" :key="item.key" class="rate-field">
